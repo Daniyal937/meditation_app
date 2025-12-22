@@ -1,0 +1,44 @@
+
+Build a meditation & mindfulness app with guided sessions, sleep stories,
+and calming tracks. Include onboarding, auth, reminders, preferences, and
+progress tracking. Deliver a soothing UI with smooth playback, downloads,
+and seamless navigation.
+Task Checklist
+Self QA (Before Ticket Move to Review)*
+• Test guided sessions, reminders, sleep music, preferences.
+• Verify auth, reminders, and local storage.
+• Check audio playback, downloads, and navigation.
+• Ensure responsive layouts and smooth transitions.
+• Remove logs/unused imports/assets.
+• Attach Expo build + GitHub.
+• Post on LinkedIn (#TechloSet #BootcampWise).
+Todos*
+• Auth: signup/login/recovery.
+• Welcome/onboarding flow.
+• Home: daily sessions + mood greeting.
+• Courses: Focus/Relax/Sleep lists.
+• Audio Detail: play with duration/desc.
+• Sleep: stories, sounds, controls.
+• Profile: info + stats.
+• Preferences: themes, reminders, language.
+• About + Logout screens.
+Requirements*
+• Implement auth + onboarding.
+• Audio playback for meditation/sleep.
+• Local reminders via notifications.
+• Persist preferences (cloud/local).
+• Relaxing minimal UI, smooth animations.
+• Modular, reusable components.
+Tech Stack*
+• Frontend: React Native
+• Backend: Firebase
+• Database: Firestore
+• State: Redux
+• Notifications: OneSignal
+• Design: soft gradients, calming tones, icons/illustrations.
+Coding Standards*
+• PascalCase components; camelCase vars/functions.
+• Modular folders: screens/components/redux.
+• Clean, reusable, documented code.
+• No redundant imports/assets.
+• Responsive + accessible across devices.

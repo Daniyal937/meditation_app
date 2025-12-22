@@ -1,0 +1,199 @@
+# **Product Requirements Document (PRD)**
+
+## **Meditation & Mindfulness Mobile App**
+
+---
+
+## **1. Overview**
+
+The Meditation & Mindfulness App is a cross-platform (iOS/Android) mobile application designed to help users improve mental well-being through guided meditation sessions, calming music, sleep stories, breathing exercises, and personalized progress insights. The app delivers a peaceful user experience with a soft, relaxing aesthetic, smooth transitions, and intuitive navigation. It includes guided sessions, onboarding, authentication, reminders, downloads, and playlist management.
+
+---
+
+## **2. Goals & Objectives**
+
+### **Primary Goals**
+
+* Provide users with an immersive meditation experience.
+* Offer daily mindfulness content, sleep stories, and calming tracks.
+* Enable personalization through themes, preferences, and reminders.
+* Track progress and promote consistent habit-building.
+
+### **Success Metrics**
+
+* High daily/weekly engagement.
+* Smooth playback and low error rate for audio sessions.
+* Increased user retention after onboarding.
+* Consistent reminder engagement and sessions completed.
+
+---
+
+## **3. Target Audience**
+
+* Individuals seeking stress relief and mental wellness.
+* Beginners exploring meditation.
+* Users looking for calming sleep audio or quick relaxation.
+* People wanting habit-building with reminders and tracking.
+
+---
+
+## **4. Features & Requirements**
+
+### **4.1 Authentication & User Management**
+
+* Email/password signup/login via Firebase Auth.
+* Password recovery.
+* Persistent login.
+
+### **4.2 Onboarding Flow**
+
+* Welcome screens introducing app benefits.
+* User mood or goal selection (Reduce Stress, Better Sleep, Focus, etc.).
+* Quick theme selection.
+
+### **4.3 Home Screen**
+
+* Daily recommended session.
+* Personalized greeting based on time/mood.
+* Quick navigation to Focus / Relax / Sleep.
+
+### **4.4 Meditation Courses**
+
+* Categorized lists: Focus, Relax, Sleep.
+* Course details with session lists.
+* Ability to favorite or save sessions.
+
+### **4.5 Audio Detail Screen**
+
+* Play, pause, seek controls.
+* Track duration, description, tags.
+* Background playback.
+* Download audio for offline use.
+
+### **4.6 Sleep Section**
+
+* Sleep stories, ambient sounds, bedtime music.
+* Continuous playback and looping.
+* Soft gradients and calming visual design.
+
+### **4.7 Notifications & Reminders**
+
+* Local push notifications using OneSignal.
+* Daily meditation reminders.
+* Sleep reminder option.
+
+### **4.8 Preferences & Settings**
+
+* Themes (light, dark, calming tones).
+* Language selection.
+* Reminder time customization.
+* Download management.
+
+### **4.9 Profile & Stats**
+
+* Daily streaks.
+* Total minutes meditated.
+* Courses completed.
+* Personal info.
+
+### **4.10 About + Logout**
+
+* App info, privacy policy, support.
+* Logout functionality.
+
+---
+
+## **5. Technical Requirements**
+
+### **Frontend**
+
+* **React Native (Expo)**
+* Smooth transitions + calming UI animations.
+* Responsive layout for all devices.
+
+### **Backend**
+
+* **Firebase** for authentication & hosting.
+* **Firestore** for course data, user progress.
+
+### **State Management**
+
+* **Redux Toolkit** for predictable state & scalability.
+
+### **Notifications**
+
+* **OneSignal** for scheduled reminders.
+
+### **Audio**
+
+* React Native audio libraries (e.g., expo-av).
+* Background playback support.
+* Download and offline playback.
+
+### **Design Requirements**
+
+* Soft gradients and calm pastel color palette.
+* Soothing illustrations and minimal visual noise.
+* Icons for meditation categories.
+
+---
+
+## **6. User Experience (UX) Requirements**
+
+* Intuitive navigation via bottom tabs or stack navigation.
+* Sessions should start in 1–2 taps.
+* Smooth onboarding with no friction.
+* Haptic feedback for controls (optional).
+* Accessible text sizes and color contrast.
+
+---
+
+## **7. Non-Functional Requirements**
+
+* **Performance:** <200ms screen transitions.
+* **Offline Support:** downloaded audio + stored preferences.
+* **Security:** Firebase rules, secure auth.
+* **Scalability:** ability to add new courses easily.
+* **Stability:** crash-free sessions and audio playback.
+
+---
+
+## **8. Folder Structure (Coding Standard)**
+
+```
+/src
+  /components
+  /screens
+  /redux
+  /assets (images, icons, audio)
+  /utils
+```
+
+* PascalCase for components.
+* camelCase for functions/vars.
+* Clean, modular, reusable components.
+
+---
+
+## **9. QA & Testing Checklist**
+
+* Test guided sessions and audio playback.
+* Verify reminders & notification triggers.
+* Authentication flow (signup/login/recovery).
+* Navigation across all screens.
+* Offline downloads.
+* Low-end device testing.
+* Remove logs/unused assets.
+* Responsive UI verification.
+
+---
+
+## **10. Deliverables**
+
+* Full React Native codebase.
+* Firebase integration.
+* Expo build (APK/IPA).
+* GitHub repository.
+* LinkedIn post (#TechloSet #BootcampWise).
+
+---

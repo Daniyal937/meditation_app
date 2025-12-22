@@ -1,44 +1,49 @@
 {
-    "expo": {
-        "name": "Silent Moon",
-        "slug": "silent-moon-meditation",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "userInterfaceStyle": "light",
-        "splash": {
-            "image": "./assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#8E97FD"
-        },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
-        "updates": {
-            "enabled": false,
-            "checkAutomatically": "ON_ERROR_RECOVERY",
-            "fallbackToCacheTimeout": 0
-        },
-        "ios": {
-            "supportsTablet": true,
-            "bundleIdentifier": "com.silentmoon.meditation"
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#8E97FD"
-            },
-            "package": "com.silentmoon.meditation",
-            "versionCode": 1,
-            "permissions": [
-                "INTERNET",
-                "READ_EXTERNAL_STORAGE",
-                "WRITE_EXTERNAL_STORAGE",
-                "NOTIFICATIONS"
-            ]
-        },
-        "web": {
-            "favicon": "./assets/favicon.png"
-        }
+  "expo": {
+    "name": "Silent Moon",
+    "slug": "silent-moon-meditation",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#8E97FD"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "updates": {
+      "enabled": false,
+      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "fallbackToCacheTimeout": 0
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.silentmoon.meditation"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#8E97FD"
+      },
+      "package": "com.silentmoon.meditation",
+      "versionCode": 1,
+      "permissions": [
+        "INTERNET",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "NOTIFICATIONS"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "766c0722-d2e2-4be7-99aa-76e0817201c6"
+      }
     }
+  }
 }

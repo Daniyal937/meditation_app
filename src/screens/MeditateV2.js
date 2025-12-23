@@ -321,11 +321,11 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         paddingHorizontal: spacing(20),
-        paddingTop: hp(20),
+        paddingTop: hp(10),
         paddingBottom: hp(100), // Updated to accommodate BottomMenu
     },
     header: {
-        marginTop: hp(30),
+        marginTop: hp(10),
         marginBottom: hp(25),
         alignItems: 'center',
     },

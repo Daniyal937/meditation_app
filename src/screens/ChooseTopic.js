@@ -5,15 +5,16 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
     StatusBar,
     ImageBackground,
     Image,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 
 const ChooseTopic = ({ navigation }) => {
     const [selectedTopics, setSelectedTopics] = useState([]);
+    const insets = useSafeAreaInsets();
 
     // Topic data matching Figma design
     const topics = [
@@ -138,10 +139,10 @@ const ChooseTopic = ({ navigation }) => {
                             topic.id === 2
                                 ? styles.cardInternalImageCentered
                                 : topic.id === 3 || topic.id === 8
-                                  ? styles.cardInternalImageFullWidth
-                                  : topic.id === 4
-                                    ? styles.cardInternalImageCenteredSmallMargin
-                                    : styles.cardInternalImage
+                                    ? styles.cardInternalImageFullWidth
+                                    : topic.id === 4
+                                        ? styles.cardInternalImageCenteredSmallMargin
+                                        : styles.cardInternalImage
                         }
                         resizeMode="contain"
                     />
@@ -155,12 +156,18 @@ const ChooseTopic = ({ navigation }) => {
     const rightColumnTopics = topics.filter((_, index) => index % 2 !== 0);
 
     return (
-        <ImageBackground
-            source={require('../../assets/images/choose-topic-background.png')}
-            style={styles.backgroundImage}
-            resizeMode="cover"
-        >
-            <SafeAreaView style={styles.container}>
+        <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+            <Image
+                source={require('../../assets/images/choose-topic-background.png')}
+                style={{
+                    position: 'absolute',
+                    top: insets.top + hp(20) + fs(38),
+                    width: '100%',
+                    height: '100%',
+                }}
+                resizeMode="cover"
+            />
+            <View style={[styles.container, { paddingTop: insets.top }]}>
                 <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
                 <ScrollView
@@ -170,7 +177,10 @@ const ChooseTopic = ({ navigation }) => {
                 >
                     {/* Header Section */}
                     <View style={styles.header}>
-                        <Text style={styles.title}>What Brings you{'\n'}to Silent Moon?</Text>
+                        <Text style={styles.title}>
+                            <Text style={{ fontWeight: '700' }}>What Brings you</Text>
+                            {'\n'}to Silent Moon?
+                        </Text>
                         <Text style={styles.subtitle}>choose a topic to focus on</Text>
                     </View>
 
@@ -182,18 +192,12 @@ const ChooseTopic = ({ navigation }) => {
                         <View style={styles.column}>{rightColumnTopics.map(renderTopicCard)}</View>
                     </View>
                 </ScrollView>
-            </SafeAreaView>
-        </ImageBackground>
+            </View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    backgroundImage: {
-        flex: 1,
-        width: '100%',
-        justifyContent: 'flex-end',
-        paddingBottom: hp(10),
-    },
     container: {
         flex: 1,
         backgroundColor: 'transparent',
@@ -211,7 +215,6 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: fs(28),
-        fontWeight: '700',
         color: '#3F414E',
         marginBottom: hp(12),
         lineHeight: fs(36),
@@ -250,9 +253,9 @@ const styles = StyleSheet.create({
     cardInternalImage: {
         position: 'absolute',
         top: 0,
-        right: 0,
-        left: 0,
+        alignSelf: 'center',
         bottom: hp(30), // Leave space for text
+        width: '100%',
     },
     cardInternalImageCentered: {
         position: 'absolute',
@@ -271,8 +274,7 @@ const styles = StyleSheet.create({
     cardInternalImageFullWidth: {
         position: 'absolute',
         top: 0,
-        left: 0,
-        right: 0,
+        alignSelf: 'center',
         bottom: hp(30),
         width: '100%',
     },

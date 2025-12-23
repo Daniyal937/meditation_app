@@ -5,13 +5,13 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
     StatusBar,
     LayoutAnimation,
     Platform,
     UIManager,
     Alert,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { OneSignal } from 'react-native-onesignal';
 import * as Notifications from 'expo-notifications';
@@ -23,6 +23,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Reminders = ({ navigation }) => {
+    const insets = useSafeAreaInsets();
     const [selectedHour, setSelectedHour] = useState(11);
     const [selectedMinute, setSelectedMinute] = useState(30);
     const [selectedPeriod, setSelectedPeriod] = useState('AM');
@@ -123,12 +124,15 @@ const Reminders = ({ navigation }) => {
     );
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
             <ScrollView
                 style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
+                contentContainerStyle={[
+                    styles.scrollContent,
+                    { paddingBottom: Math.max(insets.bottom, hp(40)) },
+                ]}
                 showsVerticalScrollIndicator={false}
                 nestedScrollEnabled={true}
             >
@@ -213,7 +217,7 @@ const Reminders = ({ navigation }) => {
                                     style={[
                                         styles.dayButtonText,
                                         selectedDays.includes(day.id) &&
-                                            styles.dayButtonTextSelected,
+                                        styles.dayButtonTextSelected,
                                     ]}
                                 >
                                     {day.label}
@@ -245,7 +249,7 @@ const Reminders = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 };
 

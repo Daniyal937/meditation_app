@@ -133,7 +133,7 @@ const Sleep = ({ navigation, route }) => {
         fetchUserData();
     }, [route, userProfileFromRedux]);
 
-    useFocusEffect(useCallback(() => {}, []));
+    useFocusEffect(useCallback(() => { }, []));
 
     return (
         <View style={{ flex: 1, backgroundColor: '#03174C' }}>
@@ -191,10 +191,6 @@ const Sleep = ({ navigation, route }) => {
                             resizeMode="cover"
                         >
                             <View style={styles.featuredContent}>
-                                <Text style={styles.featuredTitle}>The Ocean Moon</Text>
-                                <Text style={styles.featuredSubtitle}>
-                                    Non-stop 8-hour mixes of our most popular sleep audio
-                                </Text>
 
                                 <TouchableOpacity
                                     style={styles.startButton}

@@ -123,7 +123,7 @@ const Profile = ({ navigation }) => {
             title: 'Language',
             iconImage: require('../../assets/images/language_icon.png'),
             value: 'English (US)',
-            onPress: () => {}, // TODO: Implement Language selection
+            onPress: () => { }, // TODO: Implement Language selection
         },
     ];
 
@@ -369,10 +369,26 @@ const Profile = ({ navigation }) => {
                 onRequestClose={() => setShowLogoutModal(false)}
             >
                 <View style={styles.modalOverlay}>
-                    <View style={[styles.modalContent, { backgroundColor: theme.colors.card }]}>
+                    <View
+                        style={[
+                            styles.modalContent,
+                            {
+                                backgroundColor: theme.colors.card,
+                                paddingBottom: Math.max(insets.bottom, hp(24)),
+                            },
+                        ]}
+                    >
                         <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
                             Logout
                         </Text>
+                        <View
+                            style={{
+                                height: 2,
+                                backgroundColor: '#E5E7EB',
+                                width: '100%',
+                                marginBottom: hp(20),
+                            }}
+                        />
                         <Text style={[styles.modalMessage, { color: theme.colors.textSecondary }]}>
                             Are you sure you want to log out?
                         </Text>
@@ -419,8 +435,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: spacing(20),
-        paddingTop: hp(30),
-        paddingBottom: hp(15),
+        paddingTop: hp(10),
+        paddingBottom: hp(10),
     },
     headerTitle: {
         fontSize: fs(24),
@@ -547,7 +563,7 @@ const styles = StyleSheet.create({
         fontSize: fs(22),
         fontWeight: '700',
         textAlign: 'center',
-        marginBottom: hp(16),
+        marginBottom: hp(12),
     },
     modalMessage: {
         fontSize: fs(16),

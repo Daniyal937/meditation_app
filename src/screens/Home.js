@@ -463,17 +463,17 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: wp(10),
         padding: spacing(16),
-        height: hp(200),
+        minHeight: hp(200),
         justifyContent: 'flex-end',
         position: 'relative',
         overflow: 'hidden',
     },
     basicsLogo: {
-        width: wp(120),
-        height: hp(92),
+        width: wp(110),
+        height: hp(85),
         position: 'absolute',
         top: 0,
-        right: wp(-8),
+        right: wp(-5),
     },
     relaxationLogo: {
         width: '100%',
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
         transform: [{ translateX: wp(-43.5) }, { translateY: hp(-50.5) }],
     },
     featuredContent: {
-        gap: hp(16),
+        gap: hp(12),
     },
     featuredFooter: {
         flexDirection: 'row',
@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
     dailyThoughtBg2: {
         position: 'absolute',
         right: 0,
-        top: -14,
+        top: hp(-14),
         width: wp(170),
         height: hp(80),
         opacity: 0.8,

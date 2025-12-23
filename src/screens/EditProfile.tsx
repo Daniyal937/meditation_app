@@ -23,7 +23,7 @@ import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlic
 import { ScreenProps } from '../types';
 import { RootState } from '../redux/store';
 
-const EditProfile: React.FC<ScreenProps<'EditProfile'>> = ({ navigation }) => {
+const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
     const { theme } = useTheme();
     const dispatch = useDispatch();
     const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);

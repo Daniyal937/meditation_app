@@ -6,7 +6,7 @@ import { wp, hp, fs, spacing } from '../utils/responsive';
 import { useTheme } from '../context/ThemeContext';
 import type { ScreenProps } from '../types';
 
-const About: React.FC<ScreenProps<'AboutScreen'>> = ({ navigation }) => {
+const About = ({ navigation }: ScreenProps<'AboutScreen'>) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
 

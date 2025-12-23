@@ -19,13 +19,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 import BottomMenu from '../components/BottomMenu';
 import { wp, hp, fs, spacing } from '../utils/responsive';
+import { ScreenProps } from '../types';
+import { RootState } from '../redux/store';
 
-const MeditationSessions = ({ navigation, route }) => {
+const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessions'>) => {
     const { theme } = useTheme(); // Get theme
     const dispatch = useDispatch();
-    const userProfileFromRedux = useSelector(state => state.user.profile);
+    const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
-    const [activeSessionId, setActiveSessionId] = useState(null);
+    const [activeSessionId, setActiveSessionId] = useState<number | null>(null);
     const insets = useSafeAreaInsets();
 
     // Get category data from route params or use default
@@ -53,18 +55,20 @@ const MeditationSessions = ({ navigation, route }) => {
                             setUserName(userProfile.name);
                             dispatch(setUserProfileAction(userProfile));
                         } else {
-                            const emailName = currentUser.email.split('@')[0];
-                            const derivedName =
-                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
-                            setUserName(derivedName);
-                            // Store partial data if just name
-                            dispatch(
-                                setUserProfileAction({
-                                    name: derivedName,
-                                    uid: currentUser.uid,
-                                    email: currentUser.email,
-                                })
-                            );
+                            if (currentUser.email) {
+                                const emailName = currentUser.email.split('@')[0];
+                                const derivedName =
+                                    emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                                setUserName(derivedName);
+                                // Store partial data if just name
+                                dispatch(
+                                    setUserProfileAction({
+                                        name: derivedName,
+                                        uid: currentUser.uid,
+                                        email: currentUser.email,
+                                    })
+                                );
+                            }
                         }
                     }
                 }
@@ -121,7 +125,7 @@ const MeditationSessions = ({ navigation, route }) => {
         },
     ];
 
-    const handlePlaySession = session => {
+    const handlePlaySession = (session: typeof sessions[0]) => {
         // Navigate to AudioDetails2 screen (using v2 as requested implicitly by user editing AudioDetails2)
         navigation.navigate('AudioDetails2', { session });
     };

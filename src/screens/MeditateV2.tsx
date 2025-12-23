@@ -17,12 +17,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 import BottomMenu from '../components/BottomMenu';
 import { wp, hp, fs, spacing } from '../utils/responsive';
+import { ScreenProps } from '../types';
+import { RootState } from '../redux/store';
 
-const MeditateV2 = ({ navigation, route }) => {
+const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
     const { theme } = useTheme();
     const [selectedCategory, setSelectedCategory] = useState('all');
     const dispatch = useDispatch();
-    const userProfileFromRedux = useSelector(state => state.user.profile);
+    const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const insets = useSafeAreaInsets();
 
@@ -44,17 +46,19 @@ const MeditateV2 = ({ navigation, route }) => {
                             setUserName(userProfile.name);
                             dispatch(setUserProfileAction(userProfile));
                         } else {
-                            const emailName = currentUser.email.split('@')[0];
-                            const derivedName =
-                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
-                            setUserName(derivedName);
-                            dispatch(
-                                setUserProfileAction({
-                                    name: derivedName,
-                                    uid: currentUser.uid,
-                                    email: currentUser.email,
-                                })
-                            );
+                            if (currentUser.email) {
+                                const emailName = currentUser.email.split('@')[0];
+                                const derivedName =
+                                    emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                                setUserName(derivedName);
+                                dispatch(
+                                    setUserProfileAction({
+                                        name: derivedName,
+                                        uid: currentUser.uid,
+                                        email: currentUser.email,
+                                    })
+                                );
+                            }
                         }
                     }
                 } else {
@@ -144,7 +148,7 @@ const MeditateV2 = ({ navigation, route }) => {
         },
     ];
 
-    const handleCategoryPress = category => {
+    const handleCategoryPress = (category: typeof categories[0]) => {
         setSelectedCategory(category.id);
         navigation.navigate('MeditationSessions', {
             category: {

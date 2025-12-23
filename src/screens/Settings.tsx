@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
+import { ScreenProps } from '../types';
 
-const Settings = ({ navigation }) => {
+const Settings = ({ navigation }: ScreenProps<'Settings'>) => {
     const { theme, isDarkMode, toggleTheme } = useTheme();
 
     const settingsOptions = [
@@ -143,7 +144,7 @@ const Settings = ({ navigation }) => {
                                     ]}
                                 >
                                     <Ionicons
-                                        name={option.icon}
+                                        name={option.icon as any}
                                         size={22}
                                         color={theme.colors.primary}
                                     />
@@ -215,7 +216,7 @@ const Settings = ({ navigation }) => {
                         await signOutUser();
                         navigation.reset({
                             index: 0,
-                            routes: [{ name: 'SignIn' }],
+                            routes: [{ name: 'Login' }],
                         });
                     }}
                 >

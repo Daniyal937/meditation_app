@@ -9,6 +9,7 @@ import { LogLevel, OneSignal } from 'react-native-onesignal';
 import * as Notifications from 'expo-notifications';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
+import { RootStackParamList } from './src/types';
 import * as Updates from 'expo-updates';
 
 // Error Boundary Component
@@ -110,7 +111,7 @@ import { ThemeProvider } from './src/context/ThemeContext';
 // import OnboardingScreen from './src/screens/OnboardingScreen';
 // import HomeScreen from './src/screens/HomeScreen';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
     React.useEffect(() => {

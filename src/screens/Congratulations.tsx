@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { fs, hp, wp, spacing } from '../utils/responsive';
 import { ScreenProps } from '../types';
 
-const Congratulations: React.FC<ScreenProps<'Congratulations'>> = ({ navigation }) => {
+const Congratulations = ({ navigation }: ScreenProps<'Congratulations'>) => {
     const emojiImages = [
         require('../../assets/images/emoji_1.png'),
         require('../../assets/images/emoji_2.png'),

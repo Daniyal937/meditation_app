@@ -20,14 +20,15 @@ import { wp, hp, fs, spacing } from '../utils/responsive';
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
+import { ScreenProps } from '../types';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const Reminders = ({ navigation }) => {
+const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
     const insets = useSafeAreaInsets();
     const [selectedHour, setSelectedHour] = useState(11);
     const [selectedMinute, setSelectedMinute] = useState(30);
     const [selectedPeriod, setSelectedPeriod] = useState('AM');
-    const [selectedDays, setSelectedDays] = useState([]);
+    const [selectedDays, setSelectedDays] = useState<number[]>([]);
 
     const hours = Array.from({ length: 12 }, (_, i) => i + 1);
     const minutes = Array.from({ length: 60 }, (_, i) => i);
@@ -42,7 +43,7 @@ const Reminders = ({ navigation }) => {
         { id: 6, label: 'S', full: 'Saturday' },
     ];
 
-    const toggleDay = dayId => {
+    const toggleDay = (dayId: number) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         if (selectedDays.includes(dayId)) {
             setSelectedDays(selectedDays.filter(id => id !== dayId));
@@ -83,6 +84,7 @@ const Reminders = ({ navigation }) => {
                         sound: true,
                     },
                     trigger: {
+                        type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
                         hour: hour24,
                         minute: selectedMinute,
                         weekday: dayId + 1, // 0+1 = 1 (Sunday), etc.
@@ -105,17 +107,17 @@ const Reminders = ({ navigation }) => {
         }
 
         // Navigate to Home screen
-        navigation.navigate('Home');
+        navigation.navigate('Home', {});
     };
 
     const handleNoThanks = () => {
         // Skip reminder setup
 
         // Navigate to Home screen
-        navigation.navigate('Home');
+        navigation.navigate('Home', {});
     };
 
-    const renderPickerItem = (value, isSelected, onPress) => (
+    const renderPickerItem = (value: number | string, isSelected: boolean, onPress: () => void) => (
         <TouchableOpacity key={value} onPress={onPress} style={styles.pickerItem}>
             <Text style={[styles.pickerItemText, isSelected && styles.pickerItemTextSelected]}>
                 {typeof value === 'number' ? value.toString().padStart(2, '0') : value}

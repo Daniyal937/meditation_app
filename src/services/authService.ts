@@ -86,9 +86,9 @@ export const signInWithEmail = async (
         return {
             success: true,
             user: {
-                uid: user.uid,
-                email: user.email || email,
                 ...userProfile,
+                uid: user.uid,
+                email: (user.email || email) as string,
             },
         };
     } catch (error: any) {
@@ -159,6 +159,7 @@ export const createUserProfile = async (
                 stats: {
                     totalMinutes: 0,
                     streakDays: 0,
+                    dailyStreak: 0,
                     coursesCompleted: 0,
                 },
             },

@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from 'reac
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { wp, hp, fs, spacing } from '../utils/responsive';
+import { ScreenProps } from '../types';
 
-const SignUpAndSignIn = ({ navigation }) => {
+const SignUpAndSignIn = ({ navigation }: ScreenProps<'SignUp'>) => {
     const insets = useSafeAreaInsets();
     const handleSignUp = () => {
         // Navigate to sign up form or handle sign up logic

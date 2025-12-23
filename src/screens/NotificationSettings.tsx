@@ -12,8 +12,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { OneSignal } from 'react-native-onesignal';
+import { ScreenProps } from '../types';
 
-const NotificationSettings = ({ navigation }) => {
+const NotificationSettings = ({ navigation }: ScreenProps<'NotificationSettings'>) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
     const [newCourse, setNewCourse] = useState(true);
@@ -21,7 +22,11 @@ const NotificationSettings = ({ navigation }) => {
     const [systemNotifications, setSystemNotifications] = useState(true);
     const [participateSurvey, setParticipateSurvey] = useState(false);
     const [newTips, setNewTips] = useState(false);
-    const updateNotificationPreference = (id, value, setter) => {
+    const updateNotificationPreference = (
+        id: string,
+        value: boolean,
+        setter: (value: boolean) => void
+    ) => {
         setter(value);
         try {
             if (id === 'systemNotifications') {
@@ -45,34 +50,34 @@ const NotificationSettings = ({ navigation }) => {
             id: 'newCourse',
             title: "There's a New Meditation Course",
             value: newCourse,
-            onValueChange: val => updateNotificationPreference('newCourse', val, setNewCourse),
+            onValueChange: (val: boolean) => updateNotificationPreference('newCourse', val, setNewCourse),
         },
         {
             id: 'downloadAudios',
             title: 'Downloads Meditation Audios',
             value: downloadAudios,
-            onValueChange: val =>
+            onValueChange: (val: boolean) =>
                 updateNotificationPreference('downloadAudios', val, setDownloadAudios),
         },
         {
             id: 'systemNotifications',
             title: 'Enable App system Notifications',
             value: systemNotifications,
-            onValueChange: val =>
+            onValueChange: (val: boolean) =>
                 updateNotificationPreference('systemNotifications', val, setSystemNotifications),
         },
         {
             id: 'participateSurvey',
             title: 'Participate in Survey',
             value: participateSurvey,
-            onValueChange: val =>
+            onValueChange: (val: boolean) =>
                 updateNotificationPreference('participateSurvey', val, setParticipateSurvey),
         },
         {
             id: 'newTips',
             title: 'New Tips & Services Available',
             value: newTips,
-            onValueChange: val => updateNotificationPreference('newTips', val, setNewTips),
+            onValueChange: (val: boolean) => updateNotificationPreference('newTips', val, setNewTips),
         },
     ];
 

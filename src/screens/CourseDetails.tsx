@@ -14,7 +14,7 @@ import { wp, hp, fs, spacing } from '../utils/responsive';
 import { ScreenProps } from '../types';
 import { Session } from '../global';
 
-const CourseDetails: React.FC<ScreenProps<'CourseDetails'>> = ({ navigation, route }) => {
+const CourseDetails = ({ navigation, route }: ScreenProps<'CourseDetails'>) => {
     const [selectedVoice, setSelectedVoice] = useState('MALE');
     const [selectedSession, setSelectedSession] = useState<number | string>(1); // Default to first session
 

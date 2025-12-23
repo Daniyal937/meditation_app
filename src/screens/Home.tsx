@@ -18,10 +18,13 @@ import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 
-const Home = ({ navigation, route }) => {
+import { ScreenProps } from '../types';
+import { RootState } from '../redux/store';
+
+const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
     const { theme } = useTheme();
     const dispatch = useDispatch();
-    const userProfileFromRedux = useSelector(state => state.user.profile);
+    const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const [greeting, setGreeting] = useState('Good Morning');
     const [loading, setLoading] = useState(true);
@@ -54,18 +57,20 @@ const Home = ({ navigation, route }) => {
                             setUserName(userProfile.name);
                             dispatch(setUserProfileAction(userProfile)); // Save to Redux
                         } else {
-                            const emailName = currentUser.email.split('@')[0];
-                            const derivedName =
-                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
-                            setUserName(derivedName);
-                            // Save payload to Redux
-                            dispatch(
-                                setUserProfileAction({
-                                    name: derivedName,
-                                    uid: currentUser.uid,
-                                    email: currentUser.email,
-                                })
-                            );
+                            if (currentUser.email) {
+                                const emailName = currentUser.email.split('@')[0];
+                                const derivedName =
+                                    emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                                setUserName(derivedName);
+                                // Save payload to Redux
+                                dispatch(
+                                    setUserProfileAction({
+                                        name: derivedName,
+                                        uid: currentUser.uid,
+                                        email: currentUser.email,
+                                    })
+                                );
+                            }
                         }
                     }
                 } else {

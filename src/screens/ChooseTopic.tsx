@@ -14,7 +14,7 @@ import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 import { ScreenProps } from '../types';
 import { Topic } from '../global';
 
-const ChooseTopic: React.FC<ScreenProps<'ChooseTopic'>> = ({ navigation }) => {
+const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
     const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
     const insets = useSafeAreaInsets();
 

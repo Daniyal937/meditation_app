@@ -18,7 +18,7 @@ import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { wp, hp, fs } from '../utils/responsive';
 import { ScreenProps } from '../types';
 
-const SignUp: React.FC<ScreenProps<'SignUpForm'>> = ({ navigation }) => {
+const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');

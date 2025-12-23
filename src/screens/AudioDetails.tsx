@@ -11,7 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import type { ScreenProps } from '../types';
 
-const AudioDetails: React.FC<ScreenProps<'AudioDetails'>> = ({ navigation, route }) => {
+const AudioDetails = ({ navigation, route }: ScreenProps<'AudioDetails'>) => {
     // Get session data from route params or use default
     const defaultSession = {
         name: 'Introduction to Mindfulness',

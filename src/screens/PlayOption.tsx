@@ -16,8 +16,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { wp, hp, fs, spacing } from '../utils/responsive';
+import { ScreenProps } from '../types';
 
-const PlayOption = ({ navigation, route }) => {
+const PlayOption = ({ navigation, route }: ScreenProps<'PlayOption'>) => {
     const insets = useSafeAreaInsets();
     const [isFavorite, setIsFavorite] = useState(false);
 
@@ -49,7 +50,7 @@ const PlayOption = ({ navigation, route }) => {
         },
     ];
 
-    const HeaderButton = ({ onPress, iconName }) => (
+    const HeaderButton = ({ onPress, iconName }: { onPress: () => void; iconName: string }) => (
         <Pressable
             onPress={onPress}
             style={({ pressed }) => [
@@ -58,7 +59,7 @@ const PlayOption = ({ navigation, route }) => {
             ]}
         >
             {({ pressed }) => (
-                <Ionicons name={iconName} size={24} color={pressed ? '#000000' : '#FFFFFF'} />
+                <Ionicons name={iconName as any} size={24} color={pressed ? '#000000' : '#FFFFFF'} />
             )}
         </Pressable>
     );
@@ -72,7 +73,7 @@ const PlayOption = ({ navigation, route }) => {
                     onPress={() => setIsFavorite(!isFavorite)}
                     iconName={isFavorite ? 'heart' : 'heart-outline'}
                 />
-                <HeaderButton onPress={() => {}} iconName="download-outline" />
+                <HeaderButton onPress={() => { }} iconName="download-outline" />
             </View>
         </View>
     );
@@ -86,7 +87,7 @@ const PlayOption = ({ navigation, route }) => {
                 <TouchableOpacity
                     style={styles.nightIslandWrapper}
                     activeOpacity={0.9}
-                    onPress={() => navigation.navigate('SleepMusic')}
+                    onPress={() => navigation.navigate('SleepMusic', {})}
                 >
                     <ImageBackground
                         source={contentData.image}
@@ -133,14 +134,9 @@ const PlayOption = ({ navigation, route }) => {
                                 key={item.id}
                                 style={styles.relatedCard}
                                 activeOpacity={0.7}
-                                onPress={() => navigation.navigate('SleepMusic')}
+                                onPress={() => navigation.navigate('SleepMusic', {})}
                             >
-                                <View
-                                    style={[
-                                        styles.relatedImageContainer,
-                                        { backgroundColor: item.color },
-                                    ]}
-                                >
+                                <View style={styles.relatedImageContainer}>
                                     <Image
                                         source={item.image}
                                         style={styles.relatedImage}
@@ -170,7 +166,7 @@ const PlayOption = ({ navigation, route }) => {
                 <TouchableOpacity
                     style={styles.playButton}
                     onPress={() => {
-                        navigation.navigate('SleepMusic');
+                        navigation.navigate('SleepMusic', {});
                     }}
                 >
                     <Text style={styles.playButtonText}>PLAY</Text>

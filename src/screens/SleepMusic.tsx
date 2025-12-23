@@ -17,12 +17,15 @@ import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlic
 import { wp, hp, fs, spacing, getScreenDimensions } from '../utils/responsive';
 import BottomMenu from '../components/BottomMenu';
 
+import { ScreenProps, RootStackParamList } from '../types';
+import { RootState } from '../redux/store';
+
 const { width } = getScreenDimensions();
 const cardWidth = (width - spacing(60)) / 2; // 2 columns with padding
 
-const SleepMusic = ({ navigation, route }) => {
+const SleepMusic = ({ navigation, route }: ScreenProps<'SleepMusic'>) => {
     const dispatch = useDispatch();
-    const userProfileFromRedux = useSelector(state => state.user.profile);
+    const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
 
     useEffect(() => {
@@ -42,17 +45,19 @@ const SleepMusic = ({ navigation, route }) => {
                             setUserName(userProfile.name);
                             dispatch(setUserProfileAction(userProfile));
                         } else {
-                            const emailName = currentUser.email.split('@')[0];
-                            const derivedName =
-                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
-                            setUserName(derivedName);
-                            dispatch(
-                                setUserProfileAction({
-                                    name: derivedName,
-                                    uid: currentUser.uid,
-                                    email: currentUser.email,
-                                })
-                            );
+                            if (currentUser.email) {
+                                const emailName = currentUser.email.split('@')[0];
+                                const derivedName =
+                                    emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                                setUserName(derivedName);
+                                dispatch(
+                                    setUserProfileAction({
+                                        name: derivedName,
+                                        uid: currentUser.uid,
+                                        email: currentUser.email,
+                                    })
+                                );
+                            }
                         }
                     }
                 } else {

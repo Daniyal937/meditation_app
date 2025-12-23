@@ -21,11 +21,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction, clearUserData } from '../redux/slices/userSlice';
 import BottomMenu from '../components/BottomMenu';
 import { wp, hp, fs, spacing } from '../utils/responsive'; // Import responsive utilities
+import { ScreenProps } from '../types';
+import { RootState } from '../redux/store';
 
-const Profile = ({ navigation }) => {
+const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
     const { theme, isDarkMode, toggleTheme } = useTheme();
     const dispatch = useDispatch();
-    const userProfileFromRedux = useSelector(state => state.user.profile);
+    const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
 
     // Use Redux state or local defaults
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
@@ -40,7 +42,7 @@ const Profile = ({ navigation }) => {
                 const currentUser = auth.currentUser;
                 if (currentUser) {
                     // Update email if invalid/missing
-                    if (!userEmail) {
+                    if (!userEmail && currentUser.email) {
                         setUserEmail(currentUser.email);
                     }
 
@@ -61,16 +63,18 @@ const Profile = ({ navigation }) => {
                             setUserProfileAction({ ...userProfile, email: currentUser.email })
                         );
                     } else {
-                        const emailName = currentUser.email.split('@')[0];
-                        const derivedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
-                        setUserName(derivedName);
-                        dispatch(
-                            setUserProfileAction({
-                                name: derivedName,
-                                uid: currentUser.uid,
-                                email: currentUser.email,
-                            })
-                        );
+                        if (currentUser.email) {
+                            const emailName = currentUser.email.split('@')[0];
+                            const derivedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                            setUserName(derivedName);
+                            dispatch(
+                                setUserProfileAction({
+                                    name: derivedName,
+                                    uid: currentUser.uid,
+                                    email: currentUser.email,
+                                })
+                            );
+                        }
                     }
                 }
             } catch (error) {
@@ -95,7 +99,9 @@ const Profile = ({ navigation }) => {
             const newImage = result.assets[0].uri;
             setProfileImage(newImage);
             // Sync with Redux immediately so other screens update
-            dispatch(setUserProfileAction({ ...userProfileFromRedux, profileImage: newImage }));
+            if (userProfileFromRedux) {
+                dispatch(setUserProfileAction({ ...userProfileFromRedux, profileImage: newImage }));
+            }
         }
     };
 

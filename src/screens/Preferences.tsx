@@ -11,8 +11,9 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
+import { ScreenProps } from '../types';
 
-const Preferences = ({ navigation }) => {
+const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
     const [downloadWifiOnly, setDownloadWifiOnly] = useState(false);
@@ -80,7 +81,7 @@ const Preferences = ({ navigation }) => {
                                 },
                             ]}
                             activeOpacity={0.7}
-                            onPress={() => {}} // TODO: Implement Clear Cache
+                            onPress={() => { }} // TODO: Implement Clear Cache
                         >
                             <Text style={[styles.optionText, { color: theme.colors.text }]}>
                                 Clear Cache
@@ -103,7 +104,7 @@ const Preferences = ({ navigation }) => {
                         <TouchableOpacity
                             style={[styles.optionRow, { backgroundColor: theme.colors.card }]}
                             activeOpacity={0.7}
-                            onPress={() => {}} // TODO: Implement Audio Quality
+                            onPress={() => { }} // TODO: Implement Audio Quality
                         >
                             <Text style={[styles.optionText, { color: theme.colors.text }]}>
                                 Audio Quality

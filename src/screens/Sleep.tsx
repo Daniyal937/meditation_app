@@ -10,19 +10,34 @@ import {
     Image,
     ImageBackground,
     useWindowDimensions,
-    SafeAreaView,
     Platform,
     Pressable,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { useTheme } from '../context/ThemeContext';
 import { auth } from '../config/firebaseConfig';
 import { getUserProfile } from '../services/authService';
-import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
-import BottomMenu from '../components/BottomMenu';
+import { RootState } from '../redux/store';
+import { ScreenProps } from '../types';
 import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
+import BottomMenu from '../components/BottomMenu';
+
+interface Category {
+    id: string;
+    name: string;
+    image: any;
+}
+
+interface CategoryButtonProps {
+    category: Category;
+    isActive: boolean;
+    onPress: () => void;
+    style?: any;
+}
 
 const categories = [
     { id: 'all', name: 'All', image: require('../../assets/images/sleep_cat_all.png') },
@@ -68,7 +83,7 @@ const sleepContent = [
 ];
 
 // Animation component for category buttons
-const CategoryButton = ({ category, isActive, onPress, style }) => (
+const CategoryButton: React.FC<CategoryButtonProps> = ({ category, isActive, onPress, style }) => (
     <Pressable
         onPress={onPress}
         style={({ pressed }) => [
@@ -84,14 +99,14 @@ const CategoryButton = ({ category, isActive, onPress, style }) => (
     </Pressable>
 );
 
-const Sleep = ({ navigation, route }) => {
+const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
     const insets = useSafeAreaInsets();
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
     const numColumns = isTablet() ? 3 : 2;
     const cardWidth = (width - spacing(40) - (numColumns - 1) * spacing(15)) / numColumns;
     const dispatch = useDispatch();
-    const userProfileFromRedux = useSelector(state => state.user.profile);
+    const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const [activeCategory, setActiveCategory] = useState('All');
 
@@ -113,17 +128,19 @@ const Sleep = ({ navigation, route }) => {
                             setUserName(profile.name);
                             dispatch(setUserProfileAction(profile));
                         } else {
-                            const emailName = currentUser.email.split('@')[0];
-                            const derivedName =
-                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
-                            setUserName(derivedName);
-                            dispatch(
-                                setUserProfileAction({
-                                    name: derivedName,
-                                    uid: currentUser.uid,
-                                    email: currentUser.email,
-                                })
-                            );
+                            if (currentUser.email) {
+                                const emailName = currentUser.email.split('@')[0];
+                                const derivedName =
+                                    emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                                setUserName(derivedName);
+                                dispatch(
+                                    setUserProfileAction({
+                                        name: derivedName,
+                                        uid: currentUser.uid,
+                                        email: currentUser.email,
+                                    })
+                                );
+                            }
                         }
                     }
                 }
@@ -133,7 +150,7 @@ const Sleep = ({ navigation, route }) => {
         };
 
         fetchUserData();
-    }, [route, userProfileFromRedux]);
+    }, [route, userProfileFromRedux, dispatch]);
 
     useFocusEffect(useCallback(() => { }, []));
 
@@ -227,7 +244,7 @@ const Sleep = ({ navigation, route }) => {
                         <TouchableOpacity
                             key={item.id}
                             style={[styles.gridCard, { width: cardWidth }]}
-                            onPress={() => navigation.navigate('SleepMusic')}
+                            onPress={() => navigation.navigate('SleepMusic', {})}
                         >
                             <View
                                 style={[
@@ -251,16 +268,14 @@ const Sleep = ({ navigation, route }) => {
                     ))}
                 </View>
             </ScrollView>
-        </ScrollView>
-            {/* </SafeAreaView> - Removed to allow full screen header */ }
+            {/* </SafeAreaView> - Removed to allow full screen header */}
 
-    <BottomMenu
-        navigation={navigation}
-        activeTab="Sleep"
-        userName={userName}
-        backgroundColor="#03174C"
-    />
-        </View >
+            <BottomMenu
+                navigation={navigation}
+                activeTab="Sleep"
+                userName={userName}
+            />
+        </View>
     );
 };
 

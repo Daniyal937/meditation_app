@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     View,
     Text,
@@ -12,8 +13,9 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { wp, hp, fs, spacing } from '../utils/responsive';
+import { ScreenProps } from '../types';
 
-const SleepStart = ({ navigation }) => {
+const SleepStart = ({ navigation }: ScreenProps<'SleepStart'>) => {
     const { width, height } = useWindowDimensions();
     const insets = useSafeAreaInsets();
     return (
@@ -58,7 +60,7 @@ const SleepStart = ({ navigation }) => {
                         activeOpacity={0.8}
                         onPress={async () => {
                             await AsyncStorage.setItem('hasSeenSleepStart', 'true');
-                            navigation.navigate('Sleep');
+                            navigation.navigate('Sleep', {});
                         }}
                     >
                         <Text style={styles.getStartedText}>GET STARTED</Text>

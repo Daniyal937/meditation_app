@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { wp, hp, fs, spacing } from '../utils/responsive'; // Import responsive utilities
+import { ScreenProps } from '../types';
 
-const Welcome = ({ navigation, route }) => {
+const Welcome = ({ navigation, route }: ScreenProps<'Welcome'>) => {
     // Get user name from route params or use default
     const userName = route?.params?.userName || 'Afsar';
 

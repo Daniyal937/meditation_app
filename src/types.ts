@@ -9,13 +9,21 @@ export type RootStackParamList = {
     SignUp: undefined;
     SignUpForm: undefined;
     Login: undefined;
-    Welcome: undefined;
+    Welcome: { userName?: string };
     ChooseTopic: undefined;
     Reminders: { selectedTopic?: string; topicId?: number };
-    Home: undefined;
-    CourseDetails: { courseId?: string; title?: string };
-    MeditateV2: undefined;
-    MeditationSessions: { activeTab?: string };
+    Home: { userName?: string };
+    CourseDetails: { courseId?: string; title?: string; session?: any };
+    MeditateV2: { userName?: string };
+    MeditationSessions: {
+        activeTab?: string;
+        userName?: string;
+        category?: {
+            title: string;
+            subtitle: string;
+            color: string;
+        };
+    };
     AudioDetails: { sessionId?: string };
     AudioDetails2: {
         session?: any;
@@ -26,9 +34,19 @@ export type RootStackParamList = {
         audioFile?: any;
     };
     SleepStart: undefined;
-    Sleep: undefined;
-    PlayOption: undefined;
-    SleepMusic: { category?: string };
+    Sleep: { userName?: string };
+    PlayOption: {
+        content: {
+            title: string;
+            duration: string;
+            type: string;
+            description: string;
+            favoriteCount: string;
+            listeningCount: string;
+            image: any;
+        };
+    };
+    SleepMusic: { category?: string; userName?: string };
     Settings: undefined;
     Profile: undefined;
     EditProfile: undefined;
@@ -49,6 +67,12 @@ export type RoutePropType<T extends keyof RootStackParamList> = RouteProp<
     T
 >;
 
+// Screen props type for components - compatible with React Navigation
+export type ScreenProps<T extends keyof RootStackParamList> = {
+    navigation: NavigationProp<T>;
+    route: RoutePropType<T>;
+};
+
 // ============================================
 // User & Authentication Types
 // ============================================
@@ -62,7 +86,7 @@ export interface User {
 export interface UserProfile {
     uid?: string;
     name: string;
-    email: string;
+    email?: string | null;
     profileImage?: string | null;
     phoneNumber?: string;
     dateOfBirth?: string;
@@ -168,11 +192,6 @@ export interface BottomMenuProps {
     activeTab: string;
     userName?: string;
     backgroundColor?: string;
-}
-
-export interface ScreenProps<T extends keyof RootStackParamList = any> {
-    navigation: NavigationProp<T>;
-    route: RoutePropType<T>;
 }
 
 // ============================================

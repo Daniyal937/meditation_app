@@ -16,8 +16,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { wp, hp, fs } from '../utils/responsive';
+import { ScreenProps } from '../types';
 
-const SignIn = ({ navigation }) => {
+const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -83,7 +84,7 @@ const SignIn = ({ navigation }) => {
             if (result.success) {
                 // Navigate based on whether user has seen welcome screen
                 if (result.user.hasSeenWelcome) {
-                    navigation.replace('Home');
+                    navigation.replace('Home', {});
                 } else {
                     const userName = result.user.name || 'User';
 

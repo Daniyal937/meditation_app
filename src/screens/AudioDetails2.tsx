@@ -22,7 +22,7 @@ import BottomMenu from '../components/BottomMenu';
 import { ScreenProps } from '../types';
 import { Session, Sound as SoundType, AudioStatus } from '../global';
 
-const AudioDetails2: React.FC<ScreenProps<'AudioDetails2'>> = ({ navigation, route }) => {
+const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
     // Session data (passed from previous screen or default)
@@ -52,62 +52,13 @@ const AudioDetails2: React.FC<ScreenProps<'AudioDetails2'>> = ({ navigation, rou
         statusRef.current = status;
     }, [status]);
 
-    const panResponder = useRef(
-        PanResponder.create({
-            onStartShouldSetPanResponder: () => true,
-            onMoveShouldSetPanResponder: () => true,
-            onPanResponderGrant: () => {
-                setIsSeeking(true);
-                setSeekPosition(statusRef.current.position);
-            },
-            onPanResponderMove: (evt, gestureState) => {
-                if (barWidth.current > 0) {
-                    const currentPos = statusRef.current.position;
-                    const duration = statusRef.current.duration;
-                    const diff = (gestureState.dx / barWidth.current) * duration;
-                    const newPos = Math.min(Math.max(0, currentPos + diff), duration);
-                    setSeekPosition(newPos);
-                }
-            },
-            onPanResponderRelease: async (evt, gestureState) => {
-                if (barWidth.current > 0) {
-                    const currentPos = statusRef.current.position;
-                    const duration = statusRef.current.duration;
-                    const diff = (gestureState.dx / barWidth.current) * duration;
-                    const newPos = Math.min(Math.max(0, currentPos + diff), duration);
 
-                    if (sound) {
-                        // Check if sound is available in closure? sound state might be stale.
-                        // Ideally we should ref sound too, but usually PanResponder closes over scope.
-                        // Let's rely on sound state or better, pass it?
-                        // Can't pass arguments to this.
-                        // Let's use soundRef.
-                    }
-                    // Actually, let's just use the state update to trigger seek in useEffect? No.
-                    // Let's use a ref for sound.
-                }
-                setIsSeeking(false);
-            },
-        })
-    ).current;
 
     // We need a ref for sound because PanResponder closure might capture old null sound
     const soundRef = useRef<Audio.Sound | undefined>(sound);
     useEffect(() => {
         soundRef.current = sound;
     }, [sound]);
-
-    // Update PanResponder Release to use soundRef
-    panResponder.panHandlers.onResponderRelease = async (evt: GestureResponderEvent, gestureState: any): Promise<void> => {
-        if (barWidth.current > 0) {
-            // We recalculate final pos to be safe, or just use seekPosition state?
-            // Using gestureState.dx is relative to the grant point.
-            const currentPos = statusRef.current.position; // Position at grant? No, statusRef updates.
-            // Wait, logic flaw: currentPos in onPanResponderMove using statusRef.current.position means relative to NOW.
-            // But if audio is playing, statusRef updates! This makes dragging jumping.
-            // FIX: We must capture the start position at GRANT.
-        }
-    };
 
     // CORRECTED PANRESPONDER LOGIC:
     const startPositionRef = useRef(0);
@@ -152,7 +103,7 @@ const AudioDetails2: React.FC<ScreenProps<'AudioDetails2'>> = ({ navigation, rou
     const formatTime = (millis: number): string => {
         if (!millis) return '0:00';
         const minutes = Math.floor(millis / 60000);
-        const seconds = ((millis % 60000) / 1000).toFixed(0);
+        const seconds = Math.floor((millis % 60000) / 1000);
         return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
     };
 
@@ -717,6 +668,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: spacing(15),
         alignItems: 'center',
+    },
+    section: {
+        marginTop: hp(30),
+        paddingHorizontal: spacing(20),
+    },
+    sectionHeaderRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: hp(15),
+    },
+    tryExerciseHeader: {
+        fontSize: fs(24),
+        fontWeight: '700',
+        color: '#3F414E',
     },
 });
 

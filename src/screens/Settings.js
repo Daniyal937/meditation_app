@@ -44,7 +44,10 @@ const Settings = ({ navigation }) => {
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+            <StatusBar
+                barStyle={theme.colors.statusBar}
+                backgroundColor={theme.colors.background}
+            />
 
             {/* Header */}
             <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
@@ -70,16 +73,34 @@ const Settings = ({ navigation }) => {
                         APPEARANCE
                     </Text>
 
-                    <View style={[styles.settingItem, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+                    <View
+                        style={[
+                            styles.settingItem,
+                            {
+                                backgroundColor: theme.colors.card,
+                                borderColor: theme.colors.border,
+                            },
+                        ]}
+                    >
                         <View style={styles.settingLeft}>
-                            <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
+                            <View
+                                style={[
+                                    styles.iconContainer,
+                                    { backgroundColor: theme.colors.primary + '20' },
+                                ]}
+                            >
                                 <Ionicons name="moon" size={22} color={theme.colors.primary} />
                             </View>
                             <View style={styles.settingTextContainer}>
                                 <Text style={[styles.settingTitle, { color: theme.colors.text }]}>
                                     Dark Mode
                                 </Text>
-                                <Text style={[styles.settingSubtitle, { color: theme.colors.textSecondary }]}>
+                                <Text
+                                    style={[
+                                        styles.settingSubtitle,
+                                        { color: theme.colors.textSecondary },
+                                    ]}
+                                >
                                     {isDarkMode ? 'Enabled' : 'Disabled'}
                                 </Text>
                             </View>
@@ -109,20 +130,33 @@ const Settings = ({ navigation }) => {
                                     backgroundColor: theme.colors.card,
                                     borderColor: theme.colors.border,
                                     marginBottom: index === settingsOptions.length - 1 ? 0 : 12,
-                                }
+                                },
                             ]}
                             onPress={option.onPress}
                             activeOpacity={0.7}
                         >
                             <View style={styles.settingLeft}>
-                                <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
-                                    <Ionicons name={option.icon} size={22} color={theme.colors.primary} />
+                                <View
+                                    style={[
+                                        styles.iconContainer,
+                                        { backgroundColor: theme.colors.primary + '20' },
+                                    ]}
+                                >
+                                    <Ionicons
+                                        name={option.icon}
+                                        size={22}
+                                        color={theme.colors.primary}
+                                    />
                                 </View>
                                 <Text style={[styles.settingTitle, { color: theme.colors.text }]}>
                                     {option.title}
                                 </Text>
                             </View>
-                            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
+                            <Ionicons
+                                name="chevron-forward"
+                                size={20}
+                                color={theme.colors.textSecondary}
+                            />
                         </TouchableOpacity>
                     ))}
                 </View>
@@ -133,16 +167,38 @@ const Settings = ({ navigation }) => {
                         ABOUT
                     </Text>
 
-                    <View style={[styles.settingItem, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+                    <View
+                        style={[
+                            styles.settingItem,
+                            {
+                                backgroundColor: theme.colors.card,
+                                borderColor: theme.colors.border,
+                            },
+                        ]}
+                    >
                         <View style={styles.settingLeft}>
-                            <View style={[styles.iconContainer, { backgroundColor: theme.colors.primary + '20' }]}>
-                                <Ionicons name="information-circle-outline" size={22} color={theme.colors.primary} />
+                            <View
+                                style={[
+                                    styles.iconContainer,
+                                    { backgroundColor: theme.colors.primary + '20' },
+                                ]}
+                            >
+                                <Ionicons
+                                    name="information-circle-outline"
+                                    size={22}
+                                    color={theme.colors.primary}
+                                />
                             </View>
                             <View style={styles.settingTextContainer}>
                                 <Text style={[styles.settingTitle, { color: theme.colors.text }]}>
                                     Version
                                 </Text>
-                                <Text style={[styles.settingSubtitle, { color: theme.colors.textSecondary }]}>
+                                <Text
+                                    style={[
+                                        styles.settingSubtitle,
+                                        { color: theme.colors.textSecondary },
+                                    ]}
+                                >
                                     1.0.0
                                 </Text>
                             </View>
@@ -164,9 +220,7 @@ const Settings = ({ navigation }) => {
                     }}
                 >
                     <Ionicons name="log-out-outline" size={22} color={theme.colors.error} />
-                    <Text style={[styles.logoutText, { color: theme.colors.error }]}>
-                        Log Out
-                    </Text>
+                    <Text style={[styles.logoutText, { color: theme.colors.error }]}>Log Out</Text>
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>

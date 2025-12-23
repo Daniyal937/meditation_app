@@ -5,26 +5,37 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
-    StatusBar,
+    Image,
     TextInput,
     Alert,
+    StatusBar,
+    Platform,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '../context/ThemeContext';
 import { auth } from '../config/firebaseConfig';
 import { getUserProfile, updateUserProfile } from '../services/authService';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 
 const EditProfile = ({ navigation }) => {
     const { theme } = useTheme();
-    const [fullName, setFullName] = useState('');
+    const dispatch = useDispatch();
+    const userProfileFromRedux = useSelector(state => state.user.profile);
+    const insets = useSafeAreaInsets();
+    const [fullName, setFullName] = useState(userProfileFromRedux?.name || '');
     const [email, setEmail] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [dateOfBirth, setDateOfBirth] = useState('');
-    const [streetAddress, setStreetAddress] = useState('');
-    const [country, setCountry] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState(userProfileFromRedux?.phoneNumber || '');
+    const [dateOfBirth, setDateOfBirth] = useState(userProfileFromRedux?.dateOfBirth || '');
+    const [streetAddress, setStreetAddress] = useState(userProfileFromRedux?.streetAddress || '');
+    const [country, setCountry] = useState(userProfileFromRedux?.country || '');
+    const [profileImage, setProfileImage] = useState(userProfileFromRedux?.profileImage || null);
     const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -40,6 +51,7 @@ const EditProfile = ({ navigation }) => {
                         setDateOfBirth(userProfile.dateOfBirth || '');
                         setStreetAddress(userProfile.streetAddress || '');
                         setCountry(userProfile.country || '');
+                        setProfileImage(userProfile.profileImage || null);
                     }
                 }
             } catch (error) {
@@ -49,6 +61,32 @@ const EditProfile = ({ navigation }) => {
 
         fetchUserData();
     }, []);
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setProfileImage(result.assets[0].uri);
+            setSaved(false); // Enable save button when image changes
+        }
+    };
+
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || new Date();
+        setShowDatePicker(Platform.OS === 'ios');
+
+        // Format date to dd/mm/yyyy
+        const day = currentDate.getDate().toString().padStart(2, '0');
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const year = currentDate.getFullYear();
+        setDateOfBirth(`${day}/${month}/${year}`);
+        setSaved(false); // Enable save when date changes
+    };
 
     const handleSave = async () => {
         if (!fullName.trim()) {
@@ -60,13 +98,21 @@ const EditProfile = ({ navigation }) => {
         try {
             const currentUser = auth.currentUser;
             if (currentUser) {
-                await updateUserProfile(currentUser.uid, {
+                const updatedProfile = {
                     name: fullName,
                     phoneNumber,
                     dateOfBirth,
                     streetAddress,
                     country,
-                });
+                    profileImage,
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                };
+
+                await updateUserProfile(currentUser.uid, updatedProfile);
+
+                // Update Redux state immediately
+                dispatch(setUserProfileAction(updatedProfile));
 
                 setSaved(true);
                 Alert.alert('Success', 'Profile updated successfully');
@@ -80,143 +126,223 @@ const EditProfile = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+            <View style={{ flex: 1, paddingTop: insets.top }}>
+                <StatusBar
+                    barStyle={theme.colors.statusBar}
+                    backgroundColor={theme.colors.background}
+                />
 
-            {/* Header */}
-            <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-                <TouchableOpacity
-                    style={styles.backButton}
-                    onPress={() => navigation.goBack()}
-                    activeOpacity={0.7}
-                >
-                    <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
-                </TouchableOpacity>
-                <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Personal Info</Text>
-                <TouchableOpacity
-                    style={styles.editButton}
-                    onPress={() => setSaved(false)}
-                    activeOpacity={0.7}
-                >
-                    <Ionicons name="pencil-outline" size={20} color={theme.colors.text} />
-                </TouchableOpacity>
-            </View>
-
-            <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
-                showsVerticalScrollIndicator={false}
-            >
-                {/* Profile Picture */}
-                <View style={styles.profilePictureContainer}>
-                    <View style={[styles.profilePicture, { backgroundColor: theme.colors.primary }]}>
-                        <Text style={styles.profileInitial}>
-                            {fullName.charAt(0).toUpperCase() || 'U'}
-                        </Text>
-                    </View>
+                {/* Header */}
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        style={styles.backButton}
+                        onPress={() => navigation.goBack()}
+                        activeOpacity={0.7}
+                    >
+                        <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
+                    </TouchableOpacity>
+                    <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
+                        Personal Info
+                    </Text>
+                    <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={() => setSaved(false)}
+                        activeOpacity={0.7}
+                    >
+                        <Image
+                            source={require('../../assets/images/edit_icon.png')}
+                            style={{ width: 20, height: 20, tintColor: theme.colors.text }}
+                            resizeMode="contain"
+                        />
+                    </TouchableOpacity>
                 </View>
 
-                {/* Form Fields */}
-                <View style={styles.formContainer}>
-                    {/* Full Name */}
-                    <View style={styles.inputGroup}>
-                        <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Full Name</Text>
-                        <TextInput
-                            style={[styles.input, { color: theme.colors.text, borderBottomColor: theme.colors.border }]}
-                            value={fullName}
-                            onChangeText={setFullName}
-                            placeholder="Enter your full name"
-                            placeholderTextColor={theme.colors.textSecondary}
-                            editable={!saved}
-                        />
+                <ScrollView
+                    style={styles.scrollView}
+                    contentContainerStyle={[
+                        styles.scrollContent,
+                        { paddingBottom: insets.bottom + 20 },
+                    ]}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {/* Profile Picture */}
+                    <View
+                        style={[
+                            styles.profilePictureContainer,
+                            { borderBottomColor: theme.colors.border },
+                        ]}
+                    >
+                        <TouchableOpacity
+                            style={[
+                                styles.profilePicture,
+                                { backgroundColor: theme.colors.primary },
+                            ]}
+                            onPress={pickImage}
+                            disabled={saved}
+                            activeOpacity={0.8}
+                        >
+                            {profileImage ? (
+                                <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                            ) : (
+                                <Text style={styles.profileInitial}>
+                                    {fullName.charAt(0).toUpperCase() || 'U'}
+                                </Text>
+                            )}
+                            <View
+                                style={[styles.editBadge, { backgroundColor: theme.colors.accent }]}
+                            >
+                                <Ionicons name="camera" size={16} color="#FFFFFF" />
+                            </View>
+                        </TouchableOpacity>
                     </View>
 
-                    {/* Email */}
-                    <View style={styles.inputGroup}>
-                        <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Email</Text>
-                        <TextInput
-                            style={[styles.input, { color: theme.colors.text, borderBottomColor: theme.colors.border }]}
-                            value={email}
-                            editable={false}
-                            placeholder="Email address"
-                            placeholderTextColor={theme.colors.textSecondary}
-                            keyboardType="email-address"
-                        />
-                    </View>
-
-                    {/* Phone Number */}
-                    <View style={styles.inputGroup}>
-                        <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Phone Number</Text>
-                        <TextInput
-                            style={[styles.input, { color: theme.colors.text, borderBottomColor: theme.colors.border }]}
-                            value={phoneNumber}
-                            onChangeText={setPhoneNumber}
-                            placeholder="+1-000-000-0000"
-                            placeholderTextColor={theme.colors.textSecondary}
-                            keyboardType="phone-pad"
-                            editable={!saved}
-                        />
-                    </View>
-
-                    {/* Date of Birth */}
-                    <View style={styles.inputGroup}>
-                        <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Date of Birth</Text>
-                        <View style={styles.inputWithIcon}>
+                    {/* Form Fields */}
+                    <View style={styles.formContainer}>
+                        {/* Full Name */}
+                        <View style={styles.inputGroup}>
+                            <Text style={[styles.label, { color: '#000000' }]}>Full Name</Text>
                             <TextInput
-                                style={[styles.input, { color: theme.colors.text, borderBottomColor: theme.colors.border, flex: 1 }]}
-                                value={dateOfBirth}
-                                onChangeText={setDateOfBirth}
-                                placeholder="dd/mm/yyyy"
+                                style={[
+                                    styles.input,
+                                    { color: theme.colors.text, borderBottomColor: '#000000' },
+                                ]}
+                                value={fullName}
+                                onChangeText={setFullName}
+                                placeholder="Enter your full name"
                                 placeholderTextColor={theme.colors.textSecondary}
                                 editable={!saved}
                             />
-                            <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} style={styles.calendarIcon} />
                         </View>
+
+                        {/* Email */}
+                        <View style={styles.inputGroup}>
+                            <Text style={[styles.label, { color: '#000000' }]}>Email</Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    { color: theme.colors.text, borderBottomColor: '#000000' },
+                                ]}
+                                value={email}
+                                editable={false}
+                                placeholder="Email address"
+                                placeholderTextColor={theme.colors.textSecondary}
+                                keyboardType="email-address"
+                            />
+                        </View>
+
+                        {/* Phone Number */}
+                        <View style={styles.inputGroup}>
+                            <Text style={[styles.label, { color: '#000000' }]}>Phone Number</Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    { color: theme.colors.text, borderBottomColor: '#000000' },
+                                ]}
+                                value={phoneNumber}
+                                onChangeText={setPhoneNumber}
+                                placeholder="+1-000-000-0000"
+                                placeholderTextColor={theme.colors.textSecondary}
+                                keyboardType="phone-pad"
+                                editable={!saved}
+                            />
+                        </View>
+
+                        {/* Date of Birth */}
+                        <View style={styles.inputGroup}>
+                            <Text style={[styles.label, { color: '#000000' }]}>Date of Birth</Text>
+                            <TouchableOpacity
+                                style={styles.inputWithIcon}
+                                onPress={() => !saved && setShowDatePicker(true)}
+                                activeOpacity={0.7}
+                            >
+                                <TextInput
+                                    style={[
+                                        styles.input,
+                                        {
+                                            color: theme.colors.text,
+                                            borderBottomColor: '#000000',
+                                            flex: 1,
+                                        },
+                                    ]}
+                                    value={dateOfBirth}
+                                    placeholder="dd/mm/yyyy"
+                                    placeholderTextColor={theme.colors.textSecondary}
+                                    editable={false}
+                                    pointerEvents="none" // Ensure touch passes to parent TouchableOpacity
+                                />
+                                <Ionicons
+                                    name="calendar-outline"
+                                    size={20}
+                                    color={'#000000'}
+                                    style={styles.calendarIcon}
+                                />
+                            </TouchableOpacity>
+                        </View>
+
+                        {showDatePicker && (
+                            <DateTimePicker
+                                value={new Date()}
+                                mode="date"
+                                display="default"
+                                onChange={onChangeDate}
+                                maximumDate={new Date()}
+                            />
+                        )}
+
+                        {/* Street Address */}
+                        <View style={styles.inputGroup}>
+                            <Text style={[styles.label, { color: '#000000' }]}>Street Address</Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    { color: theme.colors.text, borderBottomColor: '#000000' },
+                                ]}
+                                value={streetAddress}
+                                onChangeText={setStreetAddress}
+                                placeholderTextColor={theme.colors.textSecondary}
+                                editable={!saved}
+                            />
+                        </View>
+
+                        {/* Country */}
+                        <View style={styles.inputGroup}>
+                            <Text style={[styles.label, { color: '#000000' }]}>Country</Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    { color: theme.colors.text, borderBottomColor: '#000000' },
+                                ]}
+                                value={country}
+                                onChangeText={setCountry}
+                                placeholderTextColor={theme.colors.textSecondary}
+                                editable={!saved}
+                            />
+                        </View>
+
+                        {/* Save Button */}
+                        {!saved && (
+                            <TouchableOpacity
+                                style={[
+                                    styles.saveButton,
+                                    { backgroundColor: theme.colors.primary },
+                                ]}
+                                onPress={handleSave}
+                                disabled={loading}
+                                activeOpacity={0.8}
+                            >
+                                <Text style={styles.saveButtonText}>
+                                    {loading ? 'SAVING...' : 'SAVE'}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
 
-                    {/* Street Address */}
-                    <View style={styles.inputGroup}>
-                        <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Street Address</Text>
-                        <TextInput
-                            style={[styles.input, { color: theme.colors.text, borderBottomColor: theme.colors.border }]}
-                            value={streetAddress}
-                            onChangeText={setStreetAddress}
-                            placeholderTextColor={theme.colors.textSecondary}
-                            editable={!saved}
-                        />
-                    </View>
-
-                    {/* Country */}
-                    <View style={styles.inputGroup}>
-                        <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Country</Text>
-                        <TextInput
-                            style={[styles.input, { color: theme.colors.text, borderBottomColor: theme.colors.border }]}
-                            value={country}
-                            onChangeText={setCountry}
-                            placeholderTextColor={theme.colors.textSecondary}
-                            editable={!saved}
-                        />
-                    </View>
-
-                    {/* Save Button */}
-                    {!saved && (
-                        <TouchableOpacity
-                            style={[styles.saveButton, { backgroundColor: theme.colors.primary }]}
-                            onPress={handleSave}
-                            disabled={loading}
-                            activeOpacity={0.8}
-                        >
-                            <Text style={styles.saveButtonText}>
-                                {loading ? 'SAVING...' : 'SAVE'}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
-                </View>
-
-                {/* Bottom padding */}
-                <View style={{ height: 40 }} />
-            </ScrollView>
-        </SafeAreaView>
+                    {/* Bottom padding */}
+                    <View style={{ height: 40 }} />
+                </ScrollView>
+            </View>
+        </View>
     );
 };
 
@@ -230,7 +356,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         paddingVertical: 15,
-        borderBottomWidth: 1,
     },
     backButton: {
         width: 40,
@@ -260,6 +385,7 @@ const styles = StyleSheet.create({
     profilePictureContainer: {
         alignItems: 'center',
         paddingVertical: 30,
+        borderBottomWidth: 1,
     },
     profilePicture: {
         width: 120,
@@ -267,11 +393,28 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         justifyContent: 'center',
         alignItems: 'center',
+        overflow: 'hidden',
+    },
+    profileImage: {
+        width: '100%',
+        height: '100%',
     },
     profileInitial: {
         fontSize: 48,
         fontWeight: '700',
         color: '#FFFFFF',
+    },
+    editBadge: {
+        position: 'absolute',
+        right: 5,
+        bottom: 5,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#FFFFFF',
     },
     formContainer: {
         paddingTop: 10,

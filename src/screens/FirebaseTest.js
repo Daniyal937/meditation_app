@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Alert, SafeAreaView } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    TextInput,
+    ScrollView,
+    Alert,
+    SafeAreaView,
+} from 'react-native';
 import { auth, db } from '../config/firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
@@ -12,7 +21,6 @@ const FirebaseTest = () => {
     const addLog = (message, type = 'info') => {
         const timestamp = new Date().toLocaleTimeString();
         setLogs(prev => [...prev, { message: `[${timestamp}] ${message}`, type }]);
-
     };
 
     useEffect(() => {
@@ -32,7 +40,7 @@ const FirebaseTest = () => {
             await setDoc(doc(db, 'users', userCredential.user.uid), {
                 email: email,
                 testField: 'Hello from test',
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString(),
             });
             addLog('✅ Firestore write successful!', 'success');
             Alert.alert('Success', 'Signup and Firestore write successful!');
@@ -54,7 +62,10 @@ const FirebaseTest = () => {
             const docSnap = await getDoc(docRef);
 
             if (docSnap.exists()) {
-                addLog(`✅ Firestore read successful! Data: ${JSON.stringify(docSnap.data())}`, 'success');
+                addLog(
+                    `✅ Firestore read successful! Data: ${JSON.stringify(docSnap.data())}`,
+                    'success'
+                );
                 Alert.alert('Success', 'Login and Firestore read successful!');
             } else {
                 addLog('⚠️ User document does not exist in Firestore', 'warning');

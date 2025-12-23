@@ -4,8 +4,9 @@ import { View, Text, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Platform } from 'react-native';
-// Uncomment the line below when ready to enable OneSignal notifications
-// import { LogLevel, OneSignal } from 'react-native-onesignal';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { LogLevel, OneSignal } from 'react-native-onesignal';
+import * as Notifications from 'expo-notifications';
 import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
 import * as Updates from 'expo-updates';
@@ -33,9 +34,7 @@ class ErrorBoundary extends React.Component {
                     <Text style={styles.errorMessage}>
                         {this.state.error?.message || 'An unexpected error occurred'}
                     </Text>
-                    <Text style={styles.errorDetails}>
-                        Please restart the app
-                    </Text>
+                    <Text style={styles.errorDetails}>Please restart the app</Text>
                 </View>
             );
         }
@@ -124,66 +123,85 @@ export default function App() {
 
         // OneSignal Initialization
         try {
-            // Uncomment these lines when you're ready to use OneSignal in production
-            // OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+            // Debugging
+            if (__DEV__) {
+                OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+            }
 
             // Initialize OneSignal with your App ID
-            // OneSignal.initialize("66c6114a-f5fa-4c4d-b94f-17387cc07b46");
+            OneSignal.initialize('66c6114a-f5fa-4c4d-b94f-17387cc07b46');
 
             // Request notification permission
-            // OneSignal.Notifications.requestPermission(true);
+            OneSignal.Notifications.requestPermission(true);
 
             // Handle notification clicks
-            // OneSignal.Notifications.addEventListener('click', (event) => {
-            //     console.log('OneSignal notification clicked:', event);
-            // });
+            OneSignal.Notifications.addEventListener('click', event => {
+                console.log('OneSignal notification clicked:', event);
+            });
         } catch (error) {
-            console.log('OneSignal initialization skipped:', error.message);
+            console.log('OneSignal initialization error:', error.message);
         }
+
+        // Expo Notifications Setup (for local reminders)
+        Notifications.setNotificationHandler({
+            handleNotification: async () => ({
+                shouldShowAlert: true,
+                shouldPlaySound: true,
+                shouldSetBadge: false,
+            }),
+        });
     }, []);
 
     return (
         <ErrorBoundary>
             <ThemeProvider>
                 <Provider store={store}>
-                    <NavigationContainer>
-                        <StatusBar style="dark" />
-                        <Stack.Navigator
-                            initialRouteName="SignUp"
-                            screenOptions={{
-                                headerShown: false,
-                                cardStyle: { backgroundColor: '#F5F5F5' },
-                            }}
-                        >
-                            {/* Development/Testing screens - Uncomment if needed */}
-                            {/* <Stack.Screen name="FirebaseTest" component={FirebaseTest} /> */}
+                    <SafeAreaProvider>
+                        <NavigationContainer>
+                            <StatusBar style="dark" />
+                            <Stack.Navigator
+                                initialRouteName="SignUp"
+                                screenOptions={{
+                                    headerShown: false,
+                                    cardStyle: { backgroundColor: '#F5F5F5' },
+                                }}
+                            >
+                                {/* Development/Testing screens - Uncomment if needed */}
+                                {/* <Stack.Screen name="FirebaseTest" component={FirebaseTest} /> */}
 
-                            <Stack.Screen name="SignUp" component={SignUpAndSignIn} />
-                            <Stack.Screen name="SignUpForm" component={SignUp} />
-                            <Stack.Screen name="Login" component={SignIn} />
-                            <Stack.Screen name="Welcome" component={Welcome} />
-                            <Stack.Screen name="ChooseTopic" component={ChooseTopic} />
-                            <Stack.Screen name="Reminders" component={Reminders} />
-                            <Stack.Screen name="Home" component={Home} />
-                            <Stack.Screen name="CourseDetails" component={CourseDetails} />
-                            <Stack.Screen name="MeditateV2" component={MeditateV2} />
-                            <Stack.Screen name="MeditationSessions" component={MeditationSessions} />
-                            <Stack.Screen name="AudioDetails" component={AudioDetails} />
-                            <Stack.Screen name="AudioDetails2" component={AudioDetails2} />
-                            <Stack.Screen name="SleepStart" component={SleepStart} />
-                            <Stack.Screen name="Sleep" component={Sleep} />
-                            <Stack.Screen name="PlayOption" component={PlayOption} />
-                            <Stack.Screen name="SleepMusic" component={SleepMusic} />
-                            <Stack.Screen name="Settings" component={Settings} />
-                            <Stack.Screen name="Profile" component={Profile} />
-                            <Stack.Screen name="EditProfile" component={EditProfile} />
-                            <Stack.Screen name="Preferences" component={Preferences} />
-                            <Stack.Screen name="NotificationSettings" component={NotificationSettings} />
-                            <Stack.Screen name="AboutScreen" component={About} />
-                            <Stack.Screen name="Congratulations" component={Congratulations} />
-                            {/* Add other screens here */}
-                        </Stack.Navigator>
-                    </NavigationContainer>
+                                <Stack.Screen name="SignUp" component={SignUpAndSignIn} />
+                                <Stack.Screen name="SignUpForm" component={SignUp} />
+                                <Stack.Screen name="Login" component={SignIn} />
+                                <Stack.Screen name="Welcome" component={Welcome} />
+                                <Stack.Screen name="ChooseTopic" component={ChooseTopic} />
+                                <Stack.Screen name="Reminders" component={Reminders} />
+                                <Stack.Screen name="Home" component={Home} />
+                                <Stack.Screen name="CourseDetails" component={CourseDetails} />
+                                <Stack.Screen name="MeditateV2" component={MeditateV2} />
+                                <Stack.Screen
+                                    name="MeditationSessions"
+                                    component={MeditationSessions}
+                                />
+                                <Stack.Screen name="AudioDetails" component={AudioDetails} />
+                                <Stack.Screen name="AudioDetails2" component={AudioDetails2} />
+                                <Stack.Screen name="SleepStart" component={SleepStart} />
+                                <Stack.Screen name="Sleep" component={Sleep} />
+                                <Stack.Screen name="PlayOption" component={PlayOption} />
+                                <Stack.Screen name="SleepMusic" component={SleepMusic} />
+                                <Stack.Screen name="Settings" component={Settings} />
+                                <Stack.Screen name="Profile" component={Profile} />
+                                <Stack.Screen name="EditProfile" component={EditProfile} />
+                                <Stack.Screen name="Preferences" component={Preferences} />
+                                <Stack.Screen
+                                    name="NotificationSettings"
+                                    component={NotificationSettings}
+                                />
+                                <Stack.Screen name="AboutScreen" component={About} />
+                                <Stack.Screen name="Congratulations" component={Congratulations} />
+                                {/* Add other screens here */}
+                            </Stack.Navigator>
+                        </NavigationContainer>
+                    </SafeAreaProvider>
                 </Provider>
             </ThemeProvider>
         </ErrorBoundary>

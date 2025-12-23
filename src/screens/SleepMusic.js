@@ -43,9 +43,16 @@ const SleepMusic = ({ navigation, route }) => {
                             dispatch(setUserProfileAction(userProfile));
                         } else {
                             const emailName = currentUser.email.split('@')[0];
-                            const derivedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                            const derivedName =
+                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
                             setUserName(derivedName);
-                            dispatch(setUserProfileAction({ name: derivedName, uid: currentUser.uid, email: currentUser.email }));
+                            dispatch(
+                                setUserProfileAction({
+                                    name: derivedName,
+                                    uid: currentUser.uid,
+                                    email: currentUser.email,
+                                })
+                            );
                         }
                     }
                 } else {
@@ -149,29 +156,36 @@ const SleepMusic = ({ navigation, route }) => {
                     style={styles.scrollView}
                     contentContainerStyle={{
                         paddingHorizontal: spacing(20),
-                        paddingBottom: hp(100)
+                        paddingBottom: hp(100),
                     }}
                     showsVerticalScrollIndicator={false}
                 >
                     <View style={styles.gridContainer}>
-                        {sleepMusicContent.map((item) => (
+                        {sleepMusicContent.map(item => (
                             <TouchableOpacity
                                 key={item.id}
                                 style={styles.gridCard}
                                 activeOpacity={0.8}
-                                onPress={() => navigation.navigate('PlayOption', {
-                                    content: {
-                                        title: item.title,
-                                        duration: item.duration,
-                                        type: item.type,
-                                        description: `Ease the mind into a restful night's sleep with these deep, ambient tones.`,
-                                        favoriteCount: '24,234',
-                                        listeningCount: '34,234',
-                                        image: item.image,
-                                    }
-                                })}
+                                onPress={() =>
+                                    navigation.navigate('PlayOption', {
+                                        content: {
+                                            title: item.title,
+                                            duration: item.duration,
+                                            type: item.type,
+                                            description: `Ease the mind into a restful night's sleep with these deep, ambient tones.`,
+                                            favoriteCount: '24,234',
+                                            listeningCount: '34,234',
+                                            image: item.image,
+                                        },
+                                    })
+                                }
                             >
-                                <View style={[styles.gridImageContainer, { backgroundColor: item.color }]}>
+                                <View
+                                    style={[
+                                        styles.gridImageContainer,
+                                        { backgroundColor: item.color },
+                                    ]}
+                                >
                                     <Image
                                         source={item.image}
                                         style={styles.gridImage}
@@ -194,7 +208,12 @@ const SleepMusic = ({ navigation, route }) => {
             </SafeAreaView>
 
             {/* Bottom Navigation */}
-            <BottomMenu navigation={navigation} activeTab="Sleep" userName={userName} backgroundColor="#03174C" />
+            <BottomMenu
+                navigation={navigation}
+                activeTab="Sleep"
+                userName={userName}
+                backgroundColor="#03174C"
+            />
         </View>
     );
 };

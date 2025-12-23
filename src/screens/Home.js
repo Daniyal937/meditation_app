@@ -14,7 +14,7 @@ import { auth } from '../config/firebaseConfig';
 import { getUserProfile } from '../services/authService';
 import { useTheme } from '../context/ThemeContext';
 import BottomMenu from '../components/BottomMenu';
-import { wp, hp, fs, spacing } from '../utils/responsive';
+import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 
@@ -32,8 +32,6 @@ const Home = ({ navigation, route }) => {
                 const currentUser = auth.currentUser;
 
                 if (currentUser) {
-
-
                     if (userProfileFromRedux) {
                         setUserName(userProfileFromRedux.name);
                         setLoading(false);
@@ -43,27 +41,36 @@ const Home = ({ navigation, route }) => {
                     if (route?.params?.userName) {
                         setUserName(route.params.userName);
                         // Store partial data if just name
-                        dispatch(setUserProfileAction({ name: route.params.userName, uid: currentUser.uid, email: currentUser.email }));
+                        dispatch(
+                            setUserProfileAction({
+                                name: route.params.userName,
+                                uid: currentUser.uid,
+                                email: currentUser.email,
+                            })
+                        );
                     } else {
                         const userProfile = await getUserProfile(currentUser.uid);
                         if (userProfile && userProfile.name) {
                             setUserName(userProfile.name);
                             dispatch(setUserProfileAction(userProfile)); // Save to Redux
-
                         } else {
                             const emailName = currentUser.email.split('@')[0];
-                            const derivedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                            const derivedName =
+                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
                             setUserName(derivedName);
                             // Save payload to Redux
-                            dispatch(setUserProfileAction({ name: derivedName, uid: currentUser.uid, email: currentUser.email }));
-
+                            dispatch(
+                                setUserProfileAction({
+                                    name: derivedName,
+                                    uid: currentUser.uid,
+                                    email: currentUser.email,
+                                })
+                            );
                         }
                     }
                 } else {
-
                     setUserName('User');
                 }
-
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setUserName('User');
@@ -86,7 +93,16 @@ const Home = ({ navigation, route }) => {
 
     const featuredSessions = [
         { id: 1, title: 'Basics', type: 'COURSE', duration: '3-10 MIN', color: '#8E97FD' },
-        { id: 2, title: 'Relaxation', type: 'MUSIC', duration: '3-10 MIN', color: '#FFCF86', textColor: '#3F414E', buttonBg: '#3F414E', buttonTextColor: '#FFFFFF' },
+        {
+            id: 2,
+            title: 'Relaxation',
+            type: 'MUSIC',
+            duration: '3-10 MIN',
+            color: '#FFCF86',
+            textColor: '#3F414E',
+            buttonBg: '#3F414E',
+            buttonTextColor: '#FFFFFF',
+        },
     ];
 
     const recommendedSessions = [
@@ -98,7 +114,10 @@ const Home = ({ navigation, route }) => {
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+                <StatusBar
+                    barStyle={theme.colors.statusBar}
+                    backgroundColor={theme.colors.background}
+                />
 
                 <ScrollView
                     style={styles.scrollView}
@@ -118,8 +137,14 @@ const Home = ({ navigation, route }) => {
 
                     {/* Greeting Section */}
                     <View style={styles.greetingSection}>
-                        <Text style={[styles.greetingText, { color: theme.colors.text }]}>{greeting}, {userName}</Text>
-                        <Text style={[styles.greetingSubtext, { color: theme.colors.textSecondary }]}>We Wish you have a good day</Text>
+                        <Text style={[styles.greetingText, { color: theme.colors.text }]}>
+                            {greeting}, {userName}
+                        </Text>
+                        <Text
+                            style={[styles.greetingSubtext, { color: theme.colors.textSecondary }]}
+                        >
+                            We Wish you have a good day
+                        </Text>
                     </View>
 
                     {/* Featured Cards */}
@@ -131,9 +156,19 @@ const Home = ({ navigation, route }) => {
                                     styles.featuredCard,
                                     {
                                         backgroundColor: session.color,
-                                        marginRight: index === 0 ? spacing(10) : 0,
-                                        marginLeft: index === 1 ? spacing(10) : 0,
-                                    }
+                                        marginRight:
+                                            index === 0
+                                                ? isTablet()
+                                                    ? spacing(20)
+                                                    : spacing(10)
+                                                : 0,
+                                        marginLeft:
+                                            index === 1
+                                                ? isTablet()
+                                                    ? spacing(20)
+                                                    : spacing(10)
+                                                : 0,
+                                    },
                                 ]}
                                 activeOpacity={0.8}
                                 onPress={() => navigation.navigate('CourseDetails', { session })}
@@ -161,20 +196,55 @@ const Home = ({ navigation, route }) => {
                                 )}
                                 <View style={styles.featuredContent}>
                                     <View>
-                                        <Text style={[styles.featuredTitle, session.textColor && { color: session.textColor }]}>{session.title}</Text>
-                                        <Text style={[styles.featuredSubtitle, session.textColor && { color: session.textColor }]}>{session.type}</Text>
+                                        <Text
+                                            style={[
+                                                styles.featuredTitle,
+                                                session.textColor && { color: session.textColor },
+                                            ]}
+                                        >
+                                            {session.title}
+                                        </Text>
+                                        <Text
+                                            style={[
+                                                styles.featuredSubtitle,
+                                                session.textColor && { color: session.textColor },
+                                            ]}
+                                        >
+                                            {session.type}
+                                        </Text>
                                     </View>
                                     <View style={styles.featuredFooter}>
-                                        <Text style={[styles.featuredDuration, session.textColor && { color: session.textColor }]}>{session.duration}</Text>
+                                        <Text
+                                            style={[
+                                                styles.featuredDuration,
+                                                session.textColor && { color: session.textColor },
+                                            ]}
+                                        >
+                                            {session.duration}
+                                        </Text>
                                         <TouchableOpacity
-                                            style={[styles.startButton, session.buttonBg && { backgroundColor: session.buttonBg }]}
+                                            style={[
+                                                styles.startButton,
+                                                session.buttonBg && {
+                                                    backgroundColor: session.buttonBg,
+                                                },
+                                            ]}
                                             activeOpacity={0.8}
-                                            onPress={(e) => {
+                                            onPress={e => {
                                                 e.stopPropagation();
                                                 navigation.navigate('CourseDetails', { session });
                                             }}
                                         >
-                                            <Text style={[styles.startButtonText, session.buttonTextColor && { color: session.buttonTextColor }]}>START</Text>
+                                            <Text
+                                                style={[
+                                                    styles.startButtonText,
+                                                    session.buttonTextColor && {
+                                                        color: session.buttonTextColor,
+                                                    },
+                                                ]}
+                                            >
+                                                START
+                                            </Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
@@ -202,7 +272,9 @@ const Home = ({ navigation, route }) => {
                         <View style={styles.dailyThoughtContent}>
                             <View>
                                 <Text style={styles.dailyThoughtTitle}>Daily Thought</Text>
-                                <Text style={styles.dailyThoughtSubtitle}>MEDITATION • 3-10 MIN</Text>
+                                <Text style={styles.dailyThoughtSubtitle}>
+                                    MEDITATION • 3-10 MIN
+                                </Text>
                             </View>
                             <View style={styles.playButton}>
                                 <Ionicons name="play" size={fs(24)} color="#3F414E" />
@@ -212,22 +284,26 @@ const Home = ({ navigation, route }) => {
 
                     {/* Recommended Section */}
                     <View style={styles.recommendedSection}>
-                        <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>Recommended for you</Text>
+                        <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
+                            Recommended for you
+                        </Text>
                         <ScrollView
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={styles.recommendedScroll}
                         >
-                            {recommendedSessions.map((session) => (
+                            {recommendedSessions.map(session => (
                                 <View key={session.id} style={styles.recommendedCardWrapper}>
                                     <TouchableOpacity
                                         style={[
                                             styles.recommendedCard,
                                             { backgroundColor: session.color },
-                                            session.id === 1 && styles.focusCard
+                                            session.id === 1 && styles.focusCard,
                                         ]}
                                         activeOpacity={0.8}
-                                        onPress={() => navigation.navigate('MeditationSessions', { userName })}
+                                        onPress={() =>
+                                            navigation.navigate('MeditationSessions', { userName })
+                                        }
                                     >
                                         {session.id === 1 && (
                                             <Image
@@ -250,24 +326,74 @@ const Home = ({ navigation, route }) => {
                                                 resizeMode="cover"
                                             />
                                         )}
-
                                     </TouchableOpacity>
                                     {session.id === 1 && (
                                         <View style={styles.focusTextContainer}>
-                                            <Text style={[styles.recommendedTitle, { color: theme.colors.text }]}>{session.title}</Text>
-                                            <Text style={[styles.recommendedDuration, { color: theme.colors.textSecondary, opacity: 1 }]}>{session.duration}</Text>
+                                            <Text
+                                                style={[
+                                                    styles.recommendedTitle,
+                                                    { color: theme.colors.text },
+                                                ]}
+                                            >
+                                                {session.title}
+                                            </Text>
+                                            <Text
+                                                style={[
+                                                    styles.recommendedDuration,
+                                                    {
+                                                        color: theme.colors.textSecondary,
+                                                        opacity: 1,
+                                                    },
+                                                ]}
+                                            >
+                                                {session.duration}
+                                            </Text>
                                         </View>
                                     )}
                                     {session.id === 2 && (
                                         <View style={styles.focusTextContainer}>
-                                            <Text style={[styles.recommendedTitle, { color: theme.colors.text }]}>{session.title}</Text>
-                                            <Text style={[styles.recommendedDuration, { color: theme.colors.textSecondary, opacity: 1 }]}>{session.duration}</Text>
+                                            <Text
+                                                style={[
+                                                    styles.recommendedTitle,
+                                                    { color: theme.colors.text },
+                                                ]}
+                                            >
+                                                {session.title}
+                                            </Text>
+                                            <Text
+                                                style={[
+                                                    styles.recommendedDuration,
+                                                    {
+                                                        color: theme.colors.textSecondary,
+                                                        opacity: 1,
+                                                    },
+                                                ]}
+                                            >
+                                                {session.duration}
+                                            </Text>
                                         </View>
                                     )}
                                     {session.id === 3 && (
                                         <View style={styles.focusTextContainer}>
-                                            <Text style={[styles.recommendedTitle, { color: theme.colors.text }]}>{session.title}</Text>
-                                            <Text style={[styles.recommendedDuration, { color: theme.colors.textSecondary, opacity: 1 }]}>{session.duration}</Text>
+                                            <Text
+                                                style={[
+                                                    styles.recommendedTitle,
+                                                    { color: theme.colors.text },
+                                                ]}
+                                            >
+                                                {session.title}
+                                            </Text>
+                                            <Text
+                                                style={[
+                                                    styles.recommendedDuration,
+                                                    {
+                                                        color: theme.colors.textSecondary,
+                                                        opacity: 1,
+                                                    },
+                                                ]}
+                                            >
+                                                {session.duration}
+                                            </Text>
                                         </View>
                                     )}
                                 </View>
@@ -285,7 +411,6 @@ const Home = ({ navigation, route }) => {
         </View>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -482,8 +607,8 @@ const styles = StyleSheet.create({
         paddingRight: spacing(20),
     },
     recommendedCard: {
-        width: wp(162),
-        height: hp(113),
+        width: isTablet() ? wp(220) : wp(162),
+        height: isTablet() ? hp(150) : hp(113),
         borderRadius: wp(12),
         padding: spacing(16),
         justifyContent: 'flex-end',
@@ -518,8 +643,8 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     focusCard: {
-        width: wp(162),
-        height: hp(113),
+        width: isTablet() ? wp(220) : wp(162),
+        height: isTablet() ? hp(150) : hp(113),
     },
     recommendedCardWrapper: {
         marginRight: spacing(15),

@@ -5,10 +5,10 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
     StatusBar,
     Image,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../config/firebaseConfig';
 import { getUserProfile } from '../services/authService';
@@ -26,6 +26,7 @@ const MeditationSessions = ({ navigation, route }) => {
     const userProfileFromRedux = useSelector(state => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const [activeSessionId, setActiveSessionId] = useState(null);
+    const insets = useSafeAreaInsets();
 
     // Get category data from route params or use default
     const categoryData = route?.params?.category || {
@@ -53,10 +54,17 @@ const MeditationSessions = ({ navigation, route }) => {
                             dispatch(setUserProfileAction(userProfile));
                         } else {
                             const emailName = currentUser.email.split('@')[0];
-                            const derivedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                            const derivedName =
+                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
                             setUserName(derivedName);
                             // Store partial data if just name
-                            dispatch(setUserProfileAction({ name: derivedName, uid: currentUser.uid, email: currentUser.email }));
+                            dispatch(
+                                setUserProfileAction({
+                                    name: derivedName,
+                                    uid: currentUser.uid,
+                                    email: currentUser.email,
+                                })
+                            );
                         }
                     }
                 }
@@ -69,38 +77,78 @@ const MeditationSessions = ({ navigation, route }) => {
     }, [route, userProfileFromRedux]);
 
     const sessions = [
-        { id: 1, name: 'First Session', duration: '2 - 5 min', audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-        { id: 2, name: 'Introduction to Mindfulness', duration: '5 - 15 min', audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-        { id: 3, name: 'Vipassana', duration: '5 - 10 min', audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-        { id: 4, name: 'Mindful Living', duration: '5 - 20 min', audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3' },
-        { id: 5, name: 'Science of Meditation', duration: '5 - 20 min', audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
-        { id: 6, name: 'Manage Negative Emotions', duration: '5 - 25 min', audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3' },
-        { id: 7, name: 'Meditation Sounds', duration: '5 - 30 min', audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
+        {
+            id: 1,
+            name: 'First Session',
+            duration: '2 - 5 min',
+            audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+        },
+        {
+            id: 2,
+            name: 'Introduction to Mindfulness',
+            duration: '5 - 15 min',
+            audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+        },
+        {
+            id: 3,
+            name: 'Vipassana',
+            duration: '5 - 10 min',
+            audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+        },
+        {
+            id: 4,
+            name: 'Mindful Living',
+            duration: '5 - 20 min',
+            audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+        },
+        {
+            id: 5,
+            name: 'Science of Meditation',
+            duration: '5 - 20 min',
+            audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+        },
+        {
+            id: 6,
+            name: 'Manage Negative Emotions',
+            duration: '5 - 25 min',
+            audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
+        },
+        {
+            id: 7,
+            name: 'Meditation Sounds',
+            duration: '5 - 30 min',
+            audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
+        },
     ];
 
-    const handlePlaySession = (session) => {
+    const handlePlaySession = session => {
         // Navigate to AudioDetails2 screen (using v2 as requested implicitly by user editing AudioDetails2)
         navigation.navigate('AudioDetails2', { session });
     };
 
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+            <View style={{ flex: 1, paddingTop: insets.top }}>
+                <StatusBar
+                    barStyle={theme.colors.statusBar}
+                    backgroundColor={theme.colors.background}
+                />
 
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={{
                         paddingHorizontal: spacing(20),
                         paddingTop: hp(20),
-                        paddingBottom: hp(140)
+                        paddingBottom: hp(140),
                     }}
                     showsVerticalScrollIndicator={false}
                 >
                     {/* Back Button */}
                     <TouchableOpacity
-                        style={[styles.backButton, { borderColor: theme.colors.border, borderWidth: 1 }]}
+                        style={[
+                            styles.backButton,
+                            { borderColor: theme.colors.border, borderWidth: 1 },
+                        ]}
                         onPress={() => navigation.goBack()}
                         activeOpacity={0.7}
                     >
@@ -125,7 +173,7 @@ const MeditationSessions = ({ navigation, route }) => {
 
                     {/* Session List */}
                     <View style={styles.sessionList}>
-                        {sessions.map((session) => (
+                        {sessions.map(session => (
                             <TouchableOpacity
                                 key={session.id}
                                 style={styles.sessionItem}
@@ -139,22 +187,38 @@ const MeditationSessions = ({ navigation, route }) => {
                                     <Ionicons
                                         name="play-circle"
                                         size={wp(40)}
-                                        color={activeSessionId === session.id ? '#8E97FD' : '#000000'}
+                                        color={
+                                            activeSessionId === session.id ? '#8E97FD' : '#000000'
+                                        }
                                     />
                                 </View>
                                 <View style={styles.sessionInfo}>
-                                    <Text style={[styles.sessionName, { color: theme.colors.text }]}>{session.name}</Text>
-                                    <Text style={[styles.sessionDuration, { color: theme.colors.textSecondary }]}>{session.duration}</Text>
+                                    <Text
+                                        style={[styles.sessionName, { color: theme.colors.text }]}
+                                    >
+                                        {session.name}
+                                    </Text>
+                                    <Text
+                                        style={[
+                                            styles.sessionDuration,
+                                            { color: theme.colors.textSecondary },
+                                        ]}
+                                    >
+                                        {session.duration}
+                                    </Text>
                                 </View>
                             </TouchableOpacity>
                         ))}
                     </View>
-
                 </ScrollView>
-            </SafeAreaView>
+            </View>
 
             {/* Bottom Navigation */}
-            <BottomMenu navigation={navigation} activeTab={route?.params?.activeTab || 'Meditate'} userName={userName} />
+            <BottomMenu
+                navigation={navigation}
+                activeTab={route?.params?.activeTab || 'Meditate'}
+                userName={userName}
+            />
         </View>
     );
 };
@@ -221,7 +285,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: spacing(15),
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: hp(2),

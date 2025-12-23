@@ -46,7 +46,7 @@ const userSlice = createSlice({
         removeDownload: (state, action) => {
             state.downloads = state.downloads.filter(d => d.id !== action.payload);
         },
-        clearUserData: (state) => {
+        clearUserData: state => {
             return initialState;
         },
     },

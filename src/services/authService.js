@@ -3,7 +3,7 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
 } from 'firebase/auth';
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../config/firebaseConfig';
@@ -17,16 +17,14 @@ import { auth, db } from '../config/firebaseConfig';
  */
 export const signUpWithEmail = async (email, password, name) => {
     try {
-
         const userCredential = await Promise.race([
             createUserWithEmailAndPassword(auth, email, password),
             new Promise((_, reject) =>
                 setTimeout(() => reject(new Error('Signup timeout after 10 seconds')), 10000)
-            )
+            ),
         ]);
 
         const user = userCredential.user;
-
 
         // Create user profile in Firestore
 
@@ -34,7 +32,6 @@ export const signUpWithEmail = async (email, password, name) => {
             name,
             email,
         });
-
 
         return {
             success: true,
@@ -63,22 +60,18 @@ export const signUpWithEmail = async (email, password, name) => {
  */
 export const signInWithEmail = async (email, password) => {
     try {
-
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
 
         // Get user profile from Firestore
 
         const userProfile = await getUserProfile(user.uid);
-
 
         // Update last login
 
         await updateUserProfile(user.uid, {
             lastLogin: new Date().toISOString(),
         });
-
 
         return {
             success: true,
@@ -126,7 +119,7 @@ export const getCurrentUser = () => {
  * @param {Function} callback - Callback function to handle auth state changes
  * @returns {Function} Unsubscribe function
  */
-export const onAuthStateChange = (callback) => {
+export const onAuthStateChange = callback => {
     return onAuthStateChanged(auth, callback);
 };
 
@@ -137,7 +130,6 @@ export const onAuthStateChange = (callback) => {
  */
 export const createUserProfile = async (userId, userData) => {
     try {
-
         const userRef = doc(db, 'users', userId);
 
         // Use ISO string dates instead of serverTimestamp for web compatibility
@@ -158,8 +150,6 @@ export const createUserProfile = async (userId, userData) => {
         };
 
         await setDoc(userRef, profileData);
-
-
     } catch (error) {
         console.error('❌ Error creating user profile:', error.code, error.message);
         throw error;
@@ -171,7 +161,7 @@ export const createUserProfile = async (userId, userData) => {
  * @param {string} userId - User's UID
  * @returns {Promise<Object>} User profile data
  */
-export const getUserProfile = async (userId) => {
+export const getUserProfile = async userId => {
     try {
         const userRef = doc(db, 'users', userId);
         const userSnap = await getDoc(userRef);
@@ -207,7 +197,7 @@ export const updateUserProfile = async (userId, updates) => {
  * @param {string} errorCode - Firebase error code
  * @returns {string} User-friendly error message
  */
-const getErrorMessage = (errorCode) => {
+const getErrorMessage = errorCode => {
     switch (errorCode) {
         case 'auth/email-already-in-use':
             return 'This email is already registered. Please login instead.';
@@ -233,7 +223,7 @@ const getErrorMessage = (errorCode) => {
  * @param {string} email - User's email
  * @returns {Promise<Object>} Success status
  */
-export const resetPassword = async (email) => {
+export const resetPassword = async email => {
     try {
         await sendPasswordResetEmail(auth, email);
         return { success: true };
@@ -241,7 +231,7 @@ export const resetPassword = async (email) => {
         console.error('Password reset error:', error);
         return {
             success: false,
-            error: getErrorMessage(error.code)
+            error: getErrorMessage(error.code),
         };
     }
 };

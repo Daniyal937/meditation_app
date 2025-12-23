@@ -7,7 +7,7 @@ export const store = configureStore({
         auth: authReducer,
         user: userReducer,
     },
-    middleware: (getDefaultMiddleware) =>
+    middleware: getDefaultMiddleware =>
         getDefaultMiddleware({
             serializableCheck: false,
         }),

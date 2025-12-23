@@ -14,7 +14,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
-import { wp, hp, fs, spacing } from '../utils/responsive';
+import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 import { useTheme } from '../context/ThemeContext';
 import BottomMenu from '../components/BottomMenu';
 
@@ -26,7 +26,8 @@ const AudioDetails2 = ({ navigation, route }) => {
         name: 'Mindfulness',
         category: 'Relax',
         duration: '6-15 min',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, urna sit amet cursus vestibulum, ligula sapien cursus elit, nec suscipit quam velit',
+        description:
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, urna sit amet cursus vestibulum, ligula sapien cursus elit, nec suscipit quam velit',
         artist: 'Sam Wilson', // Ensure this is present
         location: 'San Fransisco',
         streams: '2.6',
@@ -71,7 +72,8 @@ const AudioDetails2 = ({ navigation, route }) => {
                     const diff = (gestureState.dx / barWidth.current) * duration;
                     const newPos = Math.min(Math.max(0, currentPos + diff), duration);
 
-                    if (sound) { // Check if sound is available in closure? sound state might be stale.
+                    if (sound) {
+                        // Check if sound is available in closure? sound state might be stale.
                         // Ideally we should ref sound too, but usually PanResponder closes over scope.
                         // Let's rely on sound state or better, pass it?
                         // Can't pass arguments to this.
@@ -87,7 +89,9 @@ const AudioDetails2 = ({ navigation, route }) => {
 
     // We need a ref for sound because PanResponder closure might capture old null sound
     const soundRef = useRef(sound);
-    useEffect(() => { soundRef.current = sound; }, [sound]);
+    useEffect(() => {
+        soundRef.current = sound;
+    }, [sound]);
 
     // Update PanResponder Release to use soundRef
     panResponder.panHandlers.onResponderRelease = async (evt, gestureState) => {
@@ -133,21 +137,19 @@ const AudioDetails2 = ({ navigation, route }) => {
         })
     ).current;
 
-
     useEffect(() => {
         return sound
             ? () => {
-
-                sound.unloadAsync();
-            }
+                  sound.unloadAsync();
+              }
             : undefined;
     }, [sound]);
 
-    const formatTime = (millis) => {
+    const formatTime = millis => {
         if (!millis) return '0:00';
         const minutes = Math.floor(millis / 60000);
         const seconds = ((millis % 60000) / 1000).toFixed(0);
-        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
     };
 
     const handlePlay = async () => {
@@ -161,13 +163,12 @@ const AudioDetails2 = ({ navigation, route }) => {
                 setIsPlaying(true);
             }
         } else {
-
             if (sessionData.audioUrl) {
                 try {
                     const { sound: newSound } = await Audio.Sound.createAsync(
                         { uri: sessionData.audioUrl },
                         { shouldPlay: true },
-                        (playbackStatus) => {
+                        playbackStatus => {
                             if (playbackStatus.isLoaded) {
                                 setStatus({
                                     position: playbackStatus.positionMillis,
@@ -185,10 +186,10 @@ const AudioDetails2 = ({ navigation, route }) => {
 
                     // setIsPlaying(true); // Handled by status update
                 } catch (error) {
-                    console.error("Error loading sound", error);
+                    console.error('Error loading sound', error);
                 }
             } else {
-                console.warn("No audio URL provided for this session");
+                console.warn('No audio URL provided for this session');
             }
         }
     };
@@ -200,7 +201,10 @@ const AudioDetails2 = ({ navigation, route }) => {
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+                <StatusBar
+                    barStyle={theme.colors.statusBar}
+                    backgroundColor={theme.colors.background}
+                />
 
                 {/* Header */}
                 <View style={styles.header}>
@@ -210,7 +214,9 @@ const AudioDetails2 = ({ navigation, route }) => {
                     >
                         <Ionicons name="arrow-back" size={fs(24)} color={theme.colors.text} />
                     </TouchableOpacity>
-                    <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Now Playing</Text>
+                    <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
+                        Now Playing
+                    </Text>
                     <TouchableOpacity style={styles.headerRightButton}>
                         <Ionicons name="heart-outline" size={fs(24)} color={theme.colors.text} />
                     </TouchableOpacity>
@@ -235,11 +241,21 @@ const AudioDetails2 = ({ navigation, route }) => {
 
                                 <View style={styles.heroBottomContent}>
                                     <View>
-                                        <Text style={styles.categoryText}>{sessionData.category}</Text>
-                                        <Text style={styles.heroSessionName}>{sessionData.name}</Text>
+                                        <Text style={styles.categoryText}>
+                                            {sessionData.category}
+                                        </Text>
+                                        <Text style={styles.heroSessionName}>
+                                            {sessionData.name}
+                                        </Text>
                                         <View style={styles.durationRow}>
-                                            <Ionicons name="time-outline" size={fs(14)} color="#FFFFFF" />
-                                            <Text style={styles.durationText}>{sessionData.duration}</Text>
+                                            <Ionicons
+                                                name="time-outline"
+                                                size={fs(14)}
+                                                color="#FFFFFF"
+                                            />
+                                            <Text style={styles.durationText}>
+                                                {sessionData.duration}
+                                            </Text>
                                         </View>
                                     </View>
                                     <TouchableOpacity
@@ -247,7 +263,11 @@ const AudioDetails2 = ({ navigation, route }) => {
                                         activeOpacity={0.8}
                                         onPress={handlePlay}
                                     >
-                                        <Ionicons name={isPlaying ? "pause" : "play"} size={fs(24)} color="#3F414E" />
+                                        <Ionicons
+                                            name={isPlaying ? 'pause' : 'play'}
+                                            size={fs(24)}
+                                            color="#3F414E"
+                                        />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -256,8 +276,12 @@ const AudioDetails2 = ({ navigation, route }) => {
 
                     {/* Meta Data */}
                     <View style={styles.metaDataContainer}>
-                        <Text style={[styles.sessionTitle, { color: theme.colors.text }]}>{sessionData.name}</Text>
-                        <Text style={[styles.sessionArtist, { color: theme.colors.textSecondary }]}>By {sessionData.artist}</Text>
+                        <Text style={[styles.sessionTitle, { color: theme.colors.text }]}>
+                            {sessionData.name}
+                        </Text>
+                        <Text style={[styles.sessionArtist, { color: theme.colors.textSecondary }]}>
+                            By {sessionData.artist}
+                        </Text>
 
                         <Text style={[styles.description, { color: theme.colors.textSecondary }]}>
                             {sessionData.description}
@@ -281,16 +305,25 @@ const AudioDetails2 = ({ navigation, route }) => {
             </SafeAreaView>
 
             {/* Bottom Navigation */}
-            {!showMiniPlayer && <BottomMenu navigation={navigation} activeTab="Meditate" userName="User" />}
+            {!showMiniPlayer && (
+                <BottomMenu navigation={navigation} activeTab="Meditate" userName="User" />
+            )}
 
             {/* Mini Player */}
             {showMiniPlayer && (
-                <View style={[styles.miniPlayerContainer, {
-                    backgroundColor: theme.colors.card,
-                    borderTopColor: theme.colors.border,
-                    paddingBottom: spacing(20) + insets.bottom
-                }]}>
-                    <Text style={[styles.miniPlayerLabel, { color: theme.colors.textSecondary }]}>Now Playing</Text>
+                <View
+                    style={[
+                        styles.miniPlayerContainer,
+                        {
+                            backgroundColor: theme.colors.card,
+                            borderTopColor: theme.colors.border,
+                            paddingBottom: spacing(20) + insets.bottom,
+                        },
+                    ]}
+                >
+                    <Text style={[styles.miniPlayerLabel, { color: theme.colors.textSecondary }]}>
+                        Now Playing
+                    </Text>
                     <View style={styles.miniPlayerContent}>
                         <Image
                             source={require('../../assets/images/audio_details_bg.png')}
@@ -298,33 +331,82 @@ const AudioDetails2 = ({ navigation, route }) => {
                             resizeMode="cover"
                         />
                         <View style={styles.miniPlayerMainColumn}>
-                            <Text style={[styles.miniPlayerTitle, { color: theme.colors.text }]} numberOfLines={1}>{sessionData.name}</Text>
+                            <Text
+                                style={[styles.miniPlayerTitle, { color: theme.colors.text }]}
+                                numberOfLines={1}
+                            >
+                                {sessionData.name}
+                            </Text>
 
                             <View style={styles.miniPlayerProgressRow}>
                                 <View style={{ flex: 1, justifyContent: 'center' }}>
                                     {/* Progress Bar Wrapper with increased hit slop */}
                                     <View
                                         style={{ height: hp(30), justifyContent: 'center' }}
-                                        onLayout={(e) => { barWidth.current = e.nativeEvent.layout.width; }}
+                                        onLayout={e => {
+                                            barWidth.current = e.nativeEvent.layout.width;
+                                        }}
                                         {...panResponderCorrect.panHandlers}
                                     >
-                                        <View style={[styles.progressBarContainer, { backgroundColor: theme.colors.border }]}>
-                                            <View style={[styles.progressBarFill, { width: `${progressPercent}%`, backgroundColor: theme.colors.primary }]} />
+                                        <View
+                                            style={[
+                                                styles.progressBarContainer,
+                                                { backgroundColor: theme.colors.border },
+                                            ]}
+                                        >
+                                            <View
+                                                style={[
+                                                    styles.progressBarFill,
+                                                    {
+                                                        width: `${progressPercent}%`,
+                                                        backgroundColor: theme.colors.primary,
+                                                    },
+                                                ]}
+                                            />
                                             {/* Hidden knob */}
-                                            <View style={[styles.progressBarKnob, { left: `${Math.max(0, progressPercent - 2)}%`, backgroundColor: theme.colors.text }]} />
+                                            <View
+                                                style={[
+                                                    styles.progressBarKnob,
+                                                    {
+                                                        left: `${Math.max(0, progressPercent - 2)}%`,
+                                                        backgroundColor: theme.colors.text,
+                                                    },
+                                                ]}
+                                            />
                                         </View>
                                     </View>
 
                                     {/* Time */}
                                     <View style={styles.timeContainer}>
-                                        <Text style={[styles.timeText, { color: theme.colors.textSecondary }]}>{formatTime(currentDisplayPosition)}</Text>
-                                        <Text style={[styles.timeText, { color: theme.colors.textSecondary }]}>{formatTime(status.duration)}</Text>
+                                        <Text
+                                            style={[
+                                                styles.timeText,
+                                                { color: theme.colors.textSecondary },
+                                            ]}
+                                        >
+                                            {formatTime(currentDisplayPosition)}
+                                        </Text>
+                                        <Text
+                                            style={[
+                                                styles.timeText,
+                                                { color: theme.colors.textSecondary },
+                                            ]}
+                                        >
+                                            {formatTime(status.duration)}
+                                        </Text>
                                     </View>
                                 </View>
 
                                 {/* Pause Button */}
-                                <TouchableOpacity style={styles.miniPlayerPauseButton} onPress={handlePlay}>
-                                    <Ionicons name={isPlaying ? "pause" : "play"} size={fs(30)} color={theme.colors.text} />
+                                <TouchableOpacity
+                                    style={styles.miniPlayerPauseButton}
+                                    onPress={handlePlay}
+                                >
+                                    <Ionicons
+                                        name={isPlaying ? 'pause' : 'play'}
+                                        size={fs(30)}
+                                        color={theme.colors.text}
+                                    />
                                 </TouchableOpacity>
                             </View>
 
@@ -332,19 +414,35 @@ const AudioDetails2 = ({ navigation, route }) => {
                             <View style={styles.miniPlayerBottomControls}>
                                 <View style={styles.controlsGroup}>
                                     <TouchableOpacity>
-                                        <Ionicons name="repeat" size={fs(22)} color={theme.colors.textSecondary} />
+                                        <Ionicons
+                                            name="repeat"
+                                            size={fs(22)}
+                                            color={theme.colors.textSecondary}
+                                        />
                                     </TouchableOpacity>
                                     <TouchableOpacity>
-                                        <Ionicons name="shuffle" size={fs(22)} color={theme.colors.textSecondary} />
+                                        <Ionicons
+                                            name="shuffle"
+                                            size={fs(22)}
+                                            color={theme.colors.textSecondary}
+                                        />
                                     </TouchableOpacity>
                                 </View>
 
                                 <View style={styles.controlsGroup}>
                                     <TouchableOpacity>
-                                        <Ionicons name="play-skip-back" size={fs(22)} color={theme.colors.text} />
+                                        <Ionicons
+                                            name="play-skip-back"
+                                            size={fs(22)}
+                                            color={theme.colors.text}
+                                        />
                                     </TouchableOpacity>
                                     <TouchableOpacity>
-                                        <Ionicons name="play-skip-forward" size={fs(22)} color={theme.colors.text} />
+                                        <Ionicons
+                                            name="play-skip-forward"
+                                            size={fs(22)}
+                                            color={theme.colors.text}
+                                        />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -395,7 +493,8 @@ const styles = StyleSheet.create({
     },
     heroCardContainer: {
         width: '100%',
-        height: hp(320),
+        height: isTablet() ? hp(450) : hp(320),
+        maxHeight: isTablet() ? 500 : undefined,
         borderRadius: wp(20),
         marginBottom: hp(24),
         shadowColor: '#000',
@@ -531,7 +630,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: wp(20),
         borderTopRightRadius: wp(20),
         padding: spacing(20),
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: hp(-5),
@@ -552,8 +651,8 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     miniPlayerImage: {
-        width: wp(100),
-        height: wp(100),
+        width: isTablet() ? wp(150) : wp(100),
+        height: isTablet() ? wp(150) : wp(100),
         borderRadius: wp(15),
         marginRight: spacing(15),
     },

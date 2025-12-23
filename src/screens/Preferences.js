@@ -5,108 +5,143 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
     StatusBar,
     Switch,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
 const Preferences = ({ navigation }) => {
     const { theme } = useTheme();
+    const insets = useSafeAreaInsets();
     const [downloadWifiOnly, setDownloadWifiOnly] = useState(false);
     const [autoDownloadAudio, setAutoDownloadAudio] = useState(false);
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+            <View style={{ flex: 1, paddingTop: insets.top }}>
+                <StatusBar
+                    barStyle={theme.colors.statusBar}
+                    backgroundColor={theme.colors.background}
+                />
 
-            {/* Header */}
-            <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-                <TouchableOpacity
-                    style={styles.backButton}
-                    onPress={() => navigation.goBack()}
-                    activeOpacity={0.7}
+                {/* Header */}
+                <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
+                    <TouchableOpacity
+                        style={styles.backButton}
+                        onPress={() => navigation.goBack()}
+                        activeOpacity={0.7}
+                    >
+                        <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
+                    </TouchableOpacity>
+                    <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
+                        Preferences
+                    </Text>
+                    <View style={styles.placeholder} />
+                </View>
+
+                <ScrollView
+                    style={styles.scrollView}
+                    contentContainerStyle={[
+                        styles.scrollContent,
+                        { paddingBottom: insets.bottom + 20 },
+                    ]}
+                    showsVerticalScrollIndicator={false}
                 >
-                    <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
-                </TouchableOpacity>
-                <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Preferences</Text>
-                <View style={styles.placeholder} />
-            </View>
-
-            <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
-                showsVerticalScrollIndicator={false}
-            >
-                {/* General Section */}
-                <View style={styles.section}>
-                    <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>General</Text>
-
-                    {/* Download Over Wi-Fi Only */}
-                    <View style={[styles.optionRow, { backgroundColor: theme.colors.card }]}>
-                        <Text style={[styles.optionText, { color: theme.colors.text }]}>
-                            Download Over Wi-Fi Only
+                    {/* General Section */}
+                    <View style={styles.section}>
+                        <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>
+                            General
                         </Text>
-                        <Switch
-                            value={downloadWifiOnly}
-                            onValueChange={setDownloadWifiOnly}
-                            trackColor={{ false: '#E5E7EB', true: theme.colors.primary }}
-                            thumbColor={downloadWifiOnly ? '#FFFFFF' : '#F3F4F6'}
-                            ios_backgroundColor="#E5E7EB"
-                        />
-                    </View>
 
-                    {/* Clear Cache */}
-                    <TouchableOpacity
-                        style={[styles.optionRow, { backgroundColor: theme.colors.card }]}
-                        activeOpacity={0.7}
-                        onPress={() => { }} // TODO: Implement Clear Cache
-                    >
-                        <Text style={[styles.optionText, { color: theme.colors.text }]}>
-                            Clear Cache
-                        </Text>
-                        <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
-                    </TouchableOpacity>
-                </View>
-
-                {/* Audio Section */}
-                <View style={styles.section}>
-                    <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>Audio</Text>
-
-                    {/* Audio Quality */}
-                    <TouchableOpacity
-                        style={[styles.optionRow, { backgroundColor: theme.colors.card }]}
-                        activeOpacity={0.7}
-                        onPress={() => { }} // TODO: Implement Audio Quality
-                    >
-                        <Text style={[styles.optionText, { color: theme.colors.text }]}>
-                            Audio Quality
-                        </Text>
-                        <View style={styles.optionRight}>
-                            <Text style={[styles.optionValue, { color: theme.colors.textSecondary }]}>
-                                Standard
+                        {/* Download Over Wi-Fi Only */}
+                        <View style={[styles.optionRow, { backgroundColor: theme.colors.card }]}>
+                            <Text style={[styles.optionText, { color: theme.colors.text }]}>
+                                Download Over Wi-Fi Only
                             </Text>
-                            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
+                            <Switch
+                                value={downloadWifiOnly}
+                                onValueChange={setDownloadWifiOnly}
+                                trackColor={{ false: '#E5E7EB', true: theme.colors.primary }}
+                                thumbColor={downloadWifiOnly ? '#FFFFFF' : '#F3F4F6'}
+                                ios_backgroundColor="#E5E7EB"
+                            />
                         </View>
-                    </TouchableOpacity>
 
-                    {/* Automatically Download Audio */}
-                    <View style={[styles.optionRow, { backgroundColor: theme.colors.card }]}>
-                        <Text style={[styles.optionText, { color: theme.colors.text }]}>
-                            Automatically Download Audio
-                        </Text>
-                        <Switch
-                            value={autoDownloadAudio}
-                            onValueChange={setAutoDownloadAudio}
-                            trackColor={{ false: '#E5E7EB', true: theme.colors.primary }}
-                            thumbColor={autoDownloadAudio ? '#FFFFFF' : '#F3F4F6'}
-                            ios_backgroundColor="#E5E7EB"
-                        />
+                        {/* Clear Cache */}
+                        <TouchableOpacity
+                            style={[
+                                styles.optionRow,
+                                {
+                                    backgroundColor: theme.colors.card,
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: theme.colors.border,
+                                },
+                            ]}
+                            activeOpacity={0.7}
+                            onPress={() => {}} // TODO: Implement Clear Cache
+                        >
+                            <Text style={[styles.optionText, { color: theme.colors.text }]}>
+                                Clear Cache
+                            </Text>
+                            <Ionicons
+                                name="chevron-forward"
+                                size={20}
+                                color={theme.colors.textSecondary}
+                            />
+                        </TouchableOpacity>
                     </View>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+
+                    {/* Audio Section */}
+                    <View style={styles.section}>
+                        <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>
+                            Audio
+                        </Text>
+
+                        {/* Audio Quality */}
+                        <TouchableOpacity
+                            style={[styles.optionRow, { backgroundColor: theme.colors.card }]}
+                            activeOpacity={0.7}
+                            onPress={() => {}} // TODO: Implement Audio Quality
+                        >
+                            <Text style={[styles.optionText, { color: theme.colors.text }]}>
+                                Audio Quality
+                            </Text>
+                            <View style={styles.optionRight}>
+                                <Text
+                                    style={[
+                                        styles.optionValue,
+                                        { color: theme.colors.textSecondary },
+                                    ]}
+                                >
+                                    Standard
+                                </Text>
+                                <Ionicons
+                                    name="chevron-forward"
+                                    size={20}
+                                    color={theme.colors.textSecondary}
+                                />
+                            </View>
+                        </TouchableOpacity>
+
+                        {/* Automatically Download Audio */}
+                        <View style={[styles.optionRow, { backgroundColor: theme.colors.card }]}>
+                            <Text style={[styles.optionText, { color: theme.colors.text }]}>
+                                Automatically Download Audio
+                            </Text>
+                            <Switch
+                                value={autoDownloadAudio}
+                                onValueChange={setAutoDownloadAudio}
+                                trackColor={{ false: '#E5E7EB', true: theme.colors.primary }}
+                                thumbColor={autoDownloadAudio ? '#FFFFFF' : '#F3F4F6'}
+                                ios_backgroundColor="#E5E7EB"
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
+            </View>
+        </View>
     );
 };
 

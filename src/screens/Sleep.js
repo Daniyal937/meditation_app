@@ -21,7 +21,7 @@ import { getUserProfile } from '../services/authService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 import BottomMenu from '../components/BottomMenu';
-import { wp, hp, fs, spacing } from '../utils/responsive';
+import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 
 const categories = [
     { id: 'all', name: 'All', image: require('../../assets/images/sleep_cat_all.png') },
@@ -48,6 +48,22 @@ const sleepContent = [
         image: require('../../assets/images/sweet_sleep_new.png'),
         color: '#8E97FD',
     },
+    {
+        id: 3,
+        title: 'Moon Clouds',
+        duration: '45 MIN',
+        type: 'SLEEP MUSIC',
+        image: require('../../assets/images/sleep_card_3.png'),
+        color: '#586894',
+    },
+    {
+        id: 4,
+        title: 'Sweet Dreams',
+        duration: '45 MIN',
+        type: 'SLEEP MUSIC',
+        image: require('../../assets/images/sleep_card_4.png'),
+        color: '#8E97FD',
+    },
 ];
 
 // Animation component for category buttons
@@ -59,22 +75,19 @@ const CategoryButton = ({ category, isActive, onPress, style }) => (
             style,
             {
                 transform: [{ scale: pressed ? 0.9 : 1 }],
-                opacity: pressed ? 0.8 : 1
-            }
+                opacity: pressed ? 0.8 : 1,
+            },
         ]}
     >
-        <Image
-            source={category.image}
-            style={styles.categoryImage}
-            resizeMode="contain"
-        />
+        <Image source={category.image} style={styles.categoryImage} resizeMode="contain" />
     </Pressable>
 );
 
 const Sleep = ({ navigation, route }) => {
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
-    const cardWidth = (width - spacing(40) - spacing(15)) / 2;
+    const numColumns = isTablet() ? 3 : 2;
+    const cardWidth = (width - spacing(40) - (numColumns - 1) * spacing(15)) / numColumns;
     const dispatch = useDispatch();
     const userProfileFromRedux = useSelector(state => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
@@ -99,9 +112,16 @@ const Sleep = ({ navigation, route }) => {
                             dispatch(setUserProfileAction(profile));
                         } else {
                             const emailName = currentUser.email.split('@')[0];
-                            const derivedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                            const derivedName =
+                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
                             setUserName(derivedName);
-                            dispatch(setUserProfileAction({ name: derivedName, uid: currentUser.uid, email: currentUser.email }));
+                            dispatch(
+                                setUserProfileAction({
+                                    name: derivedName,
+                                    uid: currentUser.uid,
+                                    email: currentUser.email,
+                                })
+                            );
                         }
                     }
                 }
@@ -113,7 +133,7 @@ const Sleep = ({ navigation, route }) => {
         fetchUserData();
     }, [route, userProfileFromRedux]);
 
-    useFocusEffect(useCallback(() => { }, []));
+    useFocusEffect(useCallback(() => {}, []));
 
     return (
         <View style={{ flex: 1, backgroundColor: '#03174C' }}>
@@ -128,18 +148,20 @@ const Sleep = ({ navigation, route }) => {
                     <ImageBackground
                         source={require('../../assets/images/sleep_header_bg.png')}
                         style={styles.headerGradient}
-                        resizeMode="stretch"
+                        resizeMode="cover"
                     >
                         {/* Header Icon Image */}
                         <Image
                             source={require('../../assets/images/sleep_header_icon.png')}
                             style={styles.headerImage}
-                            resizeMode="stretch"
+                            resizeMode="contain"
                         />
 
                         <Text style={styles.headerTitle}>Sleep Stories</Text>
                         <Text style={styles.headerSubtitle}>
-                            {"Soothing bedtime stories to help you fall\ninto a deep and natural sleep"}
+                            {
+                                'Soothing bedtime stories to help you fall into a deep and natural sleep'
+                            }
                         </Text>
                     </ImageBackground>
 
@@ -162,13 +184,11 @@ const Sleep = ({ navigation, route }) => {
                     </ScrollView>
 
                     {/* 🌊 FEATURED CARD — IMAGE MATCHES CARD */}
-                    <View
-                        style={styles.featuredCard}
-                    >
+                    <View style={styles.featuredCard}>
                         <ImageBackground
-                            source={require('../../assets/images/ocean_moon.png')}
+                            source={require('../../assets/images/ocean_moon_bg_final.png')}
                             style={styles.featuredImage}
-                            resizeMode="stretch"
+                            resizeMode="cover"
                         >
                             <View style={styles.featuredContent}>
                                 <Text style={styles.featuredTitle}>The Ocean Moon</Text>
@@ -178,17 +198,20 @@ const Sleep = ({ navigation, route }) => {
 
                                 <TouchableOpacity
                                     style={styles.startButton}
-                                    onPress={() => navigation.navigate('PlayOption', {
-                                        content: {
-                                            title: 'The Ocean Moon',
-                                            duration: '45 MIN',
-                                            type: 'SLEEP MUSIC',
-                                            description: "Ease the mind into a restful night's sleep with\n these deep, ambient tones.",
-                                            favoriteCount: '24,234',
-                                            listeningCount: '34,234',
-                                            image: require('../../assets/images/ocean_moon_hero.png'), // Should use hero image for play option
-                                        }
-                                    })}
+                                    onPress={() =>
+                                        navigation.navigate('PlayOption', {
+                                            content: {
+                                                title: 'The Ocean Moon',
+                                                duration: '45 MIN',
+                                                type: 'SLEEP MUSIC',
+                                                description:
+                                                    "Ease the mind into a restful night's sleep with\n these deep, ambient tones.",
+                                                favoriteCount: '24,234',
+                                                listeningCount: '34,234',
+                                                image: require('../../assets/images/ocean_moon_hero.png'), // Should use hero image for play option
+                                            },
+                                        })
+                                    }
                                 >
                                     <Text style={styles.startButtonText}>START</Text>
                                 </TouchableOpacity>
@@ -225,11 +248,15 @@ const Sleep = ({ navigation, route }) => {
                             </TouchableOpacity>
                         ))}
                     </View>
-
                 </ScrollView>
             </SafeAreaView>
 
-            <BottomMenu navigation={navigation} activeTab="Sleep" userName={userName} backgroundColor="#03174C" />
+            <BottomMenu
+                navigation={navigation}
+                activeTab="Sleep"
+                userName={userName}
+                backgroundColor="#03174C"
+            />
         </View>
     );
 };
@@ -244,7 +271,7 @@ const styles = StyleSheet.create({
         paddingBottom: hp(0),
         justifyContent: 'flex-start',
         alignItems: 'center',
-        width: wp(375), // Full screen width (based on 375 base width)
+        width: '100%',
     },
 
     headerImage: {
@@ -355,7 +382,7 @@ const styles = StyleSheet.create({
         marginBottom: hp(15),
     },
     gridImageContainer: {
-        height: hp(120),
+        aspectRatio: 1, // Square images look better and are more responsive
         width: '100%',
         borderRadius: wp(15),
         overflow: 'hidden',

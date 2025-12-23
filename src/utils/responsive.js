@@ -14,7 +14,7 @@ const getScreenDimensions = () => {
         // Fallback to base dimensions if invalid
         return {
             width: width && width > 0 ? width : baseWidth,
-            height: height && height > 0 ? height : baseHeight
+            height: height && height > 0 ? height : baseHeight,
         };
     } catch (error) {
         console.warn('Error getting screen dimensions:', error);
@@ -27,7 +27,7 @@ const getScreenDimensions = () => {
  * @param {number} size - The size to scale
  * @returns {number} - Scaled size
  */
-export const wp = (size) => {
+export const wp = size => {
     try {
         const { width } = getScreenDimensions();
         const percentage = (size / baseWidth) * 100;
@@ -44,7 +44,7 @@ export const wp = (size) => {
  * @param {number} size - The size to scale
  * @returns {number} - Scaled size
  */
-export const hp = (size) => {
+export const hp = size => {
     try {
         const { height } = getScreenDimensions();
         const percentage = (size / baseHeight) * 100;
@@ -61,7 +61,7 @@ export const hp = (size) => {
  * @param {number} size - The font size to scale
  * @returns {number} - Scaled font size
  */
-export const fs = (size) => {
+export const fs = size => {
     try {
         const { width } = getScreenDimensions();
         const scale = width / baseWidth;
@@ -97,7 +97,7 @@ export const ms = (size, factor = 0.5) => {
  * @param {number} size - The size to scale
  * @returns {number} - Scaled size
  */
-export const spacing = (size) => {
+export const spacing = size => {
     try {
         return wp(size);
     } catch (error) {

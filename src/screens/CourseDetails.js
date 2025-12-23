@@ -20,17 +20,17 @@ const CourseDetails = ({ navigation, route }) => {
     const courseData = {
         title: 'Happy Morning',
         type: 'COURSE',
-        description: 'Ease the mind into a restful night\'s sleep with these deep, amblent tones.',
+        description: "Ease the mind into a restful night's sleep with these deep, amblent tones.",
         favorites: 24234,
         listening: 34234,
         sessions: [
             { id: 1, name: 'Focus Attention', duration: '10 MIN' },
             { id: 2, name: 'Body Scan', duration: '5 MIN' },
             { id: 3, name: 'Making Happiness', duration: '3 MIN' },
-        ]
+        ],
     };
 
-    const handlePlaySession = (session) => {
+    const handlePlaySession = session => {
         setSelectedSession(session.id);
 
         // Navigate to audio player screen
@@ -41,10 +41,7 @@ const CourseDetails = ({ navigation, route }) => {
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-            <ScrollView
-                style={styles.scrollView}
-                showsVerticalScrollIndicator={false}
-            >
+            <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
                 {/* Header Image */}
                 <View style={styles.headerImageContainer}>
                     <Image
@@ -62,16 +59,10 @@ const CourseDetails = ({ navigation, route }) => {
                             <Ionicons name="chevron-back" size={fs(24)} color="#3F414E" />
                         </TouchableOpacity>
                         <View style={styles.headerRightButtons}>
-                            <TouchableOpacity
-                                style={styles.iconButton}
-                                activeOpacity={0.8}
-                            >
+                            <TouchableOpacity style={styles.iconButton} activeOpacity={0.8}>
                                 <Ionicons name="heart-outline" size={fs(24)} color="#3F414E" />
                             </TouchableOpacity>
-                            <TouchableOpacity
-                                style={styles.iconButton}
-                                activeOpacity={0.8}
-                            >
+                            <TouchableOpacity style={styles.iconButton} activeOpacity={0.8}>
                                 <Ionicons name="download-outline" size={fs(24)} color="#3F414E" />
                             </TouchableOpacity>
                         </View>
@@ -109,13 +100,18 @@ const CourseDetails = ({ navigation, route }) => {
                                 onPress={() => setSelectedVoice('MALE')}
                                 activeOpacity={0.8}
                             >
-                                <Text style={[
-                                    styles.narratorButtonText,
-                                    selectedVoice === 'MALE' && styles.narratorButtonTextSelected
-                                ]}>
+                                <Text
+                                    style={[
+                                        styles.narratorButtonText,
+                                        selectedVoice === 'MALE' &&
+                                            styles.narratorButtonTextSelected,
+                                    ]}
+                                >
                                     MALE VOICE
                                 </Text>
-                                {selectedVoice === 'MALE' && <View style={styles.narratorUnderline} />}
+                                {selectedVoice === 'MALE' && (
+                                    <View style={styles.narratorUnderline} />
+                                )}
                             </TouchableOpacity>
 
                             <TouchableOpacity
@@ -123,34 +119,45 @@ const CourseDetails = ({ navigation, route }) => {
                                 onPress={() => setSelectedVoice('FEMALE')}
                                 activeOpacity={0.8}
                             >
-                                <Text style={[
-                                    styles.narratorButtonText,
-                                    selectedVoice === 'FEMALE' && styles.narratorButtonTextSelected
-                                ]}>
+                                <Text
+                                    style={[
+                                        styles.narratorButtonText,
+                                        selectedVoice === 'FEMALE' &&
+                                            styles.narratorButtonTextSelected,
+                                    ]}
+                                >
                                     FEMALE VOICE
                                 </Text>
-                                {selectedVoice === 'FEMALE' && <View style={styles.narratorUnderline} />}
+                                {selectedVoice === 'FEMALE' && (
+                                    <View style={styles.narratorUnderline} />
+                                )}
                             </TouchableOpacity>
                         </View>
                     </View>
 
                     {/* Session List */}
                     <View style={styles.sessionSection}>
-                        {courseData.sessions.map((session) => (
+                        {courseData.sessions.map(session => (
                             <TouchableOpacity
                                 key={session.id}
                                 style={styles.sessionItem}
                                 onPress={() => handlePlaySession(session)}
                                 activeOpacity={0.7}
                             >
-                                <View style={[
-                                    styles.playButton,
-                                    selectedSession === session.id ? styles.playButtonSelected : styles.playButtonUnselected
-                                ]}>
+                                <View
+                                    style={[
+                                        styles.playButton,
+                                        selectedSession === session.id
+                                            ? styles.playButtonSelected
+                                            : styles.playButtonUnselected,
+                                    ]}
+                                >
                                     <Ionicons
                                         name="play"
                                         size={fs(20)}
-                                        color={selectedSession === session.id ? "#FFFFFF" : "#A1A4B2"}
+                                        color={
+                                            selectedSession === session.id ? '#FFFFFF' : '#A1A4B2'
+                                        }
                                     />
                                 </View>
                                 <View style={styles.sessionInfo}>

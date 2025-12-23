@@ -27,21 +27,28 @@ const SleepStart = ({ navigation }) => {
                 resizeMode="cover"
             >
                 {/* Content Container */}
-                <View style={[styles.contentContainer, { paddingTop: insets.top + hp(60), paddingBottom: insets.bottom + hp(20) }]}>
+                <View
+                    style={[
+                        styles.contentContainer,
+                        { paddingTop: insets.top + hp(60), paddingBottom: insets.bottom + hp(20) },
+                    ]}
+                >
                     {/* Title Section */}
                     <View style={styles.titleSection}>
                         <Text style={styles.title}>Welcome to Sleep</Text>
                         <Text style={styles.description}>
-                            Explore the new king of sleep. It uses sound
-                            and visualization to create perfect conditions
-                            for refreshing sleep.
+                            Explore the new king of sleep. It uses sound and visualization to create
+                            perfect conditions for refreshing sleep.
                         </Text>
                     </View>
 
                     {/* Sleeping Birds Illustration */}
                     <Image
                         source={require('../../assets/images/sleeping_birds_logo.png')}
-                        style={[styles.illustration, { width: width * 0.88, height: height * 0.385 }]}
+                        style={[
+                            styles.illustration,
+                            { width: width * 0.88, height: height * 0.385 },
+                        ]}
                         resizeMode="contain"
                     />
 
@@ -56,7 +63,6 @@ const SleepStart = ({ navigation }) => {
                     >
                         <Text style={styles.getStartedText}>GET STARTED</Text>
                     </TouchableOpacity>
-
                 </View>
             </ImageBackground>
         </View>

@@ -13,16 +13,18 @@ const BottomMenu = ({ navigation, activeTab, userName = 'User', backgroundColor 
     const paddingBottom = insets.bottom > 0 ? insets.bottom + hp(2) : hp(24); // Increased fallback padding for better visibility on small screens
 
     return (
-        <View style={[
-            styles.bottomNav,
-            {
-                backgroundColor: backgroundColor || theme.colors.navBackground,
-                borderTopColor: backgroundColor ? backgroundColor : theme.colors.navBorder,
-                borderTopWidth: backgroundColor ? 0 : 1,
-                paddingBottom: paddingBottom,
-                paddingTop: hp(12),
-            }
-        ]}>
+        <View
+            style={[
+                styles.bottomNav,
+                {
+                    backgroundColor: backgroundColor || theme.colors.navBackground,
+                    borderTopColor: backgroundColor ? backgroundColor : theme.colors.navBorder,
+                    borderTopWidth: backgroundColor ? 0 : 1,
+                    paddingBottom: paddingBottom,
+                    paddingTop: hp(12),
+                },
+            ]}
+        >
             <View style={styles.navItemWrapper}>
                 <TouchableOpacity
                     style={[styles.navItem, activeTab === 'Home' && styles.navItemActive]}
@@ -31,10 +33,20 @@ const BottomMenu = ({ navigation, activeTab, userName = 'User', backgroundColor 
                 >
                     <Image
                         source={require('../../assets/images/menu_home.png')}
-                        style={[styles.navIcon, { tintColor: activeTab === 'Home' ? '#FFFFFF' : theme.colors.navText }]}
+                        style={[
+                            styles.navIcon,
+                            { tintColor: activeTab === 'Home' ? '#FFFFFF' : theme.colors.navText },
+                        ]}
                         resizeMode="contain"
                     />
-                    <Text style={[styles.navText, { color: activeTab === 'Home' ? '#FFFFFF' : theme.colors.navText }]}>Home</Text>
+                    <Text
+                        style={[
+                            styles.navText,
+                            { color: activeTab === 'Home' ? '#FFFFFF' : theme.colors.navText },
+                        ]}
+                    >
+                        Home
+                    </Text>
                 </TouchableOpacity>
             </View>
 
@@ -57,10 +69,20 @@ const BottomMenu = ({ navigation, activeTab, userName = 'User', backgroundColor 
                 >
                     <Image
                         source={require('../../assets/images/menu_sleep.png')}
-                        style={[styles.navIcon, { tintColor: activeTab === 'Sleep' ? '#FFFFFF' : theme.colors.navText }]}
+                        style={[
+                            styles.navIcon,
+                            { tintColor: activeTab === 'Sleep' ? '#FFFFFF' : theme.colors.navText },
+                        ]}
                         resizeMode="contain"
                     />
-                    <Text style={[styles.navText, { color: activeTab === 'Sleep' ? '#FFFFFF' : theme.colors.navText }]}>Sleep</Text>
+                    <Text
+                        style={[
+                            styles.navText,
+                            { color: activeTab === 'Sleep' ? '#FFFFFF' : theme.colors.navText },
+                        ]}
+                    >
+                        Sleep
+                    </Text>
                 </TouchableOpacity>
             </View>
 
@@ -72,10 +94,23 @@ const BottomMenu = ({ navigation, activeTab, userName = 'User', backgroundColor 
                 >
                     <Image
                         source={require('../../assets/images/menu_meditate.png')}
-                        style={[styles.navIcon, { tintColor: activeTab === 'Meditate' ? '#FFFFFF' : theme.colors.navText }]}
+                        style={[
+                            styles.navIcon,
+                            {
+                                tintColor:
+                                    activeTab === 'Meditate' ? '#FFFFFF' : theme.colors.navText,
+                            },
+                        ]}
                         resizeMode="contain"
                     />
-                    <Text style={[styles.navText, { color: activeTab === 'Meditate' ? '#FFFFFF' : theme.colors.navText }]}>Meditate</Text>
+                    <Text
+                        style={[
+                            styles.navText,
+                            { color: activeTab === 'Meditate' ? '#FFFFFF' : theme.colors.navText },
+                        ]}
+                    >
+                        Meditate
+                    </Text>
                 </TouchableOpacity>
             </View>
 
@@ -83,14 +118,26 @@ const BottomMenu = ({ navigation, activeTab, userName = 'User', backgroundColor 
                 <TouchableOpacity
                     style={[styles.navItem, activeTab === 'Music' && styles.navItemActive]}
                     activeOpacity={0.7}
-                    onPress={() => navigation.navigate('MeditationSessions', { activeTab: 'Music' })}
+                    onPress={() =>
+                        navigation.navigate('MeditationSessions', { activeTab: 'Music' })
+                    }
                 >
                     <Image
                         source={require('../../assets/images/menu_music.png')}
-                        style={[styles.navIcon, { tintColor: activeTab === 'Music' ? '#FFFFFF' : theme.colors.navText }]}
+                        style={[
+                            styles.navIcon,
+                            { tintColor: activeTab === 'Music' ? '#FFFFFF' : theme.colors.navText },
+                        ]}
                         resizeMode="contain"
                     />
-                    <Text style={[styles.navText, { color: activeTab === 'Music' ? '#FFFFFF' : theme.colors.navText }]}>Music</Text>
+                    <Text
+                        style={[
+                            styles.navText,
+                            { color: activeTab === 'Music' ? '#FFFFFF' : theme.colors.navText },
+                        ]}
+                    >
+                        Music
+                    </Text>
                 </TouchableOpacity>
             </View>
 
@@ -102,10 +149,23 @@ const BottomMenu = ({ navigation, activeTab, userName = 'User', backgroundColor 
                 >
                     <Image
                         source={require('../../assets/images/menu_profile.png')}
-                        style={[styles.navIcon, { tintColor: activeTab === 'Profile' ? '#FFFFFF' : theme.colors.navText }]}
+                        style={[
+                            styles.navIcon,
+                            {
+                                tintColor:
+                                    activeTab === 'Profile' ? '#FFFFFF' : theme.colors.navText,
+                            },
+                        ]}
                         resizeMode="contain"
                     />
-                    <Text style={[styles.navText, { color: activeTab === 'Profile' ? '#FFFFFF' : theme.colors.navText }]}>{userName}</Text>
+                    <Text
+                        style={[
+                            styles.navText,
+                            { color: activeTab === 'Profile' ? '#FFFFFF' : theme.colors.navText },
+                        ]}
+                    >
+                        {userName}
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>

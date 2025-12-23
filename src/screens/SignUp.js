@@ -5,7 +5,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     TextInput,
-    SafeAreaView,
     StatusBar,
     KeyboardAvoidingView,
     Platform,
@@ -13,6 +12,7 @@ import {
     Alert,
     Image,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { wp, hp, fs } from '../utils/responsive';
@@ -24,9 +24,10 @@ const SignUp = ({ navigation }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const insets = useSafeAreaInsets();
 
     // Email validation
-    const isValidEmail = (email) => {
+    const isValidEmail = email => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
@@ -40,36 +41,28 @@ const SignUp = ({ navigation }) => {
     };
 
     const handleSignUp = async () => {
-
-
         // Validation
         if (!name.trim()) {
-
             Alert.alert('Error', 'Please enter your name');
             return;
         }
         if (!email.trim()) {
-
             Alert.alert('Error', 'Please enter your email');
             return;
         }
         if (!isValidEmail(email)) {
-
             Alert.alert('Error', 'Please enter a valid email address');
             return;
         }
         if (!password.trim()) {
-
             Alert.alert('Error', 'Please enter your password');
             return;
         }
         if (password.length < 6) {
-
             Alert.alert('Error', 'Password must be at least 6 characters');
             return;
         }
         if (!agreedToPrivacy) {
-
             Alert.alert('Error', 'Please agree to the Privacy Policy');
             return;
         }
@@ -85,16 +78,12 @@ const SignUp = ({ navigation }) => {
 
             if (result.success) {
                 // Show success message and navigate to Login screen
-                Alert.alert(
-                    'Success!',
-                    'Account created successfully. Please login to continue.',
-                    [
-                        {
-                            text: 'OK',
-                            onPress: () => navigation.navigate('Login')
-                        }
-                    ]
-                );
+                Alert.alert('Success!', 'Account created successfully. Please login to continue.', [
+                    {
+                        text: 'OK',
+                        onPress: () => navigation.navigate('Login'),
+                    },
+                ]);
             } else {
                 // Show error message from Firebase
                 Alert.alert('Signup Failed', result.error);
@@ -107,171 +96,193 @@ const SignUp = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={styles.keyboardView}
-            >
-                <ScrollView
-                    contentContainerStyle={styles.scrollContent}
-                    showsVerticalScrollIndicator={false}
+        <View style={styles.container}>
+            <Image
+                source={require('../../assets/images/login_bg.png')}
+                style={styles.backgroundImage}
+                resizeMode="cover"
+            />
+            <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+            <View style={[styles.safeArea, { paddingTop: insets.top }]}>
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={styles.keyboardView}
                 >
-                    {/* Header */}
-                    <View style={styles.header}>
-                        <TouchableOpacity
-                            onPress={() => navigation.goBack()}
-                            style={styles.backButton}
-                        >
-                            <Ionicons name="arrow-back" size={24} color="#3F414E" />
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Title */}
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}>Create your account</Text>
-                    </View>
-
-                    {/* Social Login Buttons */}
-                    <View style={styles.socialButtonsContainer}>
-                        {/* Facebook Button */}
-                        <TouchableOpacity
-                            style={styles.facebookButton}
-                            onPress={handleFacebookLogin}
-                            activeOpacity={0.8}
-                        >
-                            <LinearGradient
-                                colors={['#8E97FD', '#A5AFFF']}
-                                style={styles.facebookGradient}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 0 }}
-                            >
-                                <FontAwesome name="facebook-f" size={20} color="#FFFFFF" />
-                                <Text style={styles.facebookButtonText}>CONTINUE WITH FACEBOOK</Text>
-                            </LinearGradient>
-                        </TouchableOpacity>
-
-                        {/* Google Button */}
-                        <TouchableOpacity
-                            style={styles.googleButton}
-                            onPress={handleGoogleLogin}
-                            activeOpacity={0.8}
-                        >
-                            <Image
-                                source={require('../../assets/images/google-logo.png')}
-                                style={styles.googleLogo}
-                            />
-                            <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* Divider */}
-                    <TouchableOpacity
-                        style={styles.dividerContainer}
-                        onPress={() => navigation.navigate('Login')}
-                        activeOpacity={0.7}
+                    <ScrollView
+                        contentContainerStyle={styles.scrollContent}
+                        showsVerticalScrollIndicator={false}
                     >
-                        <Text style={styles.dividerText}>OR LOG IN WITH EMAIL</Text>
-                    </TouchableOpacity>
-
-                    {/* Form */}
-                    <View style={styles.formContainer}>
-                        {/* Name Input */}
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Username"
-                                placeholderTextColor="#A1A4B2"
-                                value={name}
-                                onChangeText={setName}
-                                autoCapitalize="words"
-                            />
-                            {name.trim().length > 0 && (
-                                <Ionicons name="checkmark-circle" size={20} color="#4CAF50" style={styles.checkIcon} />
-                            )}
-                        </View>
-
-                        {/* Email Input */}
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Email address"
-                                placeholderTextColor="#A1A4B2"
-                                value={email}
-                                onChangeText={setEmail}
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                            />
-                            {isValidEmail(email) && (
-                                <Ionicons name="checkmark-circle" size={20} color="#4CAF50" style={styles.checkIcon} />
-                            )}
-                        </View>
-
-                        {/* Password Input */}
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Password"
-                                placeholderTextColor="#A1A4B2"
-                                value={password}
-                                onChangeText={setPassword}
-                                secureTextEntry={!showPassword}
-                                autoCapitalize="none"
-                            />
+                        {/* Header */}
+                        <View style={styles.header}>
                             <TouchableOpacity
-                                onPress={() => setShowPassword(!showPassword)}
-                                style={styles.eyeIcon}
+                                onPress={() => navigation.goBack()}
+                                style={styles.backButton}
                             >
-                                <Image
-                                    source={require('../../assets/images/eye_icon.png')}
-                                    style={{ width: 20, height: 20, tintColor: '#A1A4B2' }}
-                                    resizeMode="contain"
-                                />
+                                <Ionicons name="arrow-back" size={24} color="#3F414E" />
                             </TouchableOpacity>
                         </View>
 
-                        {/* Privacy Policy Checkbox */}
+                        {/* Title */}
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.title}>Create your account</Text>
+                        </View>
+
+                        {/* Social Login Buttons */}
+                        <View style={styles.socialButtonsContainer}>
+                            {/* Facebook Button */}
+                            <TouchableOpacity
+                                style={styles.facebookButton}
+                                onPress={handleFacebookLogin}
+                                activeOpacity={0.8}
+                            >
+                                <LinearGradient
+                                    colors={['#8E97FD', '#A5AFFF']}
+                                    style={styles.facebookGradient}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                >
+                                    <FontAwesome name="facebook-f" size={20} color="#FFFFFF" />
+                                    <Text style={styles.facebookButtonText}>
+                                        CONTINUE WITH FACEBOOK
+                                    </Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+
+                            {/* Google Button */}
+                            <TouchableOpacity
+                                style={styles.googleButton}
+                                onPress={handleGoogleLogin}
+                                activeOpacity={0.8}
+                            >
+                                <Image
+                                    source={require('../../assets/images/google-logo.png')}
+                                    style={styles.googleLogo}
+                                />
+                                <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Divider */}
                         <TouchableOpacity
-                            style={styles.checkboxContainer}
-                            onPress={() => {
-                                setAgreedToPrivacy(!agreedToPrivacy);
-                            }}
+                            style={styles.dividerContainer}
+                            onPress={() => navigation.navigate('Login')}
                             activeOpacity={0.7}
                         >
-                            <Text style={styles.checkboxText}>I have read the Privacy Policy</Text>
-                            <View style={[styles.checkbox, agreedToPrivacy && styles.checkboxChecked]}>
-                                {agreedToPrivacy && (
-                                    <Ionicons name="checkmark" size={16} color="#8E97FD" />
+                            <Text style={styles.dividerText}>OR LOG IN WITH EMAIL</Text>
+                        </TouchableOpacity>
+
+                        {/* Form */}
+                        <View style={styles.formContainer}>
+                            {/* Name Input */}
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Username"
+                                    placeholderTextColor="#A1A4B2"
+                                    value={name}
+                                    onChangeText={setName}
+                                    autoCapitalize="words"
+                                />
+                                {name.trim().length > 0 && (
+                                    <Ionicons
+                                        name="checkmark-circle"
+                                        size={20}
+                                        color="#4CAF50"
+                                        style={styles.checkIcon}
+                                    />
                                 )}
                             </View>
-                        </TouchableOpacity>
-                    </View>
 
-                    {/* Get Started Button */}
-                    <TouchableOpacity
-                        style={styles.getStartedButton}
-                        onPress={handleSignUp}
-                        activeOpacity={0.8}
-                        disabled={isLoading}
-                    >
-                        <LinearGradient
-                            colors={['#8E97FD', '#A5AFFF']}
-                            style={styles.buttonGradient}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
+                            {/* Email Input */}
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Email address"
+                                    placeholderTextColor="#A1A4B2"
+                                    value={email}
+                                    onChangeText={setEmail}
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                />
+                                {isValidEmail(email) && (
+                                    <Ionicons
+                                        name="checkmark-circle"
+                                        size={20}
+                                        color="#4CAF50"
+                                        style={styles.checkIcon}
+                                    />
+                                )}
+                            </View>
+
+                            {/* Password Input */}
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Password"
+                                    placeholderTextColor="#A1A4B2"
+                                    value={password}
+                                    onChangeText={setPassword}
+                                    secureTextEntry={!showPassword}
+                                    autoCapitalize="none"
+                                />
+                                <TouchableOpacity
+                                    onPress={() => setShowPassword(!showPassword)}
+                                    style={styles.eyeIcon}
+                                >
+                                    <Image
+                                        source={require('../../assets/images/eye_icon.png')}
+                                        style={{ width: 20, height: 20, tintColor: '#A1A4B2' }}
+                                        resizeMode="contain"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+
+                            {/* Privacy Policy Checkbox */}
+                            <TouchableOpacity
+                                style={styles.checkboxContainer}
+                                onPress={() => {
+                                    setAgreedToPrivacy(!agreedToPrivacy);
+                                }}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={styles.checkboxText}>
+                                    I have read the Privacy Policy
+                                </Text>
+                                <View
+                                    style={[
+                                        styles.checkbox,
+                                        agreedToPrivacy && styles.checkboxChecked,
+                                    ]}
+                                >
+                                    {agreedToPrivacy && (
+                                        <Ionicons name="checkmark" size={16} color="#8E97FD" />
+                                    )}
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Get Started Button */}
+                        <TouchableOpacity
+                            style={styles.getStartedButton}
+                            onPress={handleSignUp}
+                            activeOpacity={0.8}
+                            disabled={isLoading}
                         >
-                            <Text style={styles.getStartedButtonText}>
-                                {isLoading ? 'CREATING ACCOUNT...' : 'GET STARTED'}
-                            </Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-
-                    {/* Bottom Divider */}
-                    <View style={styles.bottomDivider} />
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+                            <LinearGradient
+                                colors={['#8E97FD', '#A5AFFF']}
+                                style={styles.buttonGradient}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                            >
+                                <Text style={styles.getStartedButtonText}>
+                                    {isLoading ? 'CREATING ACCOUNT...' : 'GET STARTED'}
+                                </Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </View>
+        </View>
     );
 };
 
@@ -279,6 +290,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
+    },
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        height: hp(428),
+        zIndex: -1,
+    },
+    safeArea: {
+        flex: 1,
     },
     keyboardView: {
         flex: 1,
@@ -435,11 +458,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#FFFFFF',
         letterSpacing: 1.2,
-    },
-    bottomDivider: {
-        height: 1,
-        backgroundColor: '#E8E8E8',
-        marginHorizontal: wp(40),
     },
 });
 

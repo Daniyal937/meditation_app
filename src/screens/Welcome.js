@@ -58,12 +58,8 @@ const Welcome = ({ navigation, route }) => {
 
                 {/* Welcome Text Section */}
                 <View style={styles.welcomeContainer}>
-                    <Text style={styles.welcomeHeading}>
-                        Hi {userName}, Welcome
-                    </Text>
-                    <Text style={styles.welcomeSubheading}>
-                        to Silent Moon
-                    </Text>
+                    <Text style={styles.welcomeHeading}>Hi {userName}, Welcome</Text>
+                    <Text style={styles.welcomeSubheading}>to Silent Moon</Text>
                 </View>
 
                 {/* Illustration Section with Decorations */}
@@ -89,7 +85,6 @@ const Welcome = ({ navigation, route }) => {
                         resizeMode="contain"
                     />
 
-
                     {/* Meditation Illustration */}
                     <Image
                         source={require('../../assets/images/welcome_v3.png')}
@@ -107,10 +102,9 @@ const Welcome = ({ navigation, route }) => {
                     >
                         <Text style={styles.getStartedButtonText}>GET STARTED</Text>
                     </TouchableOpacity>
-
                 </View>
             </SafeAreaView>
-        </LinearGradient >
+        </LinearGradient>
     );
 };
 

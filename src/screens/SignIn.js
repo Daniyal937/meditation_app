@@ -5,7 +5,6 @@ import {
     StyleSheet,
     TouchableOpacity,
     TextInput,
-    SafeAreaView,
     StatusBar,
     KeyboardAvoidingView,
     Platform,
@@ -13,6 +12,7 @@ import {
     Alert,
     Image,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { wp, hp, fs } from '../utils/responsive';
@@ -22,6 +22,7 @@ const SignIn = ({ navigation }) => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const insets = useSafeAreaInsets();
 
     const handleFacebookLogin = () => {
         Alert.alert('Facebook Login', 'Facebook authentication will be implemented with Firebase');
@@ -72,20 +73,16 @@ const SignIn = ({ navigation }) => {
 
         setIsLoading(true);
 
-
         try {
             // Firebase Authentication
             const { signInWithEmail } = require('../services/authService');
             const result = await signInWithEmail(email, password);
 
-
             setIsLoading(false);
 
             if (result.success) {
-
                 // Navigate based on whether user has seen welcome screen
                 if (result.user.hasSeenWelcome) {
-
                     navigation.replace('Home');
                 } else {
                     const userName = result.user.name || 'User';
@@ -106,153 +103,160 @@ const SignIn = ({ navigation }) => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <View style={styles.container}>
+            <Image
+                source={require('../../assets/images/login_bg.png')}
+                style={styles.backgroundImage}
+                resizeMode="cover"
+            />
+            <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={styles.keyboardView}
-            >
-                <ScrollView
-                    contentContainerStyle={styles.scrollContent}
-                    showsVerticalScrollIndicator={false}
+            <View style={[styles.safeArea, { paddingTop: insets.top }]}>
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={styles.keyboardView}
                 >
-                    {/* Header */}
-                    <View style={styles.header}>
-                        <TouchableOpacity
-                            onPress={() => navigation.goBack()}
-                            style={styles.backButton}
-                        >
-                            <Ionicons name="arrow-back" size={24} color="#3F414E" />
-                        </TouchableOpacity>
-                    </View>
+                    <ScrollView
+                        contentContainerStyle={styles.scrollContent}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {/* Header */}
+                        <View style={styles.header}>
+                            <TouchableOpacity
+                                onPress={() => navigation.goBack()}
+                                style={styles.backButton}
+                            >
+                                <Ionicons name="arrow-back" size={24} color="#3F414E" />
+                            </TouchableOpacity>
+                        </View>
 
-                    {/* Title */}
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.title}>Welcome Back!</Text>
-                    </View>
+                        {/* Title */}
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.title}>Welcome Back!</Text>
+                        </View>
 
-                    {/* Social Login Buttons */}
-                    <View style={styles.socialButtonsContainer}>
-                        {/* Facebook Button */}
+                        {/* Social Login Buttons */}
+                        <View style={styles.socialButtonsContainer}>
+                            {/* Facebook Button */}
+                            <TouchableOpacity
+                                style={styles.facebookButton}
+                                onPress={handleFacebookLogin}
+                                activeOpacity={0.8}
+                            >
+                                <LinearGradient
+                                    colors={['#8E97FD', '#A5AFFF']}
+                                    style={styles.facebookGradient}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                >
+                                    <FontAwesome name="facebook-f" size={20} color="#FFFFFF" />
+                                    <Text style={styles.facebookButtonText}>
+                                        CONTINUE WITH FACEBOOK
+                                    </Text>
+                                </LinearGradient>
+                            </TouchableOpacity>
+
+                            {/* Google Button */}
+                            <TouchableOpacity
+                                style={styles.googleButton}
+                                onPress={handleGoogleLogin}
+                                activeOpacity={0.8}
+                            >
+                                <Image
+                                    source={require('../../assets/images/google-logo.png')}
+                                    style={styles.googleLogo}
+                                />
+                                <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Divider */}
+                        <View style={styles.dividerContainer}>
+                            <Text style={styles.dividerText}>OR LOG IN WITH EMAIL</Text>
+                        </View>
+
+                        {/* Form */}
+                        <View style={styles.formContainer}>
+                            {/* Email Input */}
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Email address"
+                                    placeholderTextColor="#A1A4B2"
+                                    value={email}
+                                    onChangeText={setEmail}
+                                    keyboardType="email-address"
+                                    autoCapitalize="none"
+                                />
+                            </View>
+
+                            {/* Password Input */}
+                            <View style={styles.inputContainer}>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Password"
+                                    placeholderTextColor="#A1A4B2"
+                                    value={password}
+                                    onChangeText={setPassword}
+                                    secureTextEntry={!showPassword}
+                                    autoCapitalize="none"
+                                />
+                                <TouchableOpacity
+                                    onPress={() => setShowPassword(!showPassword)}
+                                    style={styles.eyeIcon}
+                                >
+                                    <Image
+                                        source={require('../../assets/images/eye_icon.png')}
+                                        style={{ width: 20, height: 20, tintColor: '#A1A4B2' }}
+                                        resizeMode="contain"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+
+                        {/* Log In Button */}
                         <TouchableOpacity
-                            style={styles.facebookButton}
-                            onPress={handleFacebookLogin}
+                            style={styles.loginButton}
+                            onPress={handleLogin}
                             activeOpacity={0.8}
+                            disabled={isLoading}
                         >
                             <LinearGradient
                                 colors={['#8E97FD', '#A5AFFF']}
-                                style={styles.facebookGradient}
+                                style={styles.buttonGradient}
                                 start={{ x: 0, y: 0 }}
                                 end={{ x: 1, y: 0 }}
                             >
-                                <FontAwesome name="facebook-f" size={20} color="#FFFFFF" />
-                                <Text style={styles.facebookButtonText}>CONTINUE WITH FACEBOOK</Text>
+                                <Text style={styles.loginButtonText}>
+                                    {isLoading ? 'LOGGING IN...' : 'LOG IN'}
+                                </Text>
                             </LinearGradient>
                         </TouchableOpacity>
 
-                        {/* Google Button */}
+                        {/* Forgot Password Link */}
                         <TouchableOpacity
-                            style={styles.googleButton}
-                            onPress={handleGoogleLogin}
-                            activeOpacity={0.8}
+                            onPress={handleForgotPassword}
+                            style={styles.forgotPasswordContainer}
+                            activeOpacity={0.7}
                         >
-                            <Image
-                                source={require('../../assets/images/google-logo.png')}
-                                style={styles.googleLogo}
-                            />
-                            <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
+                            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
                         </TouchableOpacity>
-                    </View>
 
-                    {/* Divider */}
-                    <View style={styles.dividerContainer}>
-                        <Text style={styles.dividerText}>OR LOG IN WITH EMAIL</Text>
-                    </View>
-
-                    {/* Form */}
-                    <View style={styles.formContainer}>
-                        {/* Email Input */}
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Email address"
-                                placeholderTextColor="#A1A4B2"
-                                value={email}
-                                onChangeText={setEmail}
-                                keyboardType="email-address"
-                                autoCapitalize="none"
-                            />
-                        </View>
-
-                        {/* Password Input */}
-                        <View style={styles.inputContainer}>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Password"
-                                placeholderTextColor="#A1A4B2"
-                                value={password}
-                                onChangeText={setPassword}
-                                secureTextEntry={!showPassword}
-                                autoCapitalize="none"
-                            />
-                            <TouchableOpacity
-                                onPress={() => setShowPassword(!showPassword)}
-                                style={styles.eyeIcon}
-                            >
-                                <Image
-                                    source={require('../../assets/images/eye_icon.png')}
-                                    style={{ width: 20, height: 20, tintColor: '#A1A4B2' }}
-                                    resizeMode="contain"
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    {/* Log In Button */}
-                    <TouchableOpacity
-                        style={styles.loginButton}
-                        onPress={handleLogin}
-                        activeOpacity={0.8}
-                        disabled={isLoading}
-                    >
-                        <LinearGradient
-                            colors={['#8E97FD', '#A5AFFF']}
-                            style={styles.buttonGradient}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
+                        {/* Sign Up Link */}
+                        <TouchableOpacity
+                            onPress={handleSignUp}
+                            style={styles.signUpContainer}
+                            activeOpacity={0.7}
                         >
-                            <Text style={styles.loginButtonText}>
-                                {isLoading ? 'LOGGING IN...' : 'LOG IN'}
+                            <Text style={styles.signUpText}>
+                                ALREADY HAVE AN ACCOUNT?{' '}
+                                <Text style={styles.signUpLink}>SIGN UP</Text>
                             </Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-
-                    {/* Forgot Password Link */}
-                    <TouchableOpacity
-                        onPress={handleForgotPassword}
-                        style={styles.forgotPasswordContainer}
-                        activeOpacity={0.7}
-                    >
-                        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-                    </TouchableOpacity>
-
-                    {/* Bottom Divider */}
-                    <View style={styles.bottomDivider} />
-
-                    {/* Sign Up Link */}
-                    <TouchableOpacity
-                        onPress={handleSignUp}
-                        style={styles.signUpContainer}
-                        activeOpacity={0.7}
-                    >
-                        <Text style={styles.signUpText}>
-                            ALREADY HAVE AN ACCOUNT? <Text style={styles.signUpLink}>SIGN UP</Text>
-                        </Text>
-                    </TouchableOpacity>
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+                        </TouchableOpacity>
+                    </ScrollView>
+                </KeyboardAvoidingView>
+            </View>
+        </View>
     );
 };
 
@@ -260,6 +264,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
+    },
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        width: '100%',
+        height: hp(428),
+        zIndex: -1,
+    },
+    safeArea: {
+        flex: 1,
     },
     keyboardView: {
         flex: 1,
@@ -398,12 +414,7 @@ const styles = StyleSheet.create({
         color: '#3F414E',
         fontWeight: '400',
     },
-    bottomDivider: {
-        height: 1,
-        backgroundColor: '#E8E8E8',
-        marginHorizontal: wp(40),
-        marginBottom: hp(20),
-    },
+
     signUpContainer: {
         alignItems: 'center',
         paddingVertical: hp(10),

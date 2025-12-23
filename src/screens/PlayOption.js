@@ -25,10 +25,11 @@ const PlayOption = ({ navigation, route }) => {
         title: 'Night Island',
         duration: '45 MIN',
         type: 'SLEEP MUSIC',
-        description: "Ease the mind into a restful night's sleep with \n these deep, ambient tones.",
+        description:
+            "Ease the mind into a restful night's sleep with \n these deep, ambient tones.",
         favoriteCount: '24,234',
         listeningCount: '34,234',
-        image: require('../../assets/images/night_island.png'),
+        image: require('../../assets/images/night_island_new.png'),
     };
 
     const relatedContent = [
@@ -53,35 +54,25 @@ const PlayOption = ({ navigation, route }) => {
             onPress={onPress}
             style={({ pressed }) => [
                 styles.headerButton,
-                pressed && { backgroundColor: '#FFFFFF' }
+                pressed && { backgroundColor: '#FFFFFF' },
             ]}
         >
             {({ pressed }) => (
-                <Ionicons
-                    name={iconName}
-                    size={24}
-                    color={pressed ? '#000000' : '#FFFFFF'}
-                />
+                <Ionicons name={iconName} size={24} color={pressed ? '#000000' : '#FFFFFF'} />
             )}
         </Pressable>
     );
 
     const renderHeaderButtons = () => (
         <View style={styles.headerButtons}>
-            <HeaderButton
-                onPress={() => navigation.goBack()}
-                iconName="arrow-back"
-            />
+            <HeaderButton onPress={() => navigation.goBack()} iconName="arrow-back" />
 
             <View style={styles.headerRightButtons}>
                 <HeaderButton
                     onPress={() => setIsFavorite(!isFavorite)}
                     iconName={isFavorite ? 'heart' : 'heart-outline'}
                 />
-                <HeaderButton
-                    onPress={() => { }}
-                    iconName="download-outline"
-                />
+                <HeaderButton onPress={() => {}} iconName="download-outline" />
             </View>
         </View>
     );
@@ -90,10 +81,7 @@ const PlayOption = ({ navigation, route }) => {
         <View style={styles.container}>
             <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
 
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                bounces={false}
-            >
+            <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
                 {/* HERO IMAGE */}
                 <TouchableOpacity
                     style={styles.nightIslandWrapper}
@@ -116,9 +104,7 @@ const PlayOption = ({ navigation, route }) => {
                     <Text style={styles.subtitle}>
                         {contentData.duration} • {contentData.type}
                     </Text>
-                    <Text style={styles.description}>
-                        {contentData.description}
-                    </Text>
+                    <Text style={styles.description}>{contentData.description}</Text>
 
                     <View style={styles.statsRow}>
                         <View style={styles.statItem}>
@@ -163,9 +149,7 @@ const PlayOption = ({ navigation, route }) => {
                                 </View>
 
                                 <View style={styles.relatedCardContent}>
-                                    <Text style={styles.relatedCardTitle}>
-                                        {item.title}
-                                    </Text>
+                                    <Text style={styles.relatedCardTitle}>{item.title}</Text>
                                     <Text style={styles.relatedCardSubtitle}>
                                         {item.duration} • {item.type}
                                     </Text>
@@ -176,20 +160,16 @@ const PlayOption = ({ navigation, route }) => {
                 </View>
 
                 <View style={{ height: hp(150) }} />
-            </ScrollView >
+            </ScrollView>
 
             {/* PLAY BUTTON */}
             <View
-                style={[
-                    styles.playButtonContainer,
-                    { paddingBottom: spacing(20) + insets.bottom }
-                ]}
+                style={[styles.playButtonContainer, { paddingBottom: spacing(20) + insets.bottom }]}
                 pointerEvents="box-none"
             >
                 <TouchableOpacity
                     style={styles.playButton}
                     onPress={() => {
-
                         navigation.navigate('SleepMusic');
                     }}
                 >
@@ -313,7 +293,6 @@ const styles = StyleSheet.create({
         marginTop: hp(20),
         marginBottom: hp(10),
     },
-
 
     relatedContainer: {
         paddingHorizontal: spacing(20),

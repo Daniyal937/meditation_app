@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-
     View,
     Text,
     StyleSheet,
@@ -11,32 +10,80 @@ import {
     ImageBackground,
     Image,
 } from 'react-native';
-import { wp, hp, fs, spacing } from '../utils/responsive';
+import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 
 const ChooseTopic = ({ navigation }) => {
     const [selectedTopics, setSelectedTopics] = useState([]);
 
     // Topic data matching Figma design
     const topics = [
-        { id: 1, name: 'Reduce Stress', color: '#8E97FD', height: hp(210), image: require('../../assets/images/topic_reduce_stress.png') },
-        { id: 2, name: 'Improve Performance', color: '#FA6E5A', height: hp(170), image: require('../../assets/images/topic_improve_performance.png') },
-        { id: 3, name: 'Increase Happiness', color: '#FEB18F', height: hp(160), image: require('../../assets/images/topic_increase_happiness.png') },
-        { id: 4, name: 'Reduce Anxiety', color: '#FFCF86', height: hp(210), image: require('../../assets/images/topic_reduce_anxiety.png') },
-        { id: 5, name: 'Personal Growth', color: '#6CB28E', height: hp(210), image: require('../../assets/images/topic_personal_growth.png') },
-        { id: 6, name: 'Better Sleep', color: '#4E5567', height: hp(180), image: require('../../assets/images/topic_better_sleep.png'), backgroundImage: require('../../assets/images/better_sleep_card_bg.png') },
-        { id: 7, name: 'Improve Focus', color: '#6D9EEB', height: hp(170), image: require('../../assets/images/topic_improve_focus.png') },
-        { id: 8, name: 'Build Confidence', color: '#E8A5C5', height: hp(210), image: require('../../assets/images/topic_build_confidence.png') },
+        {
+            id: 1,
+            name: 'Reduce Stress',
+            color: '#8E97FD',
+            height: isTablet() ? 150 : hp(210),
+            image: require('../../assets/images/topic_reduce_stress.png'),
+        },
+        {
+            id: 2,
+            name: 'Improve Performance',
+            color: '#FA6E5A',
+            height: isTablet() ? 130 : hp(170),
+            image: require('../../assets/images/topic_improve_performance.png'),
+        },
+        {
+            id: 3,
+            name: 'Increase Happiness',
+            color: '#FEB18F',
+            height: isTablet() ? 130 : hp(160),
+            image: require('../../assets/images/topic_increase_happiness.png'),
+        },
+        {
+            id: 4,
+            name: 'Reduce Anxiety',
+            color: '#FFCF86',
+            height: isTablet() ? 160 : hp(210),
+            image: require('../../assets/images/topic_reduce_anxiety.png'),
+        },
+        {
+            id: 5,
+            name: 'Personal Growth',
+            color: '#6CB28E',
+            height: isTablet() ? 160 : hp(210),
+            image: require('../../assets/images/topic_personal_growth.png'),
+        },
+        {
+            id: 6,
+            name: 'Better Sleep',
+            color: '#4E5567',
+            height: isTablet() ? 140 : hp(180),
+            image: require('../../assets/images/topic_better_sleep.png'),
+            backgroundImage: require('../../assets/images/better_sleep_card_bg.png'),
+        },
+        {
+            id: 7,
+            name: 'Improve Focus',
+            color: '#6D9EEB',
+            height: isTablet() ? 130 : hp(170),
+            image: require('../../assets/images/topic_improve_focus.png'),
+        },
+        {
+            id: 8,
+            name: 'Build Confidence',
+            color: '#E8A5C5',
+            height: isTablet() ? 160 : hp(210),
+            image: require('../../assets/images/topic_build_confidence.png'),
+        },
     ];
-
     const handleTopicPress = (topicId, topicName) => {
         // Navigate to Reminders screen with selected topic
         navigation.navigate('Reminders', {
             selectedTopic: topicName,
-            topicId: topicId
+            topicId: topicId,
         });
     };
 
-    const renderTopicCard = (topic) => {
+    const renderTopicCard = topic => {
         // Special rendering for Better Sleep card with background image
         if (topic.id === 6 && topic.backgroundImage) {
             return (
@@ -48,7 +95,7 @@ const ChooseTopic = ({ navigation }) => {
                             height: topic.height,
                             backgroundColor: 'transparent',
                             padding: 0, // Remove padding to allow background to fill entire card
-                        }
+                        },
                     ]}
                     onPress={() => handleTopicPress(topic.id, topic.name)}
                     activeOpacity={0.8}
@@ -56,7 +103,7 @@ const ChooseTopic = ({ navigation }) => {
                     <ImageBackground
                         source={topic.backgroundImage}
                         style={styles.cardBackgroundImage}
-                        resizeMode="stretch"
+                        resizeMode="cover"
                     >
                         {topic.image && (
                             <Image
@@ -79,7 +126,7 @@ const ChooseTopic = ({ navigation }) => {
                     {
                         backgroundColor: topic.color,
                         height: topic.height,
-                    }
+                    },
                 ]}
                 onPress={() => handleTopicPress(topic.id, topic.name)}
                 activeOpacity={0.8}
@@ -88,10 +135,13 @@ const ChooseTopic = ({ navigation }) => {
                     <Image
                         source={topic.image}
                         style={
-                            topic.id === 2 ? styles.cardInternalImageCentered :
-                                (topic.id === 3 || topic.id === 8) ? styles.cardInternalImageFullWidth :
-                                    topic.id === 4 ? styles.cardInternalImageCenteredSmallMargin :
-                                        styles.cardInternalImage
+                            topic.id === 2
+                                ? styles.cardInternalImageCentered
+                                : topic.id === 3 || topic.id === 8
+                                  ? styles.cardInternalImageFullWidth
+                                  : topic.id === 4
+                                    ? styles.cardInternalImageCenteredSmallMargin
+                                    : styles.cardInternalImage
                         }
                         resizeMode="contain"
                     />
@@ -127,13 +177,9 @@ const ChooseTopic = ({ navigation }) => {
                     {/* Topic Grid */}
                     <View style={styles.masonryContainer}>
                         {/* Left Column */}
-                        <View style={styles.column}>
-                            {leftColumnTopics.map(renderTopicCard)}
-                        </View>
+                        <View style={styles.column}>{leftColumnTopics.map(renderTopicCard)}</View>
                         {/* Right Column */}
-                        <View style={styles.column}>
-                            {rightColumnTopics.map(renderTopicCard)}
-                        </View>
+                        <View style={styles.column}>{rightColumnTopics.map(renderTopicCard)}</View>
                     </View>
                 </ScrollView>
             </SafeAreaView>

@@ -5,17 +5,20 @@ A beautiful, calming meditation and mindfulness mobile application built with Re
 ## 🌙 Features
 
 ### Authentication & User Management
+
 - Email/password signup and login via Firebase Auth
 - Password recovery functionality
 - Persistent login sessions
 - Secure user data management
 
 ### Onboarding Experience
+
 - Welcome screens introducing app benefits
 - User mood and goal selection (Reduce Stress, Better Sleep, Focus)
 - Theme customization options
 
 ### Core Features
+
 - **Home Screen**: Daily recommended sessions with personalized greetings
 - **Meditation Courses**: Categorized content (Focus, Relax, Sleep)
 - **Audio Player**: Full playback controls with background audio support
@@ -25,6 +28,7 @@ A beautiful, calming meditation and mindfulness mobile application built with Re
 - **Notifications**: Daily meditation reminders via OneSignal
 
 ### User Preferences
+
 - Light/dark theme options
 - Language selection
 - Customizable reminder times
@@ -33,6 +37,7 @@ A beautiful, calming meditation and mindfulness mobile application built with Re
 ## 🎨 Design Philosophy
 
 The app features:
+
 - Soft gradients and calming pastel color palette
 - Soothing illustrations with minimal visual noise
 - Smooth transitions and animations
@@ -63,6 +68,7 @@ The app features:
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - npm or yarn
 - Expo CLI
@@ -71,22 +77,26 @@ The app features:
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd "Meditation App"
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Start the development server:
+
 ```bash
 npm start
 ```
 
 4. Run on your preferred platform:
+
 ```bash
 # iOS
 npm run ios
@@ -101,21 +111,25 @@ npm run web
 ## 📱 Current Implementation
 
 ### Completed Screens
+
 - ✅ **SignUpScreen**: Welcome screen with app branding and illustration
 - ✅ **SignUpFormScreen**: User registration form with validation
 
 ### Redux State Management
+
 - ✅ Auth slice (login, signup, logout)
 - ✅ User slice (profile, preferences, stats, favorites, downloads)
 
 ## 🔧 Configuration
 
 ### Firebase Setup
+
 1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
 2. Add your Firebase configuration to `src/utils/firebase.js`
 3. Enable Email/Password authentication in Firebase Console
 
 ### OneSignal Setup
+
 1. Create an account at [OneSignal](https://onesignal.com/)
 2. Add your OneSignal App ID to the configuration
 3. Configure push notification certificates for iOS/Android

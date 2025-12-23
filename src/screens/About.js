@@ -5,91 +5,111 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
     StatusBar,
     Image,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 
 const About = ({ navigation }) => {
     const { theme } = useTheme();
+    const insets = useSafeAreaInsets();
 
     const menuOptions = [
-        { id: 'privacy', title: 'Privacy Policy', onPress: () => { } }, // TODO: Implement Privacy Policy
-        { id: 'job', title: 'Job Vacancy', onPress: () => { } }, // TODO: Implement Job Vacancy
-        { id: 'developer', title: 'Developer', onPress: () => { } }, // TODO: Implement Developer info
-        { id: 'partner', title: 'Partner', onPress: () => { } }, // TODO: Implement Partner info
-        { id: 'accessibility', title: 'Accessibility', onPress: () => { } }, // TODO: Implement Accessibility
-        { id: 'feedback', title: 'Feedback', onPress: () => { } }, // TODO: Implement Feedback
-        { id: 'rate', title: 'Rate us', onPress: () => { } }, // TODO: Implement Rate us
-        { id: 'website', title: 'Visit Our Website', onPress: () => { } }, // TODO: Implement Website link
-        { id: 'social', title: 'Follow us on Social Media', onPress: () => { } }, // TODO: Implement Social Media links
+        { id: 'privacy', title: 'Privacy Policy', onPress: () => {} }, // TODO: Implement Privacy Policy
+        { id: 'job', title: 'Job Vacancy', onPress: () => {} }, // TODO: Implement Job Vacancy
+        { id: 'developer', title: 'Developer', onPress: () => {} }, // TODO: Implement Developer info
+        { id: 'partner', title: 'Partner', onPress: () => {} }, // TODO: Implement Partner info
+        { id: 'accessibility', title: 'Accessibility', onPress: () => {} }, // TODO: Implement Accessibility
+        { id: 'feedback', title: 'Feedback', onPress: () => {} }, // TODO: Implement Feedback
+        { id: 'rate', title: 'Rate us', onPress: () => {} }, // TODO: Implement Rate us
+        { id: 'website', title: 'Visit Our Website', onPress: () => {} }, // TODO: Implement Website link
+        { id: 'social', title: 'Follow us on Social Media', onPress: () => {} }, // TODO: Implement Social Media links
     ];
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+            <View style={{ flex: 1, paddingTop: insets.top }}>
+                <StatusBar
+                    barStyle={theme.colors.statusBar}
+                    backgroundColor={theme.colors.background}
+                />
 
-            {/* Header */}
-            <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
-                <TouchableOpacity
-                    style={styles.backButton}
-                    onPress={() => navigation.goBack()}
-                    activeOpacity={0.7}
+                {/* Header */}
+                <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
+                    <TouchableOpacity
+                        style={styles.backButton}
+                        onPress={() => navigation.goBack()}
+                        activeOpacity={0.7}
+                    >
+                        <Ionicons name="arrow-back" size={26} color={theme.colors.text} />
+                    </TouchableOpacity>
+                    <Text style={[styles.headerTitle, { color: theme.colors.text }]}>
+                        About Silent Moon
+                    </Text>
+                    <View style={styles.placeholder} />
+                </View>
+
+                <ScrollView
+                    style={styles.scrollView}
+                    contentContainerStyle={[
+                        styles.scrollContent,
+                        { paddingBottom: insets.bottom + 20 },
+                    ]}
+                    showsVerticalScrollIndicator={false}
                 >
-                    <Ionicons name="arrow-back" size={26} color={theme.colors.text} />
-                </TouchableOpacity>
-                <Text style={[styles.headerTitle, { color: theme.colors.text }]}>About Silent Moon</Text>
-                <View style={styles.placeholder} />
-            </View>
-
-            <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={styles.scrollContent}
-                showsVerticalScrollIndicator={false}
-            >
-                {/* App Logo */}
-                <View style={styles.logoContainer}>
-                    <View style={styles.logoWrapper}>
-                        <Image
-                            source={require('../../assets/images/about_logo.png')}
-                            style={styles.logo}
-                            resizeMode="contain"
-                        />
+                    {/* App Logo */}
+                    <View style={styles.logoContainer}>
+                        <View style={styles.logoWrapper}>
+                            <Image
+                                source={require('../../assets/images/about_logo.png')}
+                                style={styles.logo}
+                                resizeMode="contain"
+                            />
+                        </View>
                     </View>
-                </View>
 
-                {/* Version Text */}
-                <Text style={[styles.versionText, { color: theme.colors.text }]}>
-                    Silent Moon v5.7.8
-                </Text>
+                    {/* Version Text */}
+                    <Text
+                        style={[
+                            styles.versionText,
+                            { color: theme.colors.text, borderBottomColor: theme.colors.border },
+                        ]}
+                    >
+                        Silent Moon v5.7.8
+                    </Text>
 
-                {/* Menu Options */}
-                <View style={styles.menuContainer}>
-                    {menuOptions.map((option, index) => (
-                        <TouchableOpacity
-                            key={option.id}
-                            style={[
-                                styles.menuOption,
-                                { backgroundColor: theme.colors.card },
-                                index === menuOptions.length - 1 && styles.lastOption,
-                            ]}
-                            onPress={option.onPress}
-                            activeOpacity={0.7}
-                        >
-                            <Text style={[styles.menuText, { color: theme.colors.text }]}>
-                                {option.title}
-                            </Text>
-                            <Ionicons name="chevron-forward" size={20} color={theme.colors.textSecondary} />
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                    {/* Menu Options */}
+                    <View style={styles.menuContainer}>
+                        {menuOptions.map((option, index) => (
+                            <TouchableOpacity
+                                key={option.id}
+                                style={[
+                                    styles.menuOption,
+                                    { backgroundColor: theme.colors.card },
+                                    index === menuOptions.length - 1 && styles.lastOption,
+                                ]}
+                                onPress={option.onPress}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={[styles.menuText, { color: theme.colors.text }]}>
+                                    {option.title}
+                                </Text>
+                                <Ionicons
+                                    name="chevron-forward"
+                                    size={20}
+                                    color={theme.colors.textSecondary}
+                                />
+                            </TouchableOpacity>
+                        ))}
+                    </View>
 
-                {/* Bottom padding */}
-                <View style={{ height: 40 }} />
-            </ScrollView>
-        </SafeAreaView>
+                    {/* Bottom padding */}
+                    <View style={{ height: 40 }} />
+                </ScrollView>
+            </View>
+        </View>
     );
 };
 
@@ -99,11 +119,9 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         paddingVertical: 15,
-        borderBottomWidth: 1,
     },
     backButton: {
         width: 26,
@@ -114,10 +132,8 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 24,
         fontWeight: '700',
-        flex: 1,
-        textAlign: 'left',
-        marginLeft: 15,
-        marginRight: 40,
+        textAlign: 'center',
+        marginRight: 24,
     },
     placeholder: {
         width: 40,
@@ -148,13 +164,14 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         textAlign: 'center',
         marginBottom: 32,
+        borderBottomWidth: 0,
+        paddingTop: 10,
     },
     menuContainer: {
         marginBottom: 20,
     },
     menuOption: {
         flexDirection: 'row',
-        alignItems: 'center',
         justifyContent: 'space-between',
         paddingVertical: 16,
         paddingHorizontal: 16,

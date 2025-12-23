@@ -26,7 +26,7 @@ export const lightTheme = {
         inputBackground: '#F2F3F7',
         inputBorder: '#E8ECF4',
         statusBar: 'dark-content',
-    }
+    },
 };
 
 export const darkTheme = {
@@ -52,7 +52,7 @@ export const darkTheme = {
         inputBackground: '#2A4A9A',
         inputBorder: '#3A5AAA',
         statusBar: 'light-content',
-    }
+    },
 };
 
 const THEME_STORAGE_KEY = '@meditation_app_theme';
@@ -98,11 +98,7 @@ export const ThemeProvider = ({ children }) => {
         isLoading,
     };
 
-    return (
-        <ThemeContext.Provider value={value}>
-            {children}
-        </ThemeContext.Provider>
-    );
+    return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = () => {

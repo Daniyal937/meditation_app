@@ -1,3 +1,4 @@
+// Profile Screen - Refined custom icons and layout v5
 import React, { useState, useEffect } from 'react';
 import {
     View,
@@ -5,12 +6,12 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
-    StatusBar,
-    Image,
     Switch,
     Modal,
+    StatusBar,
+    Image,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
 import { useTheme } from '../context/ThemeContext';
@@ -30,7 +31,8 @@ const Profile = ({ navigation }) => {
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const [userEmail, setUserEmail] = useState(userProfileFromRedux?.email || '');
     const [showLogoutModal, setShowLogoutModal] = useState(false);
-    const [profileImage, setProfileImage] = useState(null); // State for profile image
+    const [profileImage, setProfileImage] = useState(userProfileFromRedux?.profileImage || null); // State for profile image
+    const insets = useSafeAreaInsets();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -46,18 +48,29 @@ const Profile = ({ navigation }) => {
                         setUserName(userProfileFromRedux.name);
                         // Update local email if Redux has it, otherwise keep currentUser.email
                         if (userProfileFromRedux.email) setUserEmail(userProfileFromRedux.email);
+                        // Update local profile image if Redux has it
+                        if (userProfileFromRedux.profileImage)
+                            setProfileImage(userProfileFromRedux.profileImage);
                         return; // Already have data
                     }
 
                     const userProfile = await getUserProfile(currentUser.uid);
                     if (userProfile && userProfile.name) {
                         setUserName(userProfile.name);
-                        dispatch(setUserProfileAction({ ...userProfile, email: currentUser.email }));
+                        dispatch(
+                            setUserProfileAction({ ...userProfile, email: currentUser.email })
+                        );
                     } else {
                         const emailName = currentUser.email.split('@')[0];
                         const derivedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
                         setUserName(derivedName);
-                        dispatch(setUserProfileAction({ name: derivedName, uid: currentUser.uid, email: currentUser.email }));
+                        dispatch(
+                            setUserProfileAction({
+                                name: derivedName,
+                                uid: currentUser.uid,
+                                email: currentUser.email,
+                            })
+                        );
                     }
                 }
             } catch (error) {
@@ -78,10 +91,11 @@ const Profile = ({ navigation }) => {
             quality: 1,
         });
 
-
-
         if (!result.canceled) {
-            setProfileImage(result.assets[0].uri);
+            const newImage = result.assets[0].uri;
+            setProfileImage(newImage);
+            // Sync with Redux immediately so other screens update
+            dispatch(setUserProfileAction({ ...userProfileFromRedux, profileImage: newImage }));
         }
     };
 
@@ -89,27 +103,27 @@ const Profile = ({ navigation }) => {
         {
             id: 'personal',
             title: 'Personal Info',
-            icon: 'person-outline',
+            iconImage: require('../../assets/images/personal_info_icon.png'),
             onPress: () => navigation.navigate('EditProfile'),
         },
         {
             id: 'notification',
             title: 'Notification',
-            icon: 'notifications-outline',
+            iconImage: require('../../assets/images/notification_icon.png'),
             onPress: () => navigation.navigate('NotificationSettings'),
         },
         {
             id: 'preferences',
             title: 'Preferences',
-            icon: 'settings-outline',
+            iconImage: require('../../assets/images/preferences_icon.png'),
             onPress: () => navigation.navigate('Preferences'),
         },
         {
             id: 'language',
             title: 'Language',
-            icon: 'document-text-outline',
+            iconImage: require('../../assets/images/language_icon.png'),
             value: 'English (US)',
-            onPress: () => { }, // TODO: Implement Language selection
+            onPress: () => {}, // TODO: Implement Language selection
         },
     ];
 
@@ -125,15 +139,18 @@ const Profile = ({ navigation }) => {
                     routes: [{ name: 'SignUp' }],
                 });
             })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Error signing out:', error);
             });
     };
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+            <View style={{ flex: 1, paddingTop: insets.top }}>
+                <StatusBar
+                    barStyle={theme.colors.statusBar}
+                    backgroundColor={theme.colors.background}
+                />
 
                 {/* Header */}
                 <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
@@ -152,18 +169,24 @@ const Profile = ({ navigation }) => {
                     contentContainerStyle={{ paddingBottom: hp(100) }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* User Profile Card */}
-                    <View style={[styles.profileCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+                    {/* User Profile Section */}
+                    <View style={[styles.profileCard, { backgroundColor: theme.colors.card }]}>
                         <View style={styles.profileHeader}>
                             <View style={styles.profileLeft}>
                                 {/* Profile Picture */}
                                 <TouchableOpacity
-                                    style={[styles.profilePicture, { backgroundColor: theme.colors.primary }]}
+                                    style={[
+                                        styles.profilePicture,
+                                        { backgroundColor: theme.colors.primary },
+                                    ]}
                                     onPress={pickImage}
                                     activeOpacity={0.8}
                                 >
                                     {profileImage ? (
-                                        <Image source={{ uri: profileImage }} style={styles.profileImage} />
+                                        <Image
+                                            source={{ uri: profileImage }}
+                                            style={styles.profileImage}
+                                        />
                                     ) : (
                                         <Text style={styles.profileInitial}>
                                             {userName.charAt(0).toUpperCase()}
@@ -176,7 +199,12 @@ const Profile = ({ navigation }) => {
                                     <Text style={[styles.userName, { color: theme.colors.text }]}>
                                         {userName}
                                     </Text>
-                                    <Text style={[styles.userEmail, { color: theme.colors.textSecondary }]}>
+                                    <Text
+                                        style={[
+                                            styles.userEmail,
+                                            { color: theme.colors.textSecondary },
+                                        ]}
+                                    >
                                         {userEmail}
                                     </Text>
                                 </View>
@@ -184,11 +212,15 @@ const Profile = ({ navigation }) => {
 
                             {/* Edit Button */}
                             <TouchableOpacity
-                                style={[styles.editButton, { backgroundColor: theme.colors.surface }]}
+                                style={styles.editButton}
                                 activeOpacity={0.7}
                                 onPress={() => navigation.navigate('EditProfile')}
                             >
-                                <Ionicons name="pencil-outline" size={fs(18)} color={theme.colors.text} />
+                                <Image
+                                    source={require('../../assets/images/edit_icon.png')}
+                                    style={{ width: wp(20), height: wp(20) }}
+                                    resizeMode="contain"
+                                />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -200,49 +232,58 @@ const Profile = ({ navigation }) => {
                                 key={item.id}
                                 style={[
                                     styles.menuItem,
-                                    {
-                                        backgroundColor: theme.colors.card,
-                                        borderColor: theme.colors.border,
-                                        marginBottom: index === menuItems.length - 1 ? 0 : hp(12),
-                                    }
+                                    { backgroundColor: theme.colors.card },
+                                    index === menuItems.length - 1 && styles.lastMenuItem,
                                 ]}
                                 onPress={item.onPress}
                                 activeOpacity={0.7}
                             >
                                 <View style={styles.menuLeft}>
-                                    <View style={[styles.menuIconContainer, { backgroundColor: theme.colors.surface }]}>
-                                        <Ionicons name={item.icon} size={fs(22)} color={theme.colors.text} />
-                                    </View>
+                                    <Image
+                                        source={item.iconImage}
+                                        style={{
+                                            width: wp(42),
+                                            height: wp(42),
+                                            marginRight: spacing(12),
+                                        }}
+                                        resizeMode="contain"
+                                    />
                                     <Text style={[styles.menuTitle, { color: theme.colors.text }]}>
                                         {item.title}
                                     </Text>
                                 </View>
                                 <View style={styles.menuRight}>
                                     {item.value && (
-                                        <Text style={[styles.menuValue, { color: theme.colors.textSecondary }]}>
+                                        <Text
+                                            style={[
+                                                styles.menuValue,
+                                                { color: theme.colors.textSecondary },
+                                            ]}
+                                        >
                                             {item.value}
                                         </Text>
                                     )}
-                                    <Ionicons name="chevron-forward" size={fs(20)} color={theme.colors.textSecondary} />
+                                    <Ionicons
+                                        name="chevron-forward"
+                                        size={fs(20)}
+                                        color={theme.colors.textSecondary}
+                                    />
                                 </View>
                             </TouchableOpacity>
                         ))}
 
                         {/* Dark Mode Toggle */}
-                        <View
-                            style={[
-                                styles.menuItem,
-                                {
-                                    backgroundColor: theme.colors.card,
-                                    borderColor: theme.colors.border,
-                                    marginBottom: hp(12),
-                                }
-                            ]}
-                        >
+                        <View style={[styles.menuItem, { backgroundColor: theme.colors.card }]}>
                             <View style={styles.menuLeft}>
-                                <View style={[styles.menuIconContainer, { backgroundColor: theme.colors.surface }]}>
-                                    <Ionicons name="moon-outline" size={fs(22)} color={theme.colors.text} />
-                                </View>
+                                <Image
+                                    source={require('../../assets/images/darkmode_icon.png')}
+                                    style={{
+                                        width: wp(42),
+                                        height: wp(42),
+                                        marginRight: spacing(12),
+                                    }}
+                                    resizeMode="contain"
+                                />
                                 <Text style={[styles.menuTitle, { color: theme.colors.text }]}>
                                     Dark Mode
                                 </Text>
@@ -258,56 +299,67 @@ const Profile = ({ navigation }) => {
 
                         {/* About */}
                         <TouchableOpacity
-                            style={[
-                                styles.menuItem,
-                                {
-                                    backgroundColor: theme.colors.card,
-                                    borderColor: theme.colors.border,
-                                    marginBottom: hp(12),
-                                }
-                            ]}
+                            style={[styles.menuItem, { backgroundColor: theme.colors.card }]}
                             onPress={() => navigation.navigate('AboutScreen')}
                             activeOpacity={0.7}
                         >
                             <View style={styles.menuLeft}>
-                                <View style={[styles.menuIconContainer, { backgroundColor: theme.colors.surface }]}>
-                                    <Ionicons name="information-circle-outline" size={fs(22)} color={theme.colors.text} />
-                                </View>
+                                <Image
+                                    source={require('../../assets/images/about_icon_v6.png')}
+                                    style={{
+                                        width: wp(42),
+                                        height: wp(42),
+                                        marginRight: spacing(12),
+                                    }}
+                                    resizeMode="contain"
+                                />
                                 <Text style={[styles.menuTitle, { color: theme.colors.text }]}>
                                     About
                                 </Text>
                             </View>
-                            <Ionicons name="chevron-forward" size={fs(20)} color={theme.colors.textSecondary} />
+                            <Ionicons
+                                name="chevron-forward"
+                                size={fs(20)}
+                                color={theme.colors.textSecondary}
+                            />
                         </TouchableOpacity>
 
                         {/* Logout */}
                         <TouchableOpacity
                             style={[
                                 styles.menuItem,
-                                {
-                                    backgroundColor: theme.colors.card,
-                                    borderColor: theme.colors.border,
-                                }
+                                { backgroundColor: theme.colors.card },
+                                styles.lastMenuItem,
                             ]}
                             onPress={() => setShowLogoutModal(true)}
                             activeOpacity={0.7}
                         >
                             <View style={styles.menuLeft}>
-                                <View style={[styles.menuIconContainer, { backgroundColor: theme.colors.error + '15' }]}>
-                                    <Ionicons name="log-out-outline" size={fs(22)} color={theme.colors.error} />
-                                </View>
+                                <Image
+                                    source={require('../../assets/images/logout_icon.png')}
+                                    style={{
+                                        width: wp(42),
+                                        height: wp(42),
+                                        marginRight: spacing(12),
+                                    }}
+                                    resizeMode="contain"
+                                />
                                 <Text style={[styles.menuTitle, { color: theme.colors.error }]}>
                                     Logout
                                 </Text>
                             </View>
-                            <Ionicons name="chevron-forward" size={fs(20)} color={theme.colors.textSecondary} />
+                            <Ionicons
+                                name="chevron-forward"
+                                size={fs(20)}
+                                color={theme.colors.textSecondary}
+                            />
                         </TouchableOpacity>
                     </View>
 
                     {/* Bottom padding for navigation */}
                     <View style={{ height: hp(100) }} />
                 </ScrollView>
-            </SafeAreaView>
+            </View>
 
             {/* Logout Confirmation Modal */}
             <Modal
@@ -318,17 +370,27 @@ const Profile = ({ navigation }) => {
             >
                 <View style={styles.modalOverlay}>
                     <View style={[styles.modalContent, { backgroundColor: theme.colors.card }]}>
-                        <Text style={[styles.modalTitle, { color: theme.colors.text }]}>Logout</Text>
+                        <Text style={[styles.modalTitle, { color: theme.colors.text }]}>
+                            Logout
+                        </Text>
                         <Text style={[styles.modalMessage, { color: theme.colors.textSecondary }]}>
                             Are you sure you want to log out?
                         </Text>
                         <View style={styles.modalButtons}>
                             <TouchableOpacity
-                                style={[styles.modalButton, styles.cancelButton, { backgroundColor: theme.colors.surface }]}
+                                style={[
+                                    styles.modalButton,
+                                    styles.cancelButton,
+                                    { backgroundColor: theme.colors.surface },
+                                ]}
                                 onPress={() => setShowLogoutModal(false)}
                                 activeOpacity={0.7}
                             >
-                                <Text style={[styles.cancelButtonText, { color: theme.colors.text }]}>Cancel</Text>
+                                <Text
+                                    style={[styles.cancelButtonText, { color: theme.colors.text }]}
+                                >
+                                    Cancel
+                                </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.modalButton, styles.logoutButton]}
@@ -343,11 +405,7 @@ const Profile = ({ navigation }) => {
             </Modal>
 
             {/* Bottom Navigation */}
-            <BottomMenu
-                navigation={navigation}
-                activeTab="Profile"
-                userName={userName}
-            />
+            <BottomMenu navigation={navigation} activeTab="Profile" userName={userName} />
         </View>
     );
 };
@@ -361,8 +419,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: spacing(20),
-        paddingVertical: hp(15),
-        borderBottomWidth: 1,
+        paddingTop: hp(30),
+        paddingBottom: hp(15),
     },
     headerTitle: {
         fontSize: fs(24),
@@ -387,15 +445,9 @@ const styles = StyleSheet.create({
         paddingTop: hp(20),
     },
     profileCard: {
-        borderRadius: wp(12),
-        padding: spacing(16),
-        marginBottom: hp(24),
-        borderWidth: 1,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: hp(2) },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-        elevation: 2,
+        paddingVertical: spacing(16),
+        paddingHorizontal: spacing(16),
+        minHeight: hp(80),
     },
     profileHeader: {
         flexDirection: 'row',
@@ -438,11 +490,7 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
     editButton: {
-        width: wp(36),
-        height: wp(36),
-        borderRadius: wp(18),
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: spacing(8),
     },
     menuContainer: {
         marginBottom: hp(20),
@@ -451,27 +499,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: spacing(16),
-        borderRadius: wp(12),
-        borderWidth: 1,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: hp(1) },
-        shadowOpacity: 0.05,
-        shadowRadius: 2,
-        elevation: 1,
+        paddingVertical: spacing(16),
+        paddingHorizontal: spacing(16),
+        minHeight: hp(56),
+    },
+    lastMenuItem: {
+        marginBottom: 0,
     },
     menuLeft: {
         flexDirection: 'row',
         alignItems: 'center',
         flex: 1,
-    },
-    menuIconContainer: {
-        width: wp(40),
-        height: wp(40),
-        borderRadius: wp(20),
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: spacing(12),
     },
     menuTitle: {
         fontSize: fs(16),

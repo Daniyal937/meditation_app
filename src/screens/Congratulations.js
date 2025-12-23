@@ -23,7 +23,7 @@ const Congratulations = ({ navigation }) => {
     const [selectedEmoji, setSelectedEmoji] = useState(null);
     const scaleAnims = useRef(emojiImages.map(() => new Animated.Value(1))).current;
 
-    const handleEmojiPress = (index) => {
+    const handleEmojiPress = index => {
         setSelectedEmoji(index);
         scaleAnims.forEach((anim, i) => {
             Animated.spring(anim, {
@@ -39,10 +39,7 @@ const Congratulations = ({ navigation }) => {
 
             {/* Header with Close Button */}
             <View style={styles.header}>
-                <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={() => navigation.goBack()}
-                >
+                <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
                     <Ionicons name="close" size={fs(24)} color="#3F414E" />
                 </TouchableOpacity>
             </View>
@@ -71,18 +68,23 @@ const Congratulations = ({ navigation }) => {
                                 onPress={() => handleEmojiPress(index)}
                                 activeOpacity={0.7}
                             >
-                                <Animated.View style={[
-                                    styles.emojiButton,
-                                    { transform: [{ scale: scaleAnims[index] }] }
-                                ]}>
-                                    <Image source={img} style={styles.emojiImage} resizeMode="contain" />
+                                <Animated.View
+                                    style={[
+                                        styles.emojiButton,
+                                        { transform: [{ scale: scaleAnims[index] }] },
+                                    ]}
+                                >
+                                    <Image
+                                        source={img}
+                                        style={styles.emojiImage}
+                                        resizeMode="contain"
+                                    />
                                 </Animated.View>
                             </TouchableOpacity>
                         ))}
                     </View>
                 </View>
             </View>
-
         </SafeAreaView>
     );
 };

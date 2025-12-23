@@ -5,10 +5,10 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    SafeAreaView,
     StatusBar,
     Image,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { auth } from '../config/firebaseConfig';
@@ -24,6 +24,7 @@ const MeditateV2 = ({ navigation, route }) => {
     const dispatch = useDispatch();
     const userProfileFromRedux = useSelector(state => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
+    const insets = useSafeAreaInsets();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -44,9 +45,16 @@ const MeditateV2 = ({ navigation, route }) => {
                             dispatch(setUserProfileAction(userProfile));
                         } else {
                             const emailName = currentUser.email.split('@')[0];
-                            const derivedName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                            const derivedName =
+                                emailName.charAt(0).toUpperCase() + emailName.slice(1);
                             setUserName(derivedName);
-                            dispatch(setUserProfileAction({ name: derivedName, uid: currentUser.uid, email: currentUser.email }));
+                            dispatch(
+                                setUserProfileAction({
+                                    name: derivedName,
+                                    uid: currentUser.uid,
+                                    email: currentUser.email,
+                                })
+                            );
                         }
                     }
                 } else {
@@ -62,36 +70,99 @@ const MeditateV2 = ({ navigation, route }) => {
     }, [route, userProfileFromRedux]);
 
     const categories = [
-        { id: 'all', label: 'All', icon: 'apps', image: require('../../assets/images/all_icon.png'), title: 'All Meditations', subtitle: 'Browse all meditation sessions', color: '#8E97FD' },
-        { id: 'my', label: 'My', icon: 'heart', image: require('../../assets/images/my_icon.png'), title: 'My Favorites', subtitle: 'Your saved meditation sessions', color: '#FF84A7' },
-        { id: 'anxious', label: 'Anxious', icon: 'radio-button-on', image: require('../../assets/images/anxious_icon.png'), title: 'Mindfulness', subtitle: 'Practice and develop mindfulness', color: '#8E97FD' },
-        { id: 'sleep', label: 'Sleep', icon: 'moon', image: require('../../assets/images/sleep_icon.png'), title: 'Sleep Meditations', subtitle: 'Relax and fall asleep peacefully', color: '#6D9EEB' },
-        { id: 'kids', label: 'Kids', icon: 'happy', image: require('../../assets/images/kids_icon.png'), title: 'Kids Meditations', subtitle: 'Meditation for children', color: '#FFCF86' },
+        {
+            id: 'all',
+            label: 'All',
+            icon: 'apps',
+            image: require('../../assets/images/all_icon.png'),
+            title: 'All Meditations',
+            subtitle: 'Browse all meditation sessions',
+            color: '#8E97FD',
+        },
+        {
+            id: 'my',
+            label: 'My',
+            icon: 'heart',
+            image: require('../../assets/images/my_icon.png'),
+            title: 'My Favorites',
+            subtitle: 'Your saved meditation sessions',
+            color: '#FF84A7',
+        },
+        {
+            id: 'anxious',
+            label: 'Anxious',
+            icon: 'radio-button-on',
+            image: require('../../assets/images/anxious_icon.png'),
+            title: 'Mindfulness',
+            subtitle: 'Practice and develop mindfulness',
+            color: '#8E97FD',
+        },
+        {
+            id: 'sleep',
+            label: 'Sleep',
+            icon: 'moon',
+            image: require('../../assets/images/sleep_icon.png'),
+            title: 'Sleep Meditations',
+            subtitle: 'Relax and fall asleep peacefully',
+            color: '#6D9EEB',
+        },
+        {
+            id: 'kids',
+            label: 'Kids',
+            icon: 'happy',
+            image: require('../../assets/images/kids_icon.png'),
+            title: 'Kids Meditations',
+            subtitle: 'Meditation for children',
+            color: '#FFCF86',
+        },
     ];
 
     const meditationCards = [
-        { id: 1, title: '7 Days of Calm', image: require('../../assets/images/7_days_calm_bg.png'), height: hp(210) },
-        { id: 2, title: 'Anxiety Release', image: require('../../assets/images/anxiety_release_bg.png'), height: hp(167) },
-        { id: 3, title: 'Mindful Walking', image: require('../../assets/images/mindful_walking_bg.png'), height: hp(167) },
-        { id: 4, title: 'Deep Breathing', image: require('../../assets/images/deep_breathing_bg.png'), height: hp(210) },
+        {
+            id: 1,
+            title: '7 Days of Calm',
+            image: require('../../assets/images/7_days_calm_bg.png'),
+            height: hp(210),
+        },
+        {
+            id: 2,
+            title: 'Anxiety Release',
+            image: require('../../assets/images/anxiety_release_bg.png'),
+            height: hp(167),
+        },
+        {
+            id: 3,
+            title: 'Mindful Walking',
+            image: require('../../assets/images/mindful_walking_bg.png'),
+            height: hp(167),
+        },
+        {
+            id: 4,
+            title: 'Deep Breathing',
+            image: require('../../assets/images/deep_breathing_bg.png'),
+            height: hp(210),
+        },
     ];
 
-    const handleCategoryPress = (category) => {
+    const handleCategoryPress = category => {
         setSelectedCategory(category.id);
         navigation.navigate('MeditationSessions', {
             category: {
                 title: category.title,
                 subtitle: category.subtitle,
-                color: category.color
+                color: category.color,
             },
-            userName: userName
+            userName: userName,
         });
     };
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar barStyle={theme.colors.statusBar} backgroundColor={theme.colors.background} />
+            <View style={{ flex: 1, paddingTop: insets.top }}>
+                <StatusBar
+                    barStyle={theme.colors.statusBar}
+                    backgroundColor={theme.colors.background}
+                />
 
                 <ScrollView
                     style={styles.scrollView}
@@ -102,7 +173,8 @@ const MeditateV2 = ({ navigation, route }) => {
                     <View style={styles.header}>
                         <Text style={[styles.title, { color: theme.colors.text }]}>Meditate</Text>
                         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
-                            we can learn how to recognize when our minds are doing their normal everyday acrobatics.
+                            we can learn how to recognize when our minds are doing their normal
+                            everyday acrobatics.
                         </Text>
                     </View>
 
@@ -113,30 +185,49 @@ const MeditateV2 = ({ navigation, route }) => {
                         style={styles.categoryScroll}
                         contentContainerStyle={styles.categoryScrollContent}
                     >
-                        {categories.map((category) => (
+                        {categories.map(category => (
                             <TouchableOpacity
                                 key={category.id}
                                 style={styles.categoryItem}
                                 onPress={() => handleCategoryPress(category)}
                                 activeOpacity={0.7}
                             >
-                                <View style={[
-                                    styles.categoryIcon,
-                                    { backgroundColor: selectedCategory === category.id ? category.color : theme.colors.surface }
-                                ]}>
+                                <View
+                                    style={[
+                                        styles.categoryIcon,
+                                        {
+                                            backgroundColor:
+                                                selectedCategory === category.id
+                                                    ? category.color
+                                                    : theme.colors.surface,
+                                        },
+                                    ]}
+                                >
                                     <Image
                                         source={category.image}
                                         style={[
                                             styles.categoryIconImage,
-                                            { tintColor: selectedCategory === category.id ? '#FFFFFF' : theme.colors.textSecondary }
+                                            {
+                                                tintColor:
+                                                    selectedCategory === category.id
+                                                        ? '#FFFFFF'
+                                                        : theme.colors.textSecondary,
+                                            },
                                         ]}
                                         resizeMode="contain"
                                     />
                                 </View>
-                                <Text style={[
-                                    styles.categoryLabel,
-                                    { color: selectedCategory === category.id ? theme.colors.text : theme.colors.textSecondary }
-                                ]}>
+                                <Text
+                                    style={[
+                                        styles.categoryLabel,
+                                        {
+                                            color:
+                                                selectedCategory === category.id
+                                                    ? theme.colors.text
+                                                    : theme.colors.textSecondary,
+                                        },
+                                    ]}
+                                >
                                     {category.label}
                                 </Text>
                             </TouchableOpacity>
@@ -173,42 +264,46 @@ const MeditateV2 = ({ navigation, route }) => {
                     <View style={styles.meditationGrid}>
                         {/* Left Column */}
                         <View style={styles.gridColumn}>
-                            {meditationCards.filter((_, index) => index % 2 === 0).map(card => (
-                                <TouchableOpacity
-                                    key={card.id}
-                                    style={[styles.meditationCard, { height: card.height }]}
-                                    activeOpacity={0.8}
-                                >
-                                    <Image
-                                        source={card.image}
-                                        style={styles.meditationCardBgImage}
-                                        resizeMode="cover"
-                                    />
-                                    <Text style={styles.meditationCardTitle}>{card.title}</Text>
-                                </TouchableOpacity>
-                            ))}
+                            {meditationCards
+                                .filter((_, index) => index % 2 === 0)
+                                .map(card => (
+                                    <TouchableOpacity
+                                        key={card.id}
+                                        style={[styles.meditationCard, { height: card.height }]}
+                                        activeOpacity={0.8}
+                                    >
+                                        <Image
+                                            source={card.image}
+                                            style={styles.meditationCardBgImage}
+                                            resizeMode="cover"
+                                        />
+                                        <Text style={styles.meditationCardTitle}>{card.title}</Text>
+                                    </TouchableOpacity>
+                                ))}
                         </View>
 
                         {/* Right Column */}
                         <View style={styles.gridColumn}>
-                            {meditationCards.filter((_, index) => index % 2 !== 0).map(card => (
-                                <TouchableOpacity
-                                    key={card.id}
-                                    style={[styles.meditationCard, { height: card.height }]}
-                                    activeOpacity={0.8}
-                                >
-                                    <Image
-                                        source={card.image}
-                                        style={styles.meditationCardBgImage}
-                                        resizeMode="cover"
-                                    />
-                                    <Text style={styles.meditationCardTitle}>{card.title}</Text>
-                                </TouchableOpacity>
-                            ))}
+                            {meditationCards
+                                .filter((_, index) => index % 2 !== 0)
+                                .map(card => (
+                                    <TouchableOpacity
+                                        key={card.id}
+                                        style={[styles.meditationCard, { height: card.height }]}
+                                        activeOpacity={0.8}
+                                    >
+                                        <Image
+                                            source={card.image}
+                                            style={styles.meditationCardBgImage}
+                                            resizeMode="cover"
+                                        />
+                                        <Text style={styles.meditationCardTitle}>{card.title}</Text>
+                                    </TouchableOpacity>
+                                ))}
                         </View>
                     </View>
                 </ScrollView>
-            </SafeAreaView>
+            </View>
 
             <BottomMenu navigation={navigation} activeTab="Meditate" userName={userName} />
         </View>
@@ -230,6 +325,7 @@ const styles = StyleSheet.create({
         paddingBottom: hp(100), // Updated to accommodate BottomMenu
     },
     header: {
+        marginTop: hp(30),
         marginBottom: hp(25),
         alignItems: 'center',
     },

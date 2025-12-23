@@ -21,7 +21,6 @@ const AudioDetails = ({ navigation, route }) => {
     const durations = [5, 10, 15];
 
     const handleStart = () => {
-
         // Navigate to AudioDetails2 screen as requested
         navigation.navigate('AudioDetails2', { session: sessionData, duration: selectedDuration });
     };
@@ -49,27 +48,31 @@ const AudioDetails = ({ navigation, route }) => {
 
                 {/* Session Description */}
                 <Text style={styles.description}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua
                 </Text>
 
                 {/* Duration Picker */}
                 <View style={styles.durationSection}>
                     <Text style={styles.sectionTitle}>Pick a Duration</Text>
                     <View style={styles.durationButtons}>
-                        {durations.map((duration) => (
+                        {durations.map(duration => (
                             <TouchableOpacity
                                 key={duration}
                                 style={[
                                     styles.durationButton,
-                                    selectedDuration === duration && styles.durationButtonSelected
+                                    selectedDuration === duration && styles.durationButtonSelected,
                                 ]}
                                 onPress={() => setSelectedDuration(duration)}
                                 activeOpacity={0.7}
                             >
-                                <Text style={[
-                                    styles.durationButtonText,
-                                    selectedDuration === duration && styles.durationButtonTextSelected
-                                ]}>
+                                <Text
+                                    style={[
+                                        styles.durationButtonText,
+                                        selectedDuration === duration &&
+                                            styles.durationButtonTextSelected,
+                                    ]}
+                                >
                                     {duration} min
                                 </Text>
                             </TouchableOpacity>

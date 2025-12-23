@@ -9,20 +9,25 @@ import {
     StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import type { ScreenProps } from '../types';
 
-const AudioDetails = ({ navigation, route }) => {
+const AudioDetails: React.FC<ScreenProps<'AudioDetails'>> = ({ navigation, route }) => {
     // Get session data from route params or use default
-    const sessionData = route?.params?.session || {
+    const defaultSession = {
         name: 'Introduction to Mindfulness',
         duration: '5 - 10 min',
     };
+
+    const sessionData = typeof route?.params?.sessionId === 'string'
+        ? defaultSession
+        : (route?.params?.sessionId || defaultSession);
 
     const [selectedDuration, setSelectedDuration] = useState(10);
     const durations = [5, 10, 15];
 
     const handleStart = () => {
         // Navigate to AudioDetails2 screen as requested
-        navigation.navigate('AudioDetails2', { session: sessionData, duration: selectedDuration });
+        navigation.navigate('AudioDetails2', { session: sessionData, duration: selectedDuration.toString() });
     };
 
     return (
@@ -70,7 +75,7 @@ const AudioDetails = ({ navigation, route }) => {
                                     style={[
                                         styles.durationButtonText,
                                         selectedDuration === duration &&
-                                            styles.durationButtonTextSelected,
+                                        styles.durationButtonTextSelected,
                                     ]}
                                 >
                                     {duration} min

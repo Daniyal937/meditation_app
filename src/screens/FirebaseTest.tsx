@@ -13,12 +13,17 @@ import { auth, db } from '../config/firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 
+interface LogEntry {
+    message: string;
+    type: string;
+}
+
 const FirebaseTest = () => {
     const [email, setEmail] = useState('test@example.com');
     const [password, setPassword] = useState('test123456');
-    const [logs, setLogs] = useState([]);
+    const [logs, setLogs] = useState<LogEntry[]>([]);
 
-    const addLog = (message, type = 'info') => {
+    const addLog = (message: string, type: string = 'info'): void => {
         const timestamp = new Date().toLocaleTimeString();
         setLogs(prev => [...prev, { message: `[${timestamp}] ${message}`, type }]);
     };
@@ -45,8 +50,9 @@ const FirebaseTest = () => {
             addLog('✅ Firestore write successful!', 'success');
             Alert.alert('Success', 'Signup and Firestore write successful!');
         } catch (error) {
-            addLog(`❌ Error: ${error.code} - ${error.message}`, 'error');
-            Alert.alert('Error', error.message);
+            const err = error as any;
+            addLog(`❌ Error: ${err.code} - ${err.message}`, 'error');
+            Alert.alert('Error', err.message);
         }
     };
 
@@ -72,8 +78,9 @@ const FirebaseTest = () => {
                 Alert.alert('Warning', 'User authenticated but no Firestore document found');
             }
         } catch (error) {
-            addLog(`❌ Error: ${error.code} - ${error.message}`, 'error');
-            Alert.alert('Error', error.message);
+            const err = error as any;
+            addLog(`❌ Error: ${err.code} - ${err.message}`, 'error');
+            Alert.alert('Error', err.message);
         }
     };
 

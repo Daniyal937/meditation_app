@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
+import { ScreenProps } from '../types';
+import { Topic } from '../global';
 
-const ChooseTopic = ({ navigation }) => {
-    const [selectedTopics, setSelectedTopics] = useState([]);
+const ChooseTopic: React.FC<ScreenProps<'ChooseTopic'>> = ({ navigation }) => {
+    const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
     const insets = useSafeAreaInsets();
 
     // Topic data matching Figma design
@@ -76,7 +78,7 @@ const ChooseTopic = ({ navigation }) => {
             image: require('../../assets/images/topic_build_confidence.png'),
         },
     ];
-    const handleTopicPress = (topicId, topicName) => {
+    const handleTopicPress = (topicId: number, topicName: string): void => {
         // Navigate to Reminders screen with selected topic
         navigation.navigate('Reminders', {
             selectedTopic: topicName,
@@ -84,7 +86,7 @@ const ChooseTopic = ({ navigation }) => {
         });
     };
 
-    const renderTopicCard = topic => {
+    const renderTopicCard = (topic: Topic): React.ReactElement => {
         // Special rendering for Better Sleep card with background image
         if (topic.id === 6 && topic.backgroundImage) {
             return (

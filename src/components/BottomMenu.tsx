@@ -4,8 +4,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { wp, hp, fs, spacing } from '../utils/responsive';
+import { BottomMenuProps } from '../types';
 
-const BottomMenu = ({ navigation, activeTab, userName = 'User', backgroundColor }) => {
+const BottomMenu: React.FC<BottomMenuProps> = ({
+    navigation,
+    activeTab,
+    userName = 'User',
+    backgroundColor
+}) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
 

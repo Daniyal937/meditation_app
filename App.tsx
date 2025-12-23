@@ -12,17 +12,26 @@ import { store } from './src/redux/store';
 import * as Updates from 'expo-updates';
 
 // Error Boundary Component
-class ErrorBoundary extends React.Component {
-    constructor(props) {
+interface ErrorBoundaryProps {
+    children: React.ReactNode;
+}
+
+interface ErrorBoundaryState {
+    hasError: boolean;
+    error: Error | null;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+    constructor(props: ErrorBoundaryProps) {
         super(props);
         this.state = { hasError: false, error: null };
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError(error: Error): ErrorBoundaryState {
         return { hasError: true, error };
     }
 
-    componentDidCatch(error, errorInfo) {
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
         console.error('Error caught by boundary:', error, errorInfo);
     }
 
@@ -135,11 +144,12 @@ export default function App() {
             OneSignal.Notifications.requestPermission(true);
 
             // Handle notification clicks
-            OneSignal.Notifications.addEventListener('click', event => {
+            OneSignal.Notifications.addEventListener('click', (event: any) => {
                 console.log('OneSignal notification clicked:', event);
             });
         } catch (error) {
-            console.log('OneSignal initialization error:', error.message);
+            const err = error as Error;
+            console.log('OneSignal initialization error:', err.message);
         }
 
         // Expo Notifications Setup (for local reminders)
@@ -148,6 +158,8 @@ export default function App() {
                 shouldShowAlert: true,
                 shouldPlaySound: true,
                 shouldSetBadge: false,
+                shouldShowBanner: true,
+                shouldShowList: true,
             }),
         });
     }, []);

@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { AuthState, User } from '../../types';
 
-const initialState = {
+const initialState: AuthState = {
     user: null,
     isAuthenticated: false,
     isLoading: false,
@@ -11,40 +12,40 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        loginStart: state => {
+        loginStart: (state) => {
             state.isLoading = true;
             state.error = null;
         },
-        loginSuccess: (state, action) => {
+        loginSuccess: (state, action: PayloadAction<User>) => {
             state.isLoading = false;
             state.isAuthenticated = true;
             state.user = action.payload;
             state.error = null;
         },
-        loginFailure: (state, action) => {
+        loginFailure: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
             state.error = action.payload;
         },
-        signupStart: state => {
+        signupStart: (state) => {
             state.isLoading = true;
             state.error = null;
         },
-        signupSuccess: (state, action) => {
+        signupSuccess: (state, action: PayloadAction<User>) => {
             state.isLoading = false;
             state.isAuthenticated = true;
             state.user = action.payload;
             state.error = null;
         },
-        signupFailure: (state, action) => {
+        signupFailure: (state, action: PayloadAction<string>) => {
             state.isLoading = false;
             state.error = action.payload;
         },
-        logout: state => {
+        logout: (state) => {
             state.user = null;
             state.isAuthenticated = false;
             state.error = null;
         },
-        clearError: state => {
+        clearError: (state) => {
             state.error = null;
         },
     },

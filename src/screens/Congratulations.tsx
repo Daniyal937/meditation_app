@@ -10,9 +10,10 @@ import {
     Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { fs, hp, wp, spacing } from '../utils/responsive'; // Assuming these exist based on other files
+import { fs, hp, wp, spacing } from '../utils/responsive';
+import { ScreenProps } from '../types';
 
-const Congratulations = ({ navigation }) => {
+const Congratulations: React.FC<ScreenProps<'Congratulations'>> = ({ navigation }) => {
     const emojiImages = [
         require('../../assets/images/emoji_1.png'),
         require('../../assets/images/emoji_2.png'),
@@ -20,10 +21,10 @@ const Congratulations = ({ navigation }) => {
         require('../../assets/images/emoji_4.png'),
     ];
 
-    const [selectedEmoji, setSelectedEmoji] = useState(null);
+    const [selectedEmoji, setSelectedEmoji] = useState<number | null>(null);
     const scaleAnims = useRef(emojiImages.map(() => new Animated.Value(1))).current;
 
-    const handleEmojiPress = index => {
+    const handleEmojiPress = (index: number): void => {
         setSelectedEmoji(index);
         scaleAnims.forEach((anim, i) => {
             Animated.spring(anim, {

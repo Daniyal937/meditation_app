@@ -10,15 +10,19 @@ import {
     Image,
     ImageBackground,
     PanResponder,
+    LayoutChangeEvent,
+    GestureResponderEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { Audio } from 'expo-av';
+import { Audio, AVPlaybackStatus } from 'expo-av';
 import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 import { useTheme } from '../context/ThemeContext';
 import BottomMenu from '../components/BottomMenu';
+import { ScreenProps } from '../types';
+import { Session, Sound as SoundType, AudioStatus } from '../global';
 
-const AudioDetails2 = ({ navigation, route }) => {
+const AudioDetails2: React.FC<ScreenProps<'AudioDetails2'>> = ({ navigation, route }) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
     // Session data (passed from previous screen or default)
@@ -33,13 +37,13 @@ const AudioDetails2 = ({ navigation, route }) => {
         streams: '2.6',
     };
 
-    const sessionData = { ...defaultSession, ...route?.params?.session };
-    const [showMiniPlayer, setShowMiniPlayer] = useState(false);
-    const [sound, setSound] = useState();
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [status, setStatus] = useState({ position: 0, duration: 1 });
-    const [isSeeking, setIsSeeking] = useState(false);
-    const [seekPosition, setSeekPosition] = useState(0);
+    const sessionData: Session = { ...defaultSession, ...route?.params?.session };
+    const [showMiniPlayer, setShowMiniPlayer] = useState<boolean>(false);
+    const [sound, setSound] = useState<Audio.Sound | undefined>(undefined);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [status, setStatus] = useState<{ position: number; duration: number }>({ position: 0, duration: 1 });
+    const [isSeeking, setIsSeeking] = useState<boolean>(false);
+    const [seekPosition, setSeekPosition] = useState<number>(0);
 
     const barWidth = useRef(0);
     const statusRef = useRef(status);
@@ -88,13 +92,13 @@ const AudioDetails2 = ({ navigation, route }) => {
     ).current;
 
     // We need a ref for sound because PanResponder closure might capture old null sound
-    const soundRef = useRef(sound);
+    const soundRef = useRef<Audio.Sound | undefined>(sound);
     useEffect(() => {
         soundRef.current = sound;
     }, [sound]);
 
     // Update PanResponder Release to use soundRef
-    panResponder.panHandlers.onResponderRelease = async (evt, gestureState) => {
+    panResponder.panHandlers.onResponderRelease = async (evt: GestureResponderEvent, gestureState: any): Promise<void> => {
         if (barWidth.current > 0) {
             // We recalculate final pos to be safe, or just use seekPosition state?
             // Using gestureState.dx is relative to the grant point.
@@ -140,12 +144,12 @@ const AudioDetails2 = ({ navigation, route }) => {
     useEffect(() => {
         return sound
             ? () => {
-                  sound.unloadAsync();
-              }
+                sound.unloadAsync();
+            }
             : undefined;
     }, [sound]);
 
-    const formatTime = millis => {
+    const formatTime = (millis: number): string => {
         if (!millis) return '0:00';
         const minutes = Math.floor(millis / 60000);
         const seconds = ((millis % 60000) / 1000).toFixed(0);

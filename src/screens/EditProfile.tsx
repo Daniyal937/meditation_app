@@ -11,7 +11,7 @@ import {
     StatusBar,
     Platform,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -20,11 +20,13 @@ import { auth } from '../config/firebaseConfig';
 import { getUserProfile, updateUserProfile } from '../services/authService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
+import { ScreenProps } from '../types';
+import { RootState } from '../redux/store';
 
-const EditProfile = ({ navigation }) => {
+const EditProfile: React.FC<ScreenProps<'EditProfile'>> = ({ navigation }) => {
     const { theme } = useTheme();
     const dispatch = useDispatch();
-    const userProfileFromRedux = useSelector(state => state.user.profile);
+    const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const insets = useSafeAreaInsets();
     const [fullName, setFullName] = useState(userProfileFromRedux?.name || '');
     const [email, setEmail] = useState('');
@@ -42,7 +44,7 @@ const EditProfile = ({ navigation }) => {
             try {
                 const currentUser = auth.currentUser;
                 if (currentUser) {
-                    setEmail(currentUser.email);
+                    setEmail(currentUser.email || '');
 
                     const userProfile = await getUserProfile(currentUser.uid);
                     if (userProfile) {
@@ -76,7 +78,7 @@ const EditProfile = ({ navigation }) => {
         }
     };
 
-    const onChangeDate = (event, selectedDate) => {
+    const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date): void => {
         const currentDate = selectedDate || new Date();
         setShowDatePicker(Platform.OS === 'ios');
 
@@ -106,7 +108,7 @@ const EditProfile = ({ navigation }) => {
                     country,
                     profileImage,
                     uid: currentUser.uid,
-                    email: currentUser.email,
+                    email: currentUser.email || '',
                 };
 
                 await updateUserProfile(currentUser.uid, updatedProfile);

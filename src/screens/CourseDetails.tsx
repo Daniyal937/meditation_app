@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { wp, hp, fs, spacing } from '../utils/responsive';
+import { ScreenProps } from '../types';
+import { Session } from '../global';
 
-const CourseDetails = ({ navigation, route }) => {
+const CourseDetails: React.FC<ScreenProps<'CourseDetails'>> = ({ navigation, route }) => {
     const [selectedVoice, setSelectedVoice] = useState('MALE');
-    const [selectedSession, setSelectedSession] = useState(1); // Default to first session
+    const [selectedSession, setSelectedSession] = useState<number | string>(1); // Default to first session
 
     // Course data - can be passed via route params or fetched from API
     const courseData = {
@@ -30,7 +32,7 @@ const CourseDetails = ({ navigation, route }) => {
         ],
     };
 
-    const handlePlaySession = session => {
+    const handlePlaySession = (session: Session): void => {
         setSelectedSession(session.id);
 
         // Navigate to audio player screen
@@ -104,7 +106,7 @@ const CourseDetails = ({ navigation, route }) => {
                                     style={[
                                         styles.narratorButtonText,
                                         selectedVoice === 'MALE' &&
-                                            styles.narratorButtonTextSelected,
+                                        styles.narratorButtonTextSelected,
                                     ]}
                                 >
                                     MALE VOICE
@@ -123,7 +125,7 @@ const CourseDetails = ({ navigation, route }) => {
                                     style={[
                                         styles.narratorButtonText,
                                         selectedVoice === 'FEMALE' &&
-                                            styles.narratorButtonTextSelected,
+                                        styles.narratorButtonTextSelected,
                                     ]}
                                 >
                                     FEMALE VOICE

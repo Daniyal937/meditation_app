@@ -16,31 +16,32 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { wp, hp, fs } from '../utils/responsive';
+import { ScreenProps } from '../types';
 
-const SignUp = ({ navigation }) => {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+const SignUp: React.FC<ScreenProps<'SignUpForm'>> = ({ navigation }) => {
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [agreedToPrivacy, setAgreedToPrivacy] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const insets = useSafeAreaInsets();
 
     // Email validation
-    const isValidEmail = email => {
+    const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
 
-    const handleFacebookLogin = () => {
+    const handleFacebookLogin = (): void => {
         Alert.alert('Facebook Login', 'Facebook authentication will be implemented with Firebase');
     };
 
-    const handleGoogleLogin = () => {
+    const handleGoogleLogin = (): void => {
         Alert.alert('Google Login', 'Google authentication will be implemented with Firebase');
     };
 
-    const handleSignUp = async () => {
+    const handleSignUp = async (): Promise<void> => {
         // Validation
         if (!name.trim()) {
             Alert.alert('Error', 'Please enter your name');

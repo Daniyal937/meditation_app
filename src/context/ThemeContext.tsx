@@ -1,9 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Theme, ThemeContextValue } from '../types';
 
-const ThemeContext = createContext();
+const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
-export const lightTheme = {
+export const lightTheme: Theme = {
     mode: 'light',
     colors: {
         background: '#FFFFFF',
@@ -29,7 +30,7 @@ export const lightTheme = {
     },
 };
 
-export const darkTheme = {
+export const darkTheme: Theme = {
     mode: 'dark',
     colors: {
         background: '#03174C',
@@ -57,16 +58,20 @@ export const darkTheme = {
 
 const THEME_STORAGE_KEY = '@meditation_app_theme';
 
-export const ThemeProvider = ({ children }) => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+interface ThemeProviderProps {
+    children: ReactNode;
+}
+
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+    const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     // Load theme preference from storage
     useEffect(() => {
         loadThemePreference();
     }, []);
 
-    const loadThemePreference = async () => {
+    const loadThemePreference = async (): Promise<void> => {
         try {
             const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
             if (savedTheme !== null) {
@@ -79,7 +84,7 @@ export const ThemeProvider = ({ children }) => {
         }
     };
 
-    const toggleTheme = async () => {
+    const toggleTheme = async (): Promise<void> => {
         try {
             const newMode = !isDarkMode;
             setIsDarkMode(newMode);
@@ -91,7 +96,7 @@ export const ThemeProvider = ({ children }) => {
 
     const theme = isDarkMode ? darkTheme : lightTheme;
 
-    const value = {
+    const value: ThemeContextValue = {
         theme,
         isDarkMode,
         toggleTheme,
@@ -101,7 +106,7 @@ export const ThemeProvider = ({ children }) => {
     return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 };
 
-export const useTheme = () => {
+export const useTheme = (): ThemeContextValue => {
     const context = useContext(ThemeContext);
     if (!context) {
         throw new Error('useTheme must be used within a ThemeProvider');

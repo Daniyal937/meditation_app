@@ -1,4 +1,5 @@
 import { Dimensions, PixelRatio, Platform } from 'react-native';
+import { ScreenDimensions } from '../types';
 
 // Base dimensions (iPhone 11 Pro / X)
 const baseWidth = 375;
@@ -6,9 +7,9 @@ const baseHeight = 812;
 
 /**
  * Get current screen dimensions safely
- * @returns {object} - { width, height }
+ * @returns {ScreenDimensions} - { width, height }
  */
-const getScreenDimensions = () => {
+const getScreenDimensions = (): ScreenDimensions => {
     try {
         const { width, height } = Dimensions.get('window');
         // Fallback to base dimensions if invalid
@@ -27,7 +28,7 @@ const getScreenDimensions = () => {
  * @param {number} size - The size to scale
  * @returns {number} - Scaled size
  */
-export const wp = size => {
+export const wp = (size: number): number => {
     try {
         const { width } = getScreenDimensions();
         const percentage = (size / baseWidth) * 100;
@@ -44,7 +45,7 @@ export const wp = size => {
  * @param {number} size - The size to scale
  * @returns {number} - Scaled size
  */
-export const hp = size => {
+export const hp = (size: number): number => {
     try {
         const { height } = getScreenDimensions();
         const percentage = (size / baseHeight) * 100;
@@ -61,7 +62,7 @@ export const hp = size => {
  * @param {number} size - The font size to scale
  * @returns {number} - Scaled font size
  */
-export const fs = size => {
+export const fs = (size: number): number => {
     try {
         const { width } = getScreenDimensions();
         const scale = width / baseWidth;
@@ -83,7 +84,7 @@ export const fs = size => {
  * @param {number} factor - Scaling factor (default: 0.5)
  * @returns {number} - Scaled size
  */
-export const ms = (size, factor = 0.5) => {
+export const ms = (size: number, factor: number = 0.5): number => {
     try {
         return size + (wp(size) - size) * factor;
     } catch (error) {
@@ -97,7 +98,7 @@ export const ms = (size, factor = 0.5) => {
  * @param {number} size - The size to scale
  * @returns {number} - Scaled size
  */
-export const spacing = size => {
+export const spacing = (size: number): number => {
     try {
         return wp(size);
     } catch (error) {
@@ -110,7 +111,7 @@ export const spacing = size => {
  * Check if device is small (width < 375)
  * @returns {boolean}
  */
-export const isSmallDevice = () => {
+export const isSmallDevice = (): boolean => {
     try {
         const { width } = getScreenDimensions();
         return width < 375;
@@ -124,7 +125,7 @@ export const isSmallDevice = () => {
  * Check if device is large (width >= 414)
  * @returns {boolean}
  */
-export const isLargeDevice = () => {
+export const isLargeDevice = (): boolean => {
     try {
         const { width } = getScreenDimensions();
         return width >= 414;
@@ -138,7 +139,7 @@ export const isLargeDevice = () => {
  * Check if device is tablet
  * @returns {boolean}
  */
-export const isTablet = () => {
+export const isTablet = (): boolean => {
     try {
         const { width } = getScreenDimensions();
         return width >= 768;
@@ -150,7 +151,7 @@ export const isTablet = () => {
 
 /**
  * Get screen dimensions
- * @returns {object} - { width, height }
+ * @returns {ScreenDimensions} - { width, height }
  */
 export { getScreenDimensions };
 

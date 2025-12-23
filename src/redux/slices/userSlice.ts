@@ -1,6 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { UserState, UserProfile, UserPreferences, UserStats, DownloadItem } from '../../types';
 
-const initialState = {
+const initialState: UserState = {
     profile: null,
     preferences: {
         theme: 'light',
@@ -10,6 +11,7 @@ const initialState = {
     },
     stats: {
         totalMinutes: 0,
+        streakDays: 0,
         dailyStreak: 0,
         coursesCompleted: 0,
     },
@@ -21,32 +23,32 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUserProfile: (state, action) => {
+        setUserProfile: (state, action: PayloadAction<UserProfile>) => {
             state.profile = action.payload;
         },
-        updatePreferences: (state, action) => {
+        updatePreferences: (state, action: PayloadAction<Partial<UserPreferences>>) => {
             state.preferences = { ...state.preferences, ...action.payload };
         },
-        updateStats: (state, action) => {
+        updateStats: (state, action: PayloadAction<Partial<UserStats>>) => {
             state.stats = { ...state.stats, ...action.payload };
         },
-        addFavorite: (state, action) => {
+        addFavorite: (state, action: PayloadAction<string>) => {
             if (!state.favorites.includes(action.payload)) {
                 state.favorites.push(action.payload);
             }
         },
-        removeFavorite: (state, action) => {
-            state.favorites = state.favorites.filter(id => id !== action.payload);
+        removeFavorite: (state, action: PayloadAction<string>) => {
+            state.favorites = state.favorites.filter((id: string) => id !== action.payload);
         },
-        addDownload: (state, action) => {
-            if (!state.downloads.find(d => d.id === action.payload.id)) {
+        addDownload: (state, action: PayloadAction<DownloadItem>) => {
+            if (!state.downloads.find((d: DownloadItem) => d.id === action.payload.id)) {
                 state.downloads.push(action.payload);
             }
         },
-        removeDownload: (state, action) => {
-            state.downloads = state.downloads.filter(d => d.id !== action.payload);
+        removeDownload: (state, action: PayloadAction<string>) => {
+            state.downloads = state.downloads.filter((d: DownloadItem) => d.id !== action.payload);
         },
-        clearUserData: state => {
+        clearUserData: (state) => {
             return initialState;
         },
     },

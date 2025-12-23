@@ -1,10 +1,11 @@
-import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence, Auth } from 'firebase/auth';
+import { getFirestore, Firestore } from 'firebase/firestore';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { FirebaseConfig } from '../types';
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
+const firebaseConfig: FirebaseConfig = {
     apiKey: 'AIzaSyA95k7vqo-JpJVvcixpa-KiYBq5pMgK6JM',
     authDomain: 'silent-moon-meditation1.firebaseapp.com',
     projectId: 'silent-moon-meditation1',
@@ -15,14 +16,14 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const app: FirebaseApp = initializeApp(firebaseConfig);
 
 // Initialize Firebase Auth with persistence
-export const auth = initializeAuth(app, {
+export const auth: Auth = initializeAuth(app, {
     persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 });
 
 // Initialize Cloud Firestore and get a reference to the service
-export const db = getFirestore(app);
+export const db: Firestore = getFirestore(app);
 
 export default app;

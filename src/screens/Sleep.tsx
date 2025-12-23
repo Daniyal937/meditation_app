@@ -14,6 +14,7 @@ import {
     Platform,
     Pressable,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { auth } from '../config/firebaseConfig';
@@ -84,6 +85,7 @@ const CategoryButton = ({ category, isActive, onPress, style }) => (
 );
 
 const Sleep = ({ navigation, route }) => {
+    const insets = useSafeAreaInsets();
     const { theme } = useTheme();
     const { width } = useWindowDimensions();
     const numColumns = isTablet() ? 3 : 2;
@@ -137,123 +139,128 @@ const Sleep = ({ navigation, route }) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#03174C' }}>
-            <SafeAreaView style={styles.container}>
-                <StatusBar barStyle="light-content" />
+            <StatusBar
+                translucent
+                backgroundColor="transparent"
+                barStyle="light-content"
+            />
 
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: hp(100) }}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: hp(100) + insets.bottom }}
+                bounces={false}
+            >
+                {/* HEADER */}
+                <ImageBackground
+                    source={require('../../assets/images/sleep_header_bg.png')}
+                    style={[styles.headerGradient, { paddingTop: insets.top + hp(20) }]}
+                    resizeMode="cover"
                 >
-                    {/* HEADER */}
+                    {/* Header Icon Image */}
+                    <Image
+                        source={require('../../assets/images/sleep_header_icon.png')}
+                        style={styles.headerImage}
+                        resizeMode="contain"
+                    />
+
+                    <Text style={styles.headerTitle}>Sleep Stories</Text>
+                    <Text style={styles.headerSubtitle}>
+                        {
+                            'Soothing bedtime stories to help you fall into a deep and natural sleep'
+                        }
+                    </Text>
+                </ImageBackground>
+
+                {/* CATEGORIES */}
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={styles.categoriesContainer}
+                    contentContainerStyle={styles.categoriesContent}
+                >
+                    {categories.map((category, index) => (
+                        <CategoryButton
+                            key={category.id}
+                            category={category}
+                            isActive={activeCategory === category.name}
+                            onPress={() => setActiveCategory(category.name)}
+                            style={index === categories.length - 1 ? { marginRight: 0 } : {}}
+                        />
+                    ))}
+                </ScrollView>
+
+                {/* 🌊 FEATURED CARD — IMAGE MATCHES CARD */}
+                <View style={styles.featuredCard}>
                     <ImageBackground
-                        source={require('../../assets/images/sleep_header_bg.png')}
-                        style={styles.headerGradient}
+                        source={require('../../assets/images/ocean_moon_bg_final.png')}
+                        style={styles.featuredImage}
                         resizeMode="cover"
                     >
-                        {/* Header Icon Image */}
-                        <Image
-                            source={require('../../assets/images/sleep_header_icon.png')}
-                            style={styles.headerImage}
-                            resizeMode="contain"
-                        />
+                        <View style={styles.featuredContent}>
 
-                        <Text style={styles.headerTitle}>Sleep Stories</Text>
-                        <Text style={styles.headerSubtitle}>
-                            {
-                                'Soothing bedtime stories to help you fall into a deep and natural sleep'
-                            }
-                        </Text>
-                    </ImageBackground>
-
-                    {/* CATEGORIES */}
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.categoriesContainer}
-                        contentContainerStyle={styles.categoriesContent}
-                    >
-                        {categories.map((category, index) => (
-                            <CategoryButton
-                                key={category.id}
-                                category={category}
-                                isActive={activeCategory === category.name}
-                                onPress={() => setActiveCategory(category.name)}
-                                style={index === categories.length - 1 ? { marginRight: 0 } : {}}
-                            />
-                        ))}
-                    </ScrollView>
-
-                    {/* 🌊 FEATURED CARD — IMAGE MATCHES CARD */}
-                    <View style={styles.featuredCard}>
-                        <ImageBackground
-                            source={require('../../assets/images/ocean_moon_bg_final.png')}
-                            style={styles.featuredImage}
-                            resizeMode="cover"
-                        >
-                            <View style={styles.featuredContent}>
-
-                                <TouchableOpacity
-                                    style={styles.startButton}
-                                    onPress={() =>
-                                        navigation.navigate('PlayOption', {
-                                            content: {
-                                                title: 'The Ocean Moon',
-                                                duration: '45 MIN',
-                                                type: 'SLEEP MUSIC',
-                                                description:
-                                                    "Ease the mind into a restful night's sleep with\n these deep, ambient tones.",
-                                                favoriteCount: '24,234',
-                                                listeningCount: '34,234',
-                                                image: require('../../assets/images/ocean_moon_hero.png'), // Should use hero image for play option
-                                            },
-                                        })
-                                    }
-                                >
-                                    <Text style={styles.startButtonText}>START</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </ImageBackground>
-                    </View>
-
-                    {/* GRID */}
-                    <View style={styles.gridContainer}>
-                        {sleepContent.map(item => (
                             <TouchableOpacity
-                                key={item.id}
-                                style={[styles.gridCard, { width: cardWidth }]}
-                                onPress={() => navigation.navigate('SleepMusic')}
+                                style={styles.startButton}
+                                onPress={() =>
+                                    navigation.navigate('PlayOption', {
+                                        content: {
+                                            title: 'The Ocean Moon',
+                                            duration: '45 MIN',
+                                            type: 'SLEEP MUSIC',
+                                            description:
+                                                "Ease the mind into a restful night's sleep with\n these deep, ambient tones.",
+                                            favoriteCount: '24,234',
+                                            listeningCount: '34,234',
+                                            image: require('../../assets/images/ocean_moon_hero.png'), // Should use hero image for play option
+                                        },
+                                    })
+                                }
                             >
-                                <View
-                                    style={[
-                                        styles.gridImageContainer,
-                                        { backgroundColor: item.color },
-                                    ]}
-                                >
-                                    <Image
-                                        source={item.image}
-                                        style={styles.gridImage}
-                                        resizeMode="cover"
-                                    />
-                                </View>
-                                <View style={styles.gridCardContent}>
-                                    <Text style={styles.gridCardTitle}>{item.title}</Text>
-                                    <Text style={styles.gridCardSubtitle}>
-                                        {item.duration} • {item.type}
-                                    </Text>
-                                </View>
+                                <Text style={styles.startButtonText}>START</Text>
                             </TouchableOpacity>
-                        ))}
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
+                        </View>
+                    </ImageBackground>
+                </View>
 
-            <BottomMenu
-                navigation={navigation}
-                activeTab="Sleep"
-                userName={userName}
-                backgroundColor="#03174C"
-            />
-        </View>
+                {/* GRID */}
+                <View style={styles.gridContainer}>
+                    {sleepContent.map(item => (
+                        <TouchableOpacity
+                            key={item.id}
+                            style={[styles.gridCard, { width: cardWidth }]}
+                            onPress={() => navigation.navigate('SleepMusic')}
+                        >
+                            <View
+                                style={[
+                                    styles.gridImageContainer,
+                                    { backgroundColor: item.color },
+                                ]}
+                            >
+                                <Image
+                                    source={item.image}
+                                    style={styles.gridImage}
+                                    resizeMode="cover"
+                                />
+                            </View>
+                            <View style={styles.gridCardContent}>
+                                <Text style={styles.gridCardTitle}>{item.title}</Text>
+                                <Text style={styles.gridCardSubtitle}>
+                                    {item.duration} • {item.type}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </ScrollView>
+        </ScrollView>
+            {/* </SafeAreaView> - Removed to allow full screen header */ }
+
+    <BottomMenu
+        navigation={navigation}
+        activeTab="Sleep"
+        userName={userName}
+        backgroundColor="#03174C"
+    />
+        </View >
     );
 };
 
@@ -267,7 +274,8 @@ const styles = StyleSheet.create({
         paddingBottom: hp(0),
         justifyContent: 'flex-start',
         alignItems: 'center',
-        width: '100%',
+        width: wp(375), // Ensure it matches the base design width scaled
+        alignSelf: 'center', // Center it if the screen is wider
     },
 
     headerImage: {

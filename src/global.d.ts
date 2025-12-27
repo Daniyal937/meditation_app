@@ -1,9 +1,6 @@
-// Global type augmentation for React Native
 declare global {
     const __DEV__: boolean;
 }
-
-// Audio types for expo-av
 export interface AudioStatus {
     isLoaded: boolean;
     isPlaying?: boolean;
@@ -11,15 +8,12 @@ export interface AudioStatus {
     durationMillis?: number;
     didJustFinish?: boolean;
 }
-
 export interface Sound {
     setPositionAsync(positionMillis: number): Promise<void>;
     pauseAsync(): Promise<void>;
     playAsync(): Promise<void>;
     unloadAsync(): Promise<void>;
 }
-
-// Topic interface for ChooseTopic screen
 export interface Topic {
     id: number;
     name: string;
@@ -28,8 +22,6 @@ export interface Topic {
     image: any;
     backgroundImage?: any;
 }
-
-// Session interface
 export interface Session {
     id: number | string;
     name: string;
@@ -41,5 +33,4 @@ export interface Session {
     location?: string;
     streams?: string;
 }
-
 export { };

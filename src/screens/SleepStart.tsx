@@ -14,28 +14,26 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { wp, hp, fs, spacing } from '../utils/responsive';
 import { ScreenProps } from '../types';
-
 const SleepStart = ({ navigation }: ScreenProps<'SleepStart'>) => {
     const { width, height } = useWindowDimensions();
     const insets = useSafeAreaInsets();
     return (
         <View style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-
-            {/* Background Image */}
+            {}
             <ImageBackground
                 source={require('../../assets/images/sleep_start_bg_v4.png')}
                 style={styles.backgroundImage}
                 resizeMode="cover"
             >
-                {/* Content Container */}
+                {}
                 <View
                     style={[
                         styles.contentContainer,
                         { paddingTop: insets.top + hp(60), paddingBottom: insets.bottom + hp(20) },
                     ]}
                 >
-                    {/* Title Section */}
+                    {}
                     <View style={styles.titleSection}>
                         <Text style={styles.title}>Welcome to Sleep</Text>
                         <Text style={styles.description}>
@@ -43,8 +41,7 @@ const SleepStart = ({ navigation }: ScreenProps<'SleepStart'>) => {
                             perfect conditions for refreshing sleep.
                         </Text>
                     </View>
-
-                    {/* Sleeping Birds Illustration */}
+                    {}
                     <Image
                         source={require('../../assets/images/sleeping_birds_logo.png')}
                         style={[
@@ -53,8 +50,7 @@ const SleepStart = ({ navigation }: ScreenProps<'SleepStart'>) => {
                         ]}
                         resizeMode="contain"
                     />
-
-                    {/* Get Started Button */}
+                    {}
                     <TouchableOpacity
                         style={styles.getStartedButton}
                         activeOpacity={0.8}
@@ -70,11 +66,10 @@ const SleepStart = ({ navigation }: ScreenProps<'SleepStart'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#03174C', // Deep blue to match bg
+        backgroundColor: '#03174C', 
     },
     backgroundImage: {
         flex: 1,
@@ -111,7 +106,7 @@ const styles = StyleSheet.create({
     },
     illustration: {
         alignSelf: 'flex-end',
-        marginRight: -spacing(30), // Offset the contentContainer's paddingHorizontal
+        marginRight: -spacing(30), 
     },
     getStartedButton: {
         backgroundColor: '#8E97FD',
@@ -135,5 +130,4 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
     },
 });
-
 export default SleepStart;

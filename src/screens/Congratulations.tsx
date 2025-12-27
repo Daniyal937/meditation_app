@@ -12,7 +12,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { fs, hp, wp, spacing } from '../utils/responsive';
 import { ScreenProps } from '../types';
-
 const Congratulations = ({ navigation }: ScreenProps<'Congratulations'>) => {
     const emojiImages = [
         require('../../assets/images/emoji_1.png'),
@@ -20,15 +19,13 @@ const Congratulations = ({ navigation }: ScreenProps<'Congratulations'>) => {
         require('../../assets/images/emoji_3.png'),
         require('../../assets/images/emoji_4.png'),
     ];
-
     const [selectedEmoji, setSelectedEmoji] = useState<number | null>(null);
     const scaleAnims = useRef(emojiImages.map(() => new Animated.Value(1))).current;
-
     const handleEmojiPress = (index: number): void => {
         setSelectedEmoji(index);
         scaleAnims.forEach((anim, i) => {
             Animated.spring(anim, {
-                toValue: i === index ? 1.3 : 1, // Increase size
+                toValue: i === index ? 1.3 : 1, 
                 useNativeDriver: true,
                 friction: 5,
             }).start();
@@ -37,16 +34,14 @@ const Congratulations = ({ navigation }: ScreenProps<'Congratulations'>) => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" />
-
-            {/* Header with Close Button */}
+            {}
             <View style={styles.header}>
                 <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
                     <Ionicons name="close" size={fs(24)} color="#3F414E" />
                 </TouchableOpacity>
             </View>
-
             <View style={styles.content}>
-                {/* Graphic - Now using Image Asset */}
+                {}
                 <View style={styles.graphicContainer}>
                     <Image
                         source={require('../../assets/images/congratulations_logo.png')}
@@ -54,12 +49,10 @@ const Congratulations = ({ navigation }: ScreenProps<'Congratulations'>) => {
                         resizeMode="contain"
                     />
                 </View>
-
-                {/* Text */}
+                {}
                 <Text style={styles.title}>Congratulations!</Text>
                 <Text style={styles.subtitle}>You have completed the session</Text>
-
-                {/* Feedback Card */}
+                {}
                 <View style={styles.card}>
                     <Text style={styles.cardTitle}>How do you feel after this session?</Text>
                     <View style={styles.emojisRow}>
@@ -89,7 +82,6 @@ const Congratulations = ({ navigation }: ScreenProps<'Congratulations'>) => {
         </SafeAreaView>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -105,7 +97,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 20,
-        backgroundColor: '#FFFFFF', // Or transparent
+        backgroundColor: '#FFFFFF', 
     },
     content: {
         flex: 1,
@@ -135,7 +127,7 @@ const styles = StyleSheet.create({
     },
     card: {
         width: '100%',
-        backgroundColor: '#F2F3F7', // Light grey/blue background
+        backgroundColor: '#F2F3F7', 
         borderRadius: wp(20),
         padding: spacing(24),
         alignItems: 'center',
@@ -164,5 +156,4 @@ const styles = StyleSheet.create({
         height: '100%',
     },
 });
-
 export default Congratulations;

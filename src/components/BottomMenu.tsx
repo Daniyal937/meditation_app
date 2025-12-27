@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { wp, hp, fs, spacing } from '../utils/responsive';
 import { BottomMenuProps } from '../types';
-
 const BottomMenu: React.FC<BottomMenuProps> = ({
     navigation,
     activeTab,
@@ -14,10 +13,7 @@ const BottomMenu: React.FC<BottomMenuProps> = ({
 }) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
-
-    // Calculate accurate padding
-    const paddingBottom = insets.bottom > 0 ? insets.bottom + hp(2) : hp(24); // Increased fallback padding for better visibility on small screens
-
+    const paddingBottom = insets.bottom > 0 ? insets.bottom + hp(2) : hp(24);
     return (
         <View
             style={[
@@ -55,7 +51,6 @@ const BottomMenu: React.FC<BottomMenuProps> = ({
                     </Text>
                 </TouchableOpacity>
             </View>
-
             <View style={styles.navItemWrapper}>
                 <TouchableOpacity
                     style={[styles.navItem, activeTab === 'Sleep' && styles.navItemActive]}
@@ -91,7 +86,6 @@ const BottomMenu: React.FC<BottomMenuProps> = ({
                     </Text>
                 </TouchableOpacity>
             </View>
-
             <View style={styles.navItemWrapper}>
                 <TouchableOpacity
                     style={[styles.navItem, activeTab === 'Meditate' && styles.navItemActive]}
@@ -119,14 +113,11 @@ const BottomMenu: React.FC<BottomMenuProps> = ({
                     </Text>
                 </TouchableOpacity>
             </View>
-
             <View style={styles.navItemWrapper}>
                 <TouchableOpacity
                     style={[styles.navItem, activeTab === 'Music' && styles.navItemActive]}
                     activeOpacity={0.7}
-                    onPress={() =>
-                        navigation.navigate('MeditationSessions', { activeTab: 'Music' })
-                    }
+                    onPress={() => navigation.navigate('Music')}
                 >
                     <Image
                         source={require('../../assets/images/menu_music.png')}
@@ -146,7 +137,6 @@ const BottomMenu: React.FC<BottomMenuProps> = ({
                     </Text>
                 </TouchableOpacity>
             </View>
-
             <View style={styles.navItemWrapper}>
                 <TouchableOpacity
                     style={[styles.navItem, activeTab === 'Profile' && styles.navItemActive]}
@@ -177,7 +167,6 @@ const BottomMenu: React.FC<BottomMenuProps> = ({
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     bottomNav: {
         position: 'absolute',
@@ -186,7 +175,6 @@ const styles = StyleSheet.create({
         right: 0,
         flexDirection: 'row',
         paddingHorizontal: spacing(10),
-        // paddingVertical removed in favor of dynamic padding
         borderTopWidth: 1,
         elevation: 8,
         shadowColor: '#000000',
@@ -208,7 +196,7 @@ const styles = StyleSheet.create({
         borderRadius: wp(35),
     },
     navItemActive: {
-        backgroundColor: '#8E97FD', // Active background color
+        backgroundColor: '#8E97FD',
     },
     navIcon: {
         width: wp(24),
@@ -220,5 +208,4 @@ const styles = StyleSheet.create({
         marginTop: hp(4),
     },
 });
-
 export default BottomMenu;

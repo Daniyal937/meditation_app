@@ -22,7 +22,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 import { ScreenProps } from '../types';
 import { RootState } from '../redux/store';
-
 const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
     const { theme } = useTheme();
     const dispatch = useDispatch();
@@ -38,14 +37,12 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
     const [loading, setLoading] = useState(false);
     const [saved, setSaved] = useState(false);
     const [showDatePicker, setShowDatePicker] = useState(false);
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const currentUser = auth.currentUser;
                 if (currentUser) {
                     setEmail(currentUser.email || '');
-
                     const userProfile = await getUserProfile(currentUser.uid);
                     if (userProfile) {
                         setFullName(userProfile.name || '');
@@ -60,10 +57,8 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                 console.error('Error fetching user data:', error);
             }
         };
-
         fetchUserData();
     }, []);
-
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -71,31 +66,25 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
             aspect: [1, 1],
             quality: 1,
         });
-
         if (!result.canceled) {
             setProfileImage(result.assets[0].uri);
-            setSaved(false); // Enable save button when image changes
+            setSaved(false); 
         }
     };
-
     const onChangeDate = (event: DateTimePickerEvent, selectedDate?: Date): void => {
         const currentDate = selectedDate || new Date();
         setShowDatePicker(Platform.OS === 'ios');
-
-        // Format date to dd/mm/yyyy
         const day = currentDate.getDate().toString().padStart(2, '0');
         const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
         const year = currentDate.getFullYear();
         setDateOfBirth(`${day}/${month}/${year}`);
-        setSaved(false); // Enable save when date changes
+        setSaved(false); 
     };
-
     const handleSave = async () => {
         if (!fullName.trim()) {
             Alert.alert('Error', 'Please enter your full name');
             return;
         }
-
         setLoading(true);
         try {
             const currentUser = auth.currentUser;
@@ -110,12 +99,8 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                     uid: currentUser.uid,
                     email: currentUser.email || '',
                 };
-
                 await updateUserProfile(currentUser.uid, updatedProfile);
-
-                // Update Redux state immediately
                 dispatch(setUserProfileAction(updatedProfile));
-
                 setSaved(true);
                 Alert.alert('Success', 'Profile updated successfully');
             }
@@ -126,7 +111,6 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
             setLoading(false);
         }
     };
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -134,8 +118,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
-                {/* Header */}
+                {}
                 <View style={styles.header}>
                     <TouchableOpacity
                         style={styles.backButton}
@@ -159,7 +142,6 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                         />
                     </TouchableOpacity>
                 </View>
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={[
@@ -168,7 +150,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                     ]}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Profile Picture */}
+                    {}
                     <View
                         style={[
                             styles.profilePictureContainer,
@@ -198,10 +180,9 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-
-                    {/* Form Fields */}
+                    {}
                     <View style={styles.formContainer}>
-                        {/* Full Name */}
+                        {}
                         <View style={styles.inputGroup}>
                             <Text style={[styles.label, { color: '#000000' }]}>Full Name</Text>
                             <TextInput
@@ -216,8 +197,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                                 editable={!saved}
                             />
                         </View>
-
-                        {/* Email */}
+                        {}
                         <View style={styles.inputGroup}>
                             <Text style={[styles.label, { color: '#000000' }]}>Email</Text>
                             <TextInput
@@ -232,8 +212,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                                 keyboardType="email-address"
                             />
                         </View>
-
-                        {/* Phone Number */}
+                        {}
                         <View style={styles.inputGroup}>
                             <Text style={[styles.label, { color: '#000000' }]}>Phone Number</Text>
                             <TextInput
@@ -249,8 +228,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                                 editable={!saved}
                             />
                         </View>
-
-                        {/* Date of Birth */}
+                        {}
                         <View style={styles.inputGroup}>
                             <Text style={[styles.label, { color: '#000000' }]}>Date of Birth</Text>
                             <TouchableOpacity
@@ -271,7 +249,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                                     placeholder="dd/mm/yyyy"
                                     placeholderTextColor={theme.colors.textSecondary}
                                     editable={false}
-                                    pointerEvents="none" // Ensure touch passes to parent TouchableOpacity
+                                    pointerEvents="none" 
                                 />
                                 <Ionicons
                                     name="calendar-outline"
@@ -281,7 +259,6 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                                 />
                             </TouchableOpacity>
                         </View>
-
                         {showDatePicker && (
                             <DateTimePicker
                                 value={new Date()}
@@ -291,8 +268,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                                 maximumDate={new Date()}
                             />
                         )}
-
-                        {/* Street Address */}
+                        {}
                         <View style={styles.inputGroup}>
                             <Text style={[styles.label, { color: '#000000' }]}>Street Address</Text>
                             <TextInput
@@ -306,8 +282,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                                 editable={!saved}
                             />
                         </View>
-
-                        {/* Country */}
+                        {}
                         <View style={styles.inputGroup}>
                             <Text style={[styles.label, { color: '#000000' }]}>Country</Text>
                             <TextInput
@@ -321,8 +296,7 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                                 editable={!saved}
                             />
                         </View>
-
-                        {/* Save Button */}
+                        {}
                         {!saved && (
                             <TouchableOpacity
                                 style={[
@@ -339,15 +313,13 @@ const EditProfile = ({ navigation }: ScreenProps<'EditProfile'>) => {
                             </TouchableOpacity>
                         )}
                     </View>
-
-                    {/* Bottom padding */}
+                    {}
                     <View style={{ height: 40 }} />
                 </ScrollView>
             </View>
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -465,5 +437,4 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
     },
 });
-
 export default EditProfile;

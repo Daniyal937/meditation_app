@@ -12,31 +12,25 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from '../config/firebaseConfig';
 import { getUserProfile } from '../services/authService';
-
 import { useTheme } from '../context/ThemeContext';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 import BottomMenu from '../components/BottomMenu';
 import { wp, hp, fs, spacing } from '../utils/responsive';
 import { ScreenProps } from '../types';
 import { RootState } from '../redux/store';
-
 const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessions'>) => {
-    const { theme } = useTheme(); // Get theme
+    const { theme } = useTheme();
     const dispatch = useDispatch();
     const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const [activeSessionId, setActiveSessionId] = useState<number | null>(null);
     const insets = useSafeAreaInsets();
-
-    // Get category data from route params or use default
     const categoryData = route?.params?.category || {
         title: 'Mindfulness',
         subtitle: 'Practice and develop mindfulness',
         color: '#8E97FD',
     };
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -44,9 +38,8 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
                 if (currentUser) {
                     if (userProfileFromRedux) {
                         setUserName(userProfileFromRedux.name);
-                        return; // Already have data
+                        return;
                     }
-
                     if (route?.params?.userName) {
                         setUserName(route.params.userName);
                     } else {
@@ -60,7 +53,6 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
                                 const derivedName =
                                     emailName.charAt(0).toUpperCase() + emailName.slice(1);
                                 setUserName(derivedName);
-                                // Store partial data if just name
                                 dispatch(
                                     setUserProfileAction({
                                         name: derivedName,
@@ -76,10 +68,8 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
                 console.error('Error fetching user data:', error);
             }
         };
-
         fetchUserData();
     }, [route, userProfileFromRedux]);
-
     const sessions = [
         {
             id: 1,
@@ -124,12 +114,9 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
             audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
         },
     ];
-
     const handlePlaySession = (session: typeof sessions[0]) => {
-        // Navigate to AudioDetails2 screen (using v2 as requested implicitly by user editing AudioDetails2)
         navigation.navigate('AudioDetails2', { session });
     };
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -137,7 +124,6 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={{
@@ -147,7 +133,7 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
                     }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Back Button */}
+                    { }
                     <TouchableOpacity
                         style={[
                             styles.backButton,
@@ -158,9 +144,8 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
                     >
                         <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
                     </TouchableOpacity>
-
-                    {/* Category Header Card */}
-                    {/* ... (this part uses categoryData.color, which is passed in, so it's dynamic enough or specific) ... */}
+                    { }
+                    { }
                     <View style={[styles.categoryCard, { backgroundColor: categoryData.color }]}>
                         <View style={styles.categoryInfo}>
                             <Text style={styles.categoryTitle}>{categoryData.title}</Text>
@@ -174,8 +159,7 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
                             />
                         </View>
                     </View>
-
-                    {/* Session List */}
+                    { }
                     <View style={styles.sessionList}>
                         {sessions.map(session => (
                             <TouchableOpacity
@@ -216,8 +200,7 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
                     </View>
                 </ScrollView>
             </View>
-
-            {/* Bottom Navigation */}
+            { }
             <BottomMenu
                 navigation={navigation}
                 activeTab={route?.params?.activeTab || 'Meditate'}
@@ -226,7 +209,6 @@ const MeditationSessions = ({ navigation, route }: ScreenProps<'MeditationSessio
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -313,5 +295,4 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
 });
-
 export default MeditationSessions;

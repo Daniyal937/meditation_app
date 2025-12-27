@@ -17,33 +17,27 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { wp, hp, fs } from '../utils/responsive';
 import { ScreenProps } from '../types';
-
 const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const insets = useSafeAreaInsets();
-
     const handleFacebookLogin = () => {
         Alert.alert('Facebook Login', 'Facebook authentication will be implemented with Firebase');
     };
-
     const handleGoogleLogin = () => {
         Alert.alert('Google Login', 'Google authentication will be implemented with Firebase');
     };
-
     const handleForgotPassword = async () => {
         if (!email.trim()) {
             Alert.alert('Forgot Password', 'Please enter your email address first.');
             return;
         }
-
         setIsLoading(true);
         try {
             const { resetPassword } = require('../services/authService');
             const result = await resetPassword(email);
-
             if (result.success) {
                 Alert.alert('Reset Password', 'Check your email for a password reset link.');
             } else {
@@ -56,13 +50,10 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
             setIsLoading(false);
         }
     };
-
     const handleSignUp = () => {
         navigation.navigate('SignUpForm');
     };
-
     const handleLogin = async () => {
-        // Validation
         if (!email.trim()) {
             Alert.alert('Error', 'Please enter your email');
             return;
@@ -71,28 +62,20 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
             Alert.alert('Error', 'Please enter your password');
             return;
         }
-
         setIsLoading(true);
-
         try {
-            // Firebase Authentication
             const { signInWithEmail } = require('../services/authService');
             const result = await signInWithEmail(email, password);
-
             setIsLoading(false);
-
             if (result.success) {
-                // Navigate based on whether user has seen welcome screen
                 if (result.user.hasSeenWelcome) {
                     navigation.replace('Home', {});
                 } else {
                     const userName = result.user.name || 'User';
-
                     navigation.navigate('Welcome', { userName });
                 }
             } else {
                 console.error('❌ Login failed:', result.error);
-                // Show error message from Firebase
                 Alert.alert('Login Failed', result.error);
             }
         } catch (error) {
@@ -102,7 +85,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
             console.error('Login error:', error);
         }
     };
-
     return (
         <View style={styles.container}>
             <Image
@@ -111,7 +93,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                 resizeMode="cover"
             />
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-
             <View style={[styles.safeArea, { paddingTop: insets.top }]}>
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -121,7 +102,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                         contentContainerStyle={styles.scrollContent}
                         showsVerticalScrollIndicator={false}
                     >
-                        {/* Header */}
                         <View style={styles.header}>
                             <TouchableOpacity
                                 onPress={() => navigation.goBack()}
@@ -130,15 +110,10 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                                 <Ionicons name="arrow-back" size={24} color="#3F414E" />
                             </TouchableOpacity>
                         </View>
-
-                        {/* Title */}
                         <View style={styles.titleContainer}>
                             <Text style={styles.title}>Welcome Back!</Text>
                         </View>
-
-                        {/* Social Login Buttons */}
                         <View style={styles.socialButtonsContainer}>
-                            {/* Facebook Button */}
                             <TouchableOpacity
                                 style={styles.facebookButton}
                                 onPress={handleFacebookLogin}
@@ -156,8 +131,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                                     </Text>
                                 </LinearGradient>
                             </TouchableOpacity>
-
-                            {/* Google Button */}
                             <TouchableOpacity
                                 style={styles.googleButton}
                                 onPress={handleGoogleLogin}
@@ -170,15 +143,10 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                                 <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
                             </TouchableOpacity>
                         </View>
-
-                        {/* Divider */}
                         <View style={styles.dividerContainer}>
                             <Text style={styles.dividerText}>OR LOG IN WITH EMAIL</Text>
                         </View>
-
-                        {/* Form */}
                         <View style={styles.formContainer}>
-                            {/* Email Input */}
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
@@ -190,8 +158,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                                     autoCapitalize="none"
                                 />
                             </View>
-
-                            {/* Password Input */}
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
@@ -214,8 +180,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                                 </TouchableOpacity>
                             </View>
                         </View>
-
-                        {/* Log In Button */}
                         <TouchableOpacity
                             style={styles.loginButton}
                             onPress={handleLogin}
@@ -233,8 +197,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                                 </Text>
                             </LinearGradient>
                         </TouchableOpacity>
-
-                        {/* Forgot Password Link */}
                         <TouchableOpacity
                             onPress={handleForgotPassword}
                             style={styles.forgotPasswordContainer}
@@ -242,8 +204,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
                         >
                             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
                         </TouchableOpacity>
-
-                        {/* Sign Up Link */}
                         <TouchableOpacity
                             onPress={handleSignUp}
                             style={styles.signUpContainer}
@@ -260,7 +220,6 @@ const SignIn = ({ navigation }: ScreenProps<'Login'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -415,7 +374,6 @@ const styles = StyleSheet.create({
         color: '#3F414E',
         fontWeight: '400',
     },
-
     signUpContainer: {
         alignItems: 'center',
         paddingVertical: hp(10),
@@ -432,5 +390,4 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
 });
-
 export default SignIn;

@@ -12,35 +12,28 @@ import {
 import { auth, db } from '../config/firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-
 interface LogEntry {
     message: string;
     type: string;
 }
-
 const FirebaseTest = () => {
     const [email, setEmail] = useState('test@example.com');
     const [password, setPassword] = useState('test123456');
     const [logs, setLogs] = useState<LogEntry[]>([]);
-
     const addLog = (message: string, type: string = 'info'): void => {
         const timestamp = new Date().toLocaleTimeString();
         setLogs(prev => [...prev, { message: `[${timestamp}] ${message}`, type }]);
     };
-
     useEffect(() => {
         addLog('🔵 Firebase Test Component Loaded');
         addLog(`Auth instance: ${auth ? 'OK' : 'MISSING'}`);
         addLog(`Firestore instance: ${db ? 'OK' : 'MISSING'}`);
     }, []);
-
     const testSignup = async () => {
         try {
             addLog('🔵 Testing signup...');
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             addLog(`✅ Signup successful! UID: ${userCredential.user.uid}`, 'success');
-
-            // Try to write to Firestore
             addLog('🔵 Writing to Firestore...');
             await setDoc(doc(db, 'users', userCredential.user.uid), {
                 email: email,
@@ -55,18 +48,14 @@ const FirebaseTest = () => {
             Alert.alert('Error', err.message);
         }
     };
-
     const testLogin = async () => {
         try {
             addLog('🔵 Testing login...');
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             addLog(`✅ Login successful! UID: ${userCredential.user.uid}`, 'success');
-
-            // Try to read from Firestore
             addLog('🔵 Reading from Firestore...');
             const docRef = doc(db, 'users', userCredential.user.uid);
             const docSnap = await getDoc(docRef);
-
             if (docSnap.exists()) {
                 addLog(
                     `✅ Firestore read successful! Data: ${JSON.stringify(docSnap.data())}`,
@@ -83,15 +72,12 @@ const FirebaseTest = () => {
             Alert.alert('Error', err.message);
         }
     };
-
     const clearLogs = () => {
         setLogs([]);
     };
-
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Firebase Connection Test</Text>
-
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email:</Text>
                 <TextInput
@@ -102,7 +88,6 @@ const FirebaseTest = () => {
                     autoCapitalize="none"
                 />
             </View>
-
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Password:</Text>
                 <TextInput
@@ -113,21 +98,17 @@ const FirebaseTest = () => {
                     secureTextEntry
                 />
             </View>
-
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={testSignup}>
                     <Text style={styles.buttonText}>Test Signup</Text>
                 </TouchableOpacity>
-
                 <TouchableOpacity style={[styles.button, styles.loginButton]} onPress={testLogin}>
                     <Text style={styles.buttonText}>Test Login</Text>
                 </TouchableOpacity>
-
                 <TouchableOpacity style={[styles.button, styles.clearButton]} onPress={clearLogs}>
                     <Text style={styles.buttonText}>Clear Logs</Text>
                 </TouchableOpacity>
             </View>
-
             <ScrollView style={styles.logContainer}>
                 <Text style={styles.logTitle}>Logs:</Text>
                 {logs.map((log, index) => (
@@ -147,7 +128,6 @@ const FirebaseTest = () => {
         </SafeAreaView>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -225,5 +205,4 @@ const styles = StyleSheet.create({
         color: '#ffd43b',
     },
 });
-
 export default FirebaseTest;

@@ -4,24 +4,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { wp, hp, fs, spacing } from '../utils/responsive';
 import { ScreenProps } from '../types';
-
 const SignUpAndSignIn = ({ navigation }: ScreenProps<'SignUp'>) => {
     const insets = useSafeAreaInsets();
     const handleSignUp = () => {
-        // Navigate to sign up form or handle sign up logic
         navigation.navigate('SignUpForm');
     };
-
     const handleLogIn = () => {
-        // Navigate to login screen
         navigation.navigate('Login');
     };
-
     return (
         <View style={[styles.container, { paddingTop: insets.top }]}>
             <StatusBar barStyle="dark-content" backgroundColor="#F5F5F5" />
-
-            {/* Logo Section */}
             <View style={styles.logoContainer}>
                 <Image
                     source={require('../../assets/images/silent-moon-logo.png')}
@@ -29,8 +22,6 @@ const SignUpAndSignIn = ({ navigation }: ScreenProps<'SignUp'>) => {
                     resizeMode="contain"
                 />
             </View>
-
-            {/* Illustration Section */}
             <View style={styles.illustrationContainer}>
                 <Image
                     source={require('../../assets/images/signup-illustration.png')}
@@ -38,16 +29,12 @@ const SignUpAndSignIn = ({ navigation }: ScreenProps<'SignUp'>) => {
                     resizeMode="contain"
                 />
             </View>
-
-            {/* Content Section */}
             <View style={styles.contentContainer}>
                 <Text style={styles.heading}>We are what we do</Text>
                 <Text style={styles.subtitle}>
                     Thousand of people are using silent moon for smalls meditation
                 </Text>
             </View>
-
-            {/* Button Section */}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={styles.signUpButton}
@@ -63,8 +50,6 @@ const SignUpAndSignIn = ({ navigation }: ScreenProps<'SignUp'>) => {
                         <Text style={styles.signUpButtonText}>SIGN UP</Text>
                     </LinearGradient>
                 </TouchableOpacity>
-
-                {/* Login Link */}
                 <TouchableOpacity onPress={handleLogIn} activeOpacity={0.7}>
                     <Text style={styles.loginText}>
                         ALREADY HAVE AN ACCOUNT? <Text style={styles.loginLink}>LOG IN</Text>
@@ -74,7 +59,6 @@ const SignUpAndSignIn = ({ navigation }: ScreenProps<'SignUp'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -144,7 +128,6 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         letterSpacing: 1.2,
     },
-
     loginText: {
         fontSize: fs(13),
         fontWeight: '400',
@@ -158,5 +141,4 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
 });
-
 export default SignUpAndSignIn;

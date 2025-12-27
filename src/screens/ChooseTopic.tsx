@@ -13,12 +13,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 import { ScreenProps } from '../types';
 import { Topic } from '../global';
-
 const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
     const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
     const insets = useSafeAreaInsets();
-
-    // Topic data matching Figma design
     const topics = [
         {
             id: 1,
@@ -79,15 +76,12 @@ const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
         },
     ];
     const handleTopicPress = (topicId: number, topicName: string): void => {
-        // Navigate to Reminders screen with selected topic
         navigation.navigate('Reminders', {
             selectedTopic: topicName,
             topicId: topicId,
         });
     };
-
     const renderTopicCard = (topic: Topic): React.ReactElement => {
-        // Special rendering for Better Sleep card with background image
         if (topic.id === 6 && topic.backgroundImage) {
             return (
                 <TouchableOpacity
@@ -97,7 +91,7 @@ const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
                         {
                             height: topic.height,
                             backgroundColor: 'transparent',
-                            padding: 0, // Remove padding to allow background to fill entire card
+                            padding: 0, 
                         },
                     ]}
                     onPress={() => handleTopicPress(topic.id, topic.name)}
@@ -119,8 +113,6 @@ const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
                 </TouchableOpacity>
             );
         }
-
-        // Default rendering for other cards
         return (
             <TouchableOpacity
                 key={topic.id}
@@ -153,10 +145,8 @@ const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
             </TouchableOpacity>
         );
     };
-
     const leftColumnTopics = topics.filter((_, index) => index % 2 === 0);
     const rightColumnTopics = topics.filter((_, index) => index % 2 !== 0);
-
     return (
         <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
             <Image
@@ -171,13 +161,12 @@ const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
             />
             <View style={[styles.container, { paddingTop: insets.top }]}>
                 <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Header Section */}
+                    {}
                     <View style={styles.header}>
                         <Text style={styles.title}>
                             <Text style={{ fontWeight: '700' }}>What Brings you</Text>
@@ -185,12 +174,11 @@ const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
                         </Text>
                         <Text style={styles.subtitle}>choose a topic to focus on</Text>
                     </View>
-
-                    {/* Topic Grid */}
+                    {}
                     <View style={styles.masonryContainer}>
-                        {/* Left Column */}
+                        {}
                         <View style={styles.column}>{leftColumnTopics.map(renderTopicCard)}</View>
-                        {/* Right Column */}
+                        {}
                         <View style={styles.column}>{rightColumnTopics.map(renderTopicCard)}</View>
                     </View>
                 </ScrollView>
@@ -198,7 +186,6 @@ const ChooseTopic = ({ navigation }: ScreenProps<'ChooseTopic'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -256,7 +243,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         alignSelf: 'center',
-        bottom: hp(30), // Leave space for text
+        bottom: hp(30), 
         width: '100%',
     },
     cardInternalImageCentered: {
@@ -294,5 +281,4 @@ const styles = StyleSheet.create({
         lineHeight: fs(22),
     },
 });
-
 export default ChooseTopic;

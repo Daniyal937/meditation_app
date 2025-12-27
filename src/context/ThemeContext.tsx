@@ -18,7 +18,6 @@ export const lightTheme: Theme = {
         border: '#F0F0F0',
         error: '#FF6B6B',
         success: '#6CB28E',
-        // Specific component colors
         navBackground: '#FFFFFF',
         navBorder: '#F0F0F0',
         navText: '#A1A4B2',
@@ -44,7 +43,6 @@ export const darkTheme: Theme = {
         border: '#2A4A9A',
         error: '#FF6B6B',
         success: '#6CB28E',
-        // Specific component colors
         navBackground: '#1E3A8A',
         navBorder: '#2A4A9A',
         navText: '#B0B3C1',
@@ -66,7 +64,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    // Load theme preference from storage
     useEffect(() => {
         loadThemePreference();
     }, []);

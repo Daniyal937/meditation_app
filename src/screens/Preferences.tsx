@@ -12,13 +12,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { ScreenProps } from '../types';
-
 const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
     const [downloadWifiOnly, setDownloadWifiOnly] = useState(false);
     const [autoDownloadAudio, setAutoDownloadAudio] = useState(false);
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -26,8 +24,7 @@ const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
-                {/* Header */}
+                {}
                 <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
                     <TouchableOpacity
                         style={styles.backButton}
@@ -41,7 +38,6 @@ const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
                     </Text>
                     <View style={styles.placeholder} />
                 </View>
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={[
@@ -50,13 +46,12 @@ const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
                     ]}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* General Section */}
+                    {}
                     <View style={styles.section}>
                         <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>
                             General
                         </Text>
-
-                        {/* Download Over Wi-Fi Only */}
+                        {}
                         <View style={[styles.optionRow, { backgroundColor: theme.colors.card }]}>
                             <Text style={[styles.optionText, { color: theme.colors.text }]}>
                                 Download Over Wi-Fi Only
@@ -69,8 +64,7 @@ const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
                                 ios_backgroundColor="#E5E7EB"
                             />
                         </View>
-
-                        {/* Clear Cache */}
+                        {}
                         <TouchableOpacity
                             style={[
                                 styles.optionRow,
@@ -81,7 +75,7 @@ const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
                                 },
                             ]}
                             activeOpacity={0.7}
-                            onPress={() => { }} // TODO: Implement Clear Cache
+                            onPress={() => { }} 
                         >
                             <Text style={[styles.optionText, { color: theme.colors.text }]}>
                                 Clear Cache
@@ -93,18 +87,16 @@ const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
                             />
                         </TouchableOpacity>
                     </View>
-
-                    {/* Audio Section */}
+                    {}
                     <View style={styles.section}>
                         <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>
                             Audio
                         </Text>
-
-                        {/* Audio Quality */}
+                        {}
                         <TouchableOpacity
                             style={[styles.optionRow, { backgroundColor: theme.colors.card }]}
                             activeOpacity={0.7}
-                            onPress={() => { }} // TODO: Implement Audio Quality
+                            onPress={() => { }} 
                         >
                             <Text style={[styles.optionText, { color: theme.colors.text }]}>
                                 Audio Quality
@@ -125,8 +117,7 @@ const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
                                 />
                             </View>
                         </TouchableOpacity>
-
-                        {/* Automatically Download Audio */}
+                        {}
                         <View style={[styles.optionRow, { backgroundColor: theme.colors.card }]}>
                             <Text style={[styles.optionText, { color: theme.colors.text }]}>
                                 Automatically Download Audio
@@ -145,7 +136,6 @@ const Preferences = ({ navigation }: ScreenProps<'Preferences'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -213,5 +203,4 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
 });
-
 export default Preferences;

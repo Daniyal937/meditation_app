@@ -17,10 +17,8 @@ import BottomMenu from '../components/BottomMenu';
 import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
-
 import { ScreenProps } from '../types';
 import { RootState } from '../redux/store';
-
 const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
     const { theme } = useTheme();
     const dispatch = useDispatch();
@@ -28,22 +26,18 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const [greeting, setGreeting] = useState('Good Morning');
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const currentUser = auth.currentUser;
-
                 if (currentUser) {
                     if (userProfileFromRedux) {
                         setUserName(userProfileFromRedux.name);
                         setLoading(false);
-                        return; // Already have data
+                        return; 
                     }
-
                     if (route?.params?.userName) {
                         setUserName(route.params.userName);
-                        // Store partial data if just name
                         dispatch(
                             setUserProfileAction({
                                 name: route.params.userName,
@@ -55,14 +49,13 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
                         const userProfile = await getUserProfile(currentUser.uid);
                         if (userProfile && userProfile.name) {
                             setUserName(userProfile.name);
-                            dispatch(setUserProfileAction(userProfile)); // Save to Redux
+                            dispatch(setUserProfileAction(userProfile)); 
                         } else {
                             if (currentUser.email) {
                                 const emailName = currentUser.email.split('@')[0];
                                 const derivedName =
                                     emailName.charAt(0).toUpperCase() + emailName.slice(1);
                                 setUserName(derivedName);
-                                // Save payload to Redux
                                 dispatch(
                                     setUserProfileAction({
                                         name: derivedName,
@@ -83,7 +76,6 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
                 setLoading(false);
             }
         };
-
         const hour = new Date().getHours();
         if (hour < 12) {
             setGreeting('Good Morning');
@@ -92,10 +84,8 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
         } else {
             setGreeting('Good Evening');
         }
-
         fetchUserData();
     }, [route]);
-
     const featuredSessions = [
         { id: 1, title: 'Basics', type: 'COURSE', duration: '3-10 MIN', color: '#8E97FD' },
         {
@@ -109,13 +99,11 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
             buttonTextColor: '#FFFFFF',
         },
     ];
-
     const recommendedSessions = [
         { id: 1, title: 'Focus', duration: 'MEDITATION • 3-10 MIN', color: '#6CB28E' },
         { id: 2, title: 'Happiness', duration: 'MEDITATION • 3-10 MIN', color: '#FFCF86' },
         { id: 3, title: 'Calm', duration: 'MEDITATION • 3-10 MIN', color: '#8E97FD' },
     ];
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <SafeAreaView style={{ flex: 1 }}>
@@ -123,13 +111,12 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Logo */}
+                    {}
                     <View style={styles.logoContainer}>
                         <Text style={[styles.logoText, { color: theme.colors.text }]}>Silent </Text>
                         <Image
@@ -139,8 +126,7 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
                         />
                         <Text style={[styles.logoText, { color: theme.colors.text }]}> Moon</Text>
                     </View>
-
-                    {/* Greeting Section */}
+                    {}
                     <View style={styles.greetingSection}>
                         <Text style={[styles.greetingText, { color: theme.colors.text }]}>
                             {greeting}, {userName}
@@ -151,8 +137,7 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
                             We Wish you have a good day
                         </Text>
                     </View>
-
-                    {/* Featured Cards */}
+                    {}
                     <View style={styles.featuredContainer}>
                         {featuredSessions.map((session, index) => (
                             <TouchableOpacity
@@ -256,8 +241,7 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
                             </TouchableOpacity>
                         ))}
                     </View>
-
-                    {/* Daily Thought */}
+                    {}
                     <TouchableOpacity style={styles.dailyThoughtCard} activeOpacity={0.8}>
                         <Image
                             source={require('../../assets/images/daily_thought_1.png')}
@@ -286,8 +270,7 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
                             </View>
                         </View>
                     </TouchableOpacity>
-
-                    {/* Recommended Section */}
+                    {}
                     <View style={styles.recommendedSection}>
                         <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
                             Recommended for you
@@ -405,18 +388,15 @@ const Home = ({ navigation, route }: ScreenProps<'Home'>) => {
                             ))}
                         </ScrollView>
                     </View>
-
-                    {/* Bottom padding for navigation */}
+                    {}
                     <View style={{ height: hp(80) }} />
                 </ScrollView>
             </SafeAreaView>
-
-            {/* Bottom Navigation */}
+            {}
             <BottomMenu navigation={navigation} activeTab="Home" userName={userName} />
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -427,7 +407,7 @@ const styles = StyleSheet.create({
     scrollContent: {
         paddingHorizontal: spacing(20),
         paddingTop: hp(20),
-        paddingBottom: hp(100), // Add padding for BottomMenu
+        paddingBottom: hp(100), 
     },
     logoContainer: {
         flexDirection: 'row',
@@ -489,8 +469,8 @@ const styles = StyleSheet.create({
     },
     relaxationLogoContainer: {
         position: 'absolute',
-        top: hp(-10), // Adjusted positioning
-        right: wp(-10), // Adjusted positioning
+        top: hp(-10), 
+        right: wp(-10), 
         width: wp(150),
         height: hp(150),
     },
@@ -673,5 +653,4 @@ const styles = StyleSheet.create({
         opacity: 0.9,
     },
 });
-
 export default Home;

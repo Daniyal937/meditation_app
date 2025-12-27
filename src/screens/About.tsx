@@ -5,11 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { wp, hp, fs, spacing } from '../utils/responsive';
 import { useTheme } from '../context/ThemeContext';
 import type { ScreenProps } from '../types';
-
 const About = ({ navigation }: ScreenProps<'AboutScreen'>) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
-
     const aboutItems = [
         {
             title: 'Version',
@@ -24,7 +22,6 @@ const About = ({ navigation }: ScreenProps<'AboutScreen'>) => {
             value: 'support@silentmoon.com',
         },
     ];
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -32,8 +29,7 @@ const About = ({ navigation }: ScreenProps<'AboutScreen'>) => {
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
-                {/* Header */}
+                {}
                 <View style={styles.header}>
                     <TouchableOpacity
                         style={styles.backButton}
@@ -45,13 +41,12 @@ const About = ({ navigation }: ScreenProps<'AboutScreen'>) => {
                     <Text style={[styles.headerTitle, { color: theme.colors.text }]}>About</Text>
                     <View style={styles.backButton} />
                 </View>
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 20 }]}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* App Info */}
+                    {}
                     <View style={styles.infoContainer}>
                         {aboutItems.map((item, index) => (
                             <View
@@ -70,8 +65,7 @@ const About = ({ navigation }: ScreenProps<'AboutScreen'>) => {
                             </View>
                         ))}
                     </View>
-
-                    {/* Description */}
+                    {}
                     <View style={styles.descriptionContainer}>
                         <Text style={[styles.descriptionText, { color: theme.colors.textSecondary }]}>
                             Silent Moon is your companion for meditation and mindfulness. Find peace,
@@ -83,7 +77,6 @@ const About = ({ navigation }: ScreenProps<'AboutScreen'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -138,5 +131,4 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
 });
-
 export default About;

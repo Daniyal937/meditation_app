@@ -10,30 +10,22 @@ import {
     Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { wp, hp, fs, spacing } from '../utils/responsive'; // Import responsive utilities
+import { wp, hp, fs, spacing } from '../utils/responsive';
 import { ScreenProps } from '../types';
-
 const Welcome = ({ navigation, route }: ScreenProps<'Welcome'>) => {
-    // Get user name from route params or use default
     const userName = route?.params?.userName || 'Afsar';
-
     const handleGetStarted = async () => {
         try {
-            // Update user profile to indicate welcome screen has been seen
             const { auth } = require('../config/firebaseConfig');
             const { updateUserProfile } = require('../services/authService');
-
             if (auth.currentUser) {
                 await updateUserProfile(auth.currentUser.uid, { hasSeenWelcome: true });
             }
         } catch (error) {
             console.error('Error updating welcome status:', error);
         }
-
-        // Navigate to Choose Topic screen
         navigation.navigate('ChooseTopic');
     };
-
     return (
         <LinearGradient
             colors={['#919CFF', '#919CFF']}
@@ -43,8 +35,6 @@ const Welcome = ({ navigation, route }: ScreenProps<'Welcome'>) => {
         >
             <SafeAreaView style={styles.safeArea}>
                 <StatusBar barStyle="light-content" backgroundColor="#919CFF" />
-
-                {/* Logo Section */}
                 <View style={styles.logoContainer}>
                     <View style={styles.logoWrapper}>
                         <Text style={styles.logoText}>Silent</Text>
@@ -56,45 +46,32 @@ const Welcome = ({ navigation, route }: ScreenProps<'Welcome'>) => {
                         <Text style={styles.logoText}>Moon</Text>
                     </View>
                 </View>
-
-                {/* Welcome Text Section */}
                 <View style={styles.welcomeContainer}>
                     <Text style={styles.welcomeHeading}>Hi {userName}, Welcome</Text>
                     <Text style={styles.welcomeSubheading}>to Silent Moon</Text>
                 </View>
-
-                {/* Illustration Section with Decorations */}
                 <View style={styles.illustrationContainer}>
-                    {/* Bird - Top Left */}
                     <Image
                         source={require('../../assets/images/bird.png')}
                         style={styles.bird}
                         resizeMode="contain"
                     />
-
-                    {/* Large Cloud - Right Side */}
                     <Image
                         source={require('../../assets/images/cloud-large.png')}
                         style={styles.cloudLarge}
                         resizeMode="contain"
                     />
-
-                    {/* Small Cloud - Bottom Left */}
                     <Image
                         source={require('../../assets/images/cloud-small.png')}
                         style={styles.cloudSmall}
                         resizeMode="contain"
                     />
-
-                    {/* Meditation Illustration */}
                     <Image
                         source={require('../../assets/images/welcome_v3.png')}
                         style={styles.illustration}
                         resizeMode="contain"
                     />
                 </View>
-
-                {/* Get Started Button */}
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.getStartedButton}
@@ -108,7 +85,6 @@ const Welcome = ({ navigation, route }: ScreenProps<'Welcome'>) => {
         </LinearGradient>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -228,5 +204,4 @@ const styles = StyleSheet.create({
         letterSpacing: 1.2,
     },
 });
-
 export default Welcome;

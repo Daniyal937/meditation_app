@@ -19,7 +19,6 @@ import BottomMenu from '../components/BottomMenu';
 import { wp, hp, fs, spacing } from '../utils/responsive';
 import { ScreenProps } from '../types';
 import { RootState } from '../redux/store';
-
 const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
     const { theme } = useTheme();
     const [selectedCategory, setSelectedCategory] = useState('all');
@@ -27,7 +26,6 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
     const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const insets = useSafeAreaInsets();
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -35,9 +33,8 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
                 if (currentUser) {
                     if (userProfileFromRedux) {
                         setUserName(userProfileFromRedux.name);
-                        return; // Already have data
+                        return; 
                     }
-
                     if (route?.params?.userName) {
                         setUserName(route.params.userName);
                     } else {
@@ -69,10 +66,8 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
                 setUserName('User');
             }
         };
-
         fetchUserData();
     }, [route, userProfileFromRedux]);
-
     const categories = [
         {
             id: 'all',
@@ -120,7 +115,6 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
             color: '#FFCF86',
         },
     ];
-
     const meditationCards = [
         {
             id: 1,
@@ -147,7 +141,6 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
             height: hp(210),
         },
     ];
-
     const handleCategoryPress = (category: typeof categories[0]) => {
         setSelectedCategory(category.id);
         navigation.navigate('MeditationSessions', {
@@ -159,7 +152,6 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
             userName: userName,
         });
     };
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -167,13 +159,12 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Header */}
+                    {}
                     <View style={styles.header}>
                         <Text style={[styles.title, { color: theme.colors.text }]}>Meditate</Text>
                         <Text style={[styles.subtitle, { color: theme.colors.textSecondary }]}>
@@ -181,8 +172,7 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
                             everyday acrobatics.
                         </Text>
                     </View>
-
-                    {/* Category Filter */}
+                    {}
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
@@ -237,8 +227,7 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
-
-                    {/* Daily Calm Featured Card */}
+                    {}
                     <TouchableOpacity style={styles.dailyCalmCard} activeOpacity={0.8}>
                         <Image
                             source={require('../../assets/images/daily_calm_bg_beige_new.png')}
@@ -263,10 +252,9 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
                             <Text style={styles.dailyCalmSubtitle}>APR 30 • PAUSE PRACTICE</Text>
                         </View>
                     </TouchableOpacity>
-
-                    {/* Meditation Cards Grid */}
+                    {}
                     <View style={styles.meditationGrid}>
-                        {/* Left Column */}
+                        {}
                         <View style={styles.gridColumn}>
                             {meditationCards
                                 .filter((_, index) => index % 2 === 0)
@@ -285,8 +273,7 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
                                     </TouchableOpacity>
                                 ))}
                         </View>
-
-                        {/* Right Column */}
+                        {}
                         <View style={styles.gridColumn}>
                             {meditationCards
                                 .filter((_, index) => index % 2 !== 0)
@@ -308,12 +295,10 @@ const MeditateV2 = ({ navigation, route }: ScreenProps<'MeditateV2'>) => {
                     </View>
                 </ScrollView>
             </View>
-
             <BottomMenu navigation={navigation} activeTab="Meditate" userName={userName} />
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -326,14 +311,13 @@ const styles = StyleSheet.create({
     scrollContent: {
         paddingHorizontal: spacing(20),
         paddingTop: hp(10),
-        paddingBottom: hp(100), // Updated to accommodate BottomMenu
+        paddingBottom: hp(100), 
     },
     header: {
         marginTop: hp(10),
         marginBottom: hp(25),
         alignItems: 'center',
     },
-
     title: {
         fontSize: fs(28),
         fontWeight: '700',
@@ -437,7 +421,6 @@ const styles = StyleSheet.create({
     },
     playButton: {
         position: 'absolute',
-        // top: hp(42),
         right: spacing(30),
         width: wp(40),
         height: wp(40),
@@ -461,7 +444,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         overflow: 'hidden',
         padding: spacing(0),
-        backgroundColor: '#F5F5F5', // Added fallback background
+        backgroundColor: '#F5F5F5', 
     },
     meditationCardBgImage: {
         position: 'absolute',
@@ -471,15 +454,14 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: '100%',
         height: '100%',
-        borderRadius: wp(12), // Re-enabled to ensure clipping on all devices
+        borderRadius: wp(12), 
     },
     meditationCardTitle: {
         fontSize: fs(16),
         fontWeight: '700',
         color: '#FFFFFF',
         zIndex: 2,
-        margin: spacing(15), // Added margin since parent padding is 0
+        margin: spacing(15), 
     },
 });
-
 export default MeditateV2;

@@ -16,7 +16,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useTheme } from '../context/ThemeContext';
 import { auth } from '../config/firebaseConfig';
 import { getUserProfile } from '../services/authService';
@@ -25,20 +24,17 @@ import { RootState } from '../redux/store';
 import { ScreenProps } from '../types';
 import { wp, hp, fs, spacing, isTablet } from '../utils/responsive';
 import BottomMenu from '../components/BottomMenu';
-
 interface Category {
     id: string;
     name: string;
     image: any;
 }
-
 interface CategoryButtonProps {
     category: Category;
     isActive: boolean;
     onPress: () => void;
     style?: any;
 }
-
 const categories = [
     { id: 'all', name: 'All', image: require('../../assets/images/sleep_cat_all.png') },
     { id: 'my', name: 'My', image: require('../../assets/images/sleep_cat_my.png') },
@@ -46,7 +42,6 @@ const categories = [
     { id: 'sleep', name: 'Sleep', image: require('../../assets/images/sleep_cat_sleep.png') },
     { id: 'kids', name: 'Kids', image: require('../../assets/images/sleep_cat_kids.png') },
 ];
-
 const sleepContent = [
     {
         id: 1,
@@ -81,8 +76,6 @@ const sleepContent = [
         color: '#8E97FD',
     },
 ];
-
-// Animation component for category buttons
 const CategoryButton: React.FC<CategoryButtonProps> = ({ category, isActive, onPress, style }) => (
     <Pressable
         onPress={onPress}
@@ -98,7 +91,6 @@ const CategoryButton: React.FC<CategoryButtonProps> = ({ category, isActive, onP
         <Image source={category.image} style={styles.categoryImage} resizeMode="contain" />
     </Pressable>
 );
-
 const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
     const insets = useSafeAreaInsets();
     const { theme } = useTheme();
@@ -109,7 +101,6 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
     const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const [activeCategory, setActiveCategory] = useState('All');
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -117,9 +108,8 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                 if (currentUser) {
                     if (userProfileFromRedux) {
                         setUserName(userProfileFromRedux.name);
-                        return; // Already have data
+                        return; 
                     }
-
                     if (route?.params?.userName) {
                         setUserName(route.params.userName);
                     } else {
@@ -148,12 +138,9 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                 setUserName('User');
             }
         };
-
         fetchUserData();
     }, [route, userProfileFromRedux, dispatch]);
-
     useFocusEffect(useCallback(() => { }, []));
-
     return (
         <View style={{ flex: 1, backgroundColor: '#03174C' }}>
             <StatusBar
@@ -161,25 +148,23 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                 backgroundColor="transparent"
                 barStyle="light-content"
             />
-
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: hp(100) + insets.bottom }}
                 bounces={false}
             >
-                {/* HEADER */}
+                {}
                 <ImageBackground
                     source={require('../../assets/images/sleep_header_bg.png')}
                     style={[styles.headerGradient, { paddingTop: insets.top + hp(20) }]}
                     resizeMode="cover"
                 >
-                    {/* Header Icon Image */}
+                    {}
                     <Image
                         source={require('../../assets/images/sleep_header_icon.png')}
                         style={styles.headerImage}
                         resizeMode="contain"
                     />
-
                     <Text style={styles.headerTitle}>Sleep Stories</Text>
                     <Text style={styles.headerSubtitle}>
                         {
@@ -187,8 +172,7 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                         }
                     </Text>
                 </ImageBackground>
-
-                {/* CATEGORIES */}
+                {}
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -205,8 +189,7 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                         />
                     ))}
                 </ScrollView>
-
-                {/* 🌊 FEATURED CARD — IMAGE MATCHES CARD */}
+                {}
                 <View style={styles.featuredCard}>
                     <ImageBackground
                         source={require('../../assets/images/ocean_moon_bg_final.png')}
@@ -214,7 +197,6 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                         resizeMode="cover"
                     >
                         <View style={styles.featuredContent}>
-
                             <TouchableOpacity
                                 style={styles.startButton}
                                 onPress={() =>
@@ -227,7 +209,7 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                                                 "Ease the mind into a restful night's sleep with\n these deep, ambient tones.",
                                             favoriteCount: '24,234',
                                             listeningCount: '34,234',
-                                            image: require('../../assets/images/ocean_moon_hero.png'), // Should use hero image for play option
+                                            image: require('../../assets/images/ocean_moon_hero.png'), 
                                         },
                                     })
                                 }
@@ -237,8 +219,7 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                         </View>
                     </ImageBackground>
                 </View>
-
-                {/* GRID */}
+                {}
                 <View style={styles.gridContainer}>
                     {sleepContent.map(item => (
                         <TouchableOpacity
@@ -268,31 +249,28 @@ const Sleep = ({ navigation, route }: ScreenProps<'Sleep'>) => {
                     ))}
                 </View>
             </ScrollView>
-            {/* </SafeAreaView> - Removed to allow full screen header */}
-
+            {}
             <BottomMenu
                 navigation={navigation}
                 activeTab="Sleep"
                 userName={userName}
+                backgroundColor="#03174C"
             />
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: { flex: 1 },
-
     headerGradient: {
-        height: hp(220),
+        height: hp(300),
         paddingTop: hp(0),
         paddingHorizontal: spacing(20),
         paddingBottom: hp(0),
         justifyContent: 'flex-start',
         alignItems: 'center',
-        width: wp(375), // Ensure it matches the base design width scaled
-        alignSelf: 'center', // Center it if the screen is wider
+        width: wp(375), 
+        alignSelf: 'center', 
     },
-
     headerImage: {
         width: '100%',
         height: hp(140),
@@ -302,7 +280,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: hp(20),
     },
-
     headerTitle: {
         fontSize: fs(28),
         fontWeight: '700',
@@ -323,17 +300,15 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontFamily: 'HelveticaNeue',
     },
-
     categoriesContainer: {
         marginVertical: hp(10),
-        marginTop: -hp(54),
+        marginTop: -hp(64),
     },
     categoriesContent: {
         paddingHorizontal: spacing(20),
         justifyContent: 'space-between',
         flexGrow: 1,
     },
-
     categoryTab: {
         marginRight: spacing(15),
         alignItems: 'center',
@@ -343,8 +318,6 @@ const styles = StyleSheet.create({
         width: wp(65),
         height: hp(70),
     },
-
-    /* ⭐ FEATURED CARD */
     featuredCard: {
         height: hp(220),
         marginHorizontal: spacing(20),
@@ -389,7 +362,6 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#3F414E',
     },
-
     gridContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -397,11 +369,10 @@ const styles = StyleSheet.create({
         gap: spacing(15),
     },
     gridCard: {
-        // Width set dynamically
         marginBottom: hp(15),
     },
     gridImageContainer: {
-        aspectRatio: 1, // Square images look better and are more responsive
+        aspectRatio: 1, 
         width: '100%',
         borderRadius: wp(15),
         overflow: 'hidden',
@@ -427,5 +398,4 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
 });
-
 export default Sleep;

@@ -12,7 +12,6 @@ import { store } from './src/redux/store';
 import { RootStackParamList } from './src/types';
 import * as Updates from 'expo-updates';
 
-// Error Boundary Component
 interface ErrorBoundaryProps {
     children: React.ReactNode;
 }
@@ -80,7 +79,6 @@ const styles = StyleSheet.create({
     },
 });
 
-// Import Screens
 import SignUpAndSignIn from './src/screens/SignUpAndSignIn';
 import SignUp from './src/screens/SignUp';
 import SignIn from './src/screens/SignIn';
@@ -105,46 +103,36 @@ import Preferences from './src/screens/Preferences';
 import NotificationSettings from './src/screens/NotificationSettings';
 import About from './src/screens/About';
 import Congratulations from './src/screens/Congratulations';
+import Music from './src/screens/Music';
+import MusicPlayer from './src/screens/MusicPlayer';
 import { ThemeProvider } from './src/context/ThemeContext';
-// Import other screens as they are created
-// import LoginScreen from './src/screens/LoginScreen';
-// import OnboardingScreen from './src/screens/OnboardingScreen';
-// import HomeScreen from './src/screens/HomeScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
     React.useEffect(() => {
-        // Disable update checks to prevent "Failed to download remote update" error
         const disableUpdates = async () => {
             try {
-                // This will prevent the app from checking for updates
                 if (!__DEV__ && Updates.isEnabled) {
-                    // Only log in development, don't check for updates
                     console.log('Updates are configured but checks are disabled');
                 }
             } catch (error) {
-                // Silently catch any update-related errors
                 console.log('Update check skipped');
             }
         };
 
         disableUpdates();
 
-        // OneSignal Initialization
+        // OneSignal initialization
         try {
-            // Debugging
             if (__DEV__) {
                 OneSignal.Debug.setLogLevel(LogLevel.Verbose);
             }
 
-            // Initialize OneSignal with your App ID
             OneSignal.initialize('66c6114a-f5fa-4c4d-b94f-17387cc07b46');
 
-            // Request notification permission
             OneSignal.Notifications.requestPermission(true);
 
-            // Handle notification clicks
             OneSignal.Notifications.addEventListener('click', (event: any) => {
                 console.log('OneSignal notification clicked:', event);
             });
@@ -153,7 +141,6 @@ export default function App() {
             console.log('OneSignal initialization error:', err.message);
         }
 
-        // Expo Notifications Setup (for local reminders)
         Notifications.setNotificationHandler({
             handleNotification: async () => ({
                 shouldShowAlert: true,
@@ -179,9 +166,6 @@ export default function App() {
                                     cardStyle: { backgroundColor: '#F5F5F5' },
                                 }}
                             >
-                                {/* Development/Testing screens - Uncomment if needed */}
-                                {/* <Stack.Screen name="FirebaseTest" component={FirebaseTest} /> */}
-
                                 <Stack.Screen name="SignUp" component={SignUpAndSignIn} />
                                 <Stack.Screen name="SignUpForm" component={SignUp} />
                                 <Stack.Screen name="Login" component={SignIn} />
@@ -197,6 +181,8 @@ export default function App() {
                                 />
                                 <Stack.Screen name="AudioDetails" component={AudioDetails} />
                                 <Stack.Screen name="AudioDetails2" component={AudioDetails2} />
+                                <Stack.Screen name="Music" component={Music} />
+                                <Stack.Screen name="MusicPlayer" component={MusicPlayer} />
                                 <Stack.Screen name="SleepStart" component={SleepStart} />
                                 <Stack.Screen name="Sleep" component={Sleep} />
                                 <Stack.Screen name="PlayOption" component={PlayOption} />
@@ -211,7 +197,6 @@ export default function App() {
                                 />
                                 <Stack.Screen name="AboutScreen" component={About} />
                                 <Stack.Screen name="Congratulations" component={Congratulations} />
-                                {/* Add other screens here */}
                             </Stack.Navigator>
                         </NavigationContainer>
                     </SafeAreaProvider>

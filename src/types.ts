@@ -1,7 +1,3 @@
-// ============================================
-// Navigation Types
-// ============================================
-
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 
@@ -52,6 +48,8 @@ export type RootStackParamList = {
     EditProfile: undefined;
     Preferences: undefined;
     NotificationSettings: undefined;
+    Music: undefined;
+    MusicPlayer: { song: { id: number; title: string; category: string; image: any; audioUrl: string; duration: string; artist: string } };
     AboutScreen: undefined;
     Congratulations: undefined;
     FirebaseTest: undefined;
@@ -67,15 +65,10 @@ export type RoutePropType<T extends keyof RootStackParamList> = RouteProp<
     T
 >;
 
-// Screen props type for components - compatible with React Navigation
 export type ScreenProps<T extends keyof RootStackParamList> = {
     navigation: NavigationProp<T>;
     route: RoutePropType<T>;
 };
-
-// ============================================
-// User & Authentication Types
-// ============================================
 
 export interface User {
     uid: string;
@@ -114,10 +107,6 @@ export interface AuthResponse {
     error?: string;
 }
 
-// ============================================
-// Redux State Types
-// ============================================
-
 export interface AuthState {
     user: User | null;
     isAuthenticated: boolean;
@@ -144,10 +133,6 @@ export interface DownloadItem {
     id: string;
     [key: string]: any;
 }
-
-// ============================================
-// Theme Types
-// ============================================
 
 export interface ThemeColors {
     background: string;
@@ -183,10 +168,6 @@ export interface ThemeContextValue {
     isLoading: boolean;
 }
 
-// ============================================
-// Component Props Types
-// ============================================
-
 export interface BottomMenuProps {
     navigation: any;
     activeTab: string;
@@ -194,18 +175,10 @@ export interface BottomMenuProps {
     backgroundColor?: string;
 }
 
-// ============================================
-// Dimension Types
-// ============================================
-
 export interface ScreenDimensions {
     width: number;
     height: number;
 }
-
-// ============================================
-// Firebase Types
-// ============================================
 
 export interface FirebaseConfig {
     apiKey: string;

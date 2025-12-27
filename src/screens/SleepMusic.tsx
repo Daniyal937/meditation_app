@@ -16,18 +16,14 @@ import { getUserProfile } from '../services/authService';
 import { setUserProfile as setUserProfileAction } from '../redux/slices/userSlice';
 import { wp, hp, fs, spacing, getScreenDimensions } from '../utils/responsive';
 import BottomMenu from '../components/BottomMenu';
-
 import { ScreenProps, RootStackParamList } from '../types';
 import { RootState } from '../redux/store';
-
 const { width } = getScreenDimensions();
-const cardWidth = (width - spacing(60)) / 2; // 2 columns with padding
-
+const cardWidth = (width - spacing(60)) / 2; 
 const SleepMusic = ({ navigation, route }: ScreenProps<'SleepMusic'>) => {
     const dispatch = useDispatch();
     const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -68,7 +64,6 @@ const SleepMusic = ({ navigation, route }: ScreenProps<'SleepMusic'>) => {
                 setUserName('User');
             }
         };
-
         fetchUserData();
     }, [route, userProfileFromRedux]);
     const sleepMusicContent = [
@@ -137,13 +132,11 @@ const SleepMusic = ({ navigation, route }: ScreenProps<'SleepMusic'>) => {
             color: '#A5AFFF',
         },
     ];
-
     return (
         <View style={styles.container}>
             <SafeAreaView style={{ flex: 1 }}>
                 <StatusBar barStyle="light-content" backgroundColor="#03174C" />
-
-                {/* Header */}
+                {}
                 <View style={styles.header}>
                     <TouchableOpacity
                         style={styles.backButton}
@@ -155,8 +148,7 @@ const SleepMusic = ({ navigation, route }: ScreenProps<'SleepMusic'>) => {
                     <Text style={styles.headerTitle}>Sleep Music</Text>
                     <View style={styles.headerPlaceholder} />
                 </View>
-
-                {/* Content Grid */}
+                {}
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={{
@@ -206,13 +198,11 @@ const SleepMusic = ({ navigation, route }: ScreenProps<'SleepMusic'>) => {
                             </TouchableOpacity>
                         ))}
                     </View>
-
-                    {/* Bottom padding for navigation */}
+                    {}
                     <View style={{ height: hp(100) }} />
                 </ScrollView>
             </SafeAreaView>
-
-            {/* Bottom Navigation */}
+            {}
             <BottomMenu
                 navigation={navigation}
                 activeTab="Sleep"
@@ -222,7 +212,6 @@ const SleepMusic = ({ navigation, route }: ScreenProps<'SleepMusic'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -297,5 +286,4 @@ const styles = StyleSheet.create({
         opacity: 0.7,
     },
 });
-
 export default SleepMusic;

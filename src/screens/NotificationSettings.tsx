@@ -13,7 +13,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { OneSignal } from 'react-native-onesignal';
 import { ScreenProps } from '../types';
-
 const NotificationSettings = ({ navigation }: ScreenProps<'NotificationSettings'>) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
@@ -30,21 +29,18 @@ const NotificationSettings = ({ navigation }: ScreenProps<'NotificationSettings'
         setter(value);
         try {
             if (id === 'systemNotifications') {
-                // Control actual push subscription
                 if (value) {
                     OneSignal.User.pushSubscription.optIn();
                 } else {
                     OneSignal.User.pushSubscription.optOut();
                 }
             } else {
-                // Use tags for other categories
                 OneSignal.User.addTag(id, value ? 'true' : 'false');
             }
         } catch (error) {
             console.error(`Error updating OneSignal for ${id}:`, error);
         }
     };
-
     const notificationOptions = [
         {
             id: 'newCourse',
@@ -80,7 +76,6 @@ const NotificationSettings = ({ navigation }: ScreenProps<'NotificationSettings'
             onValueChange: (val: boolean) => updateNotificationPreference('newTips', val, setNewTips),
         },
     ];
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -88,8 +83,7 @@ const NotificationSettings = ({ navigation }: ScreenProps<'NotificationSettings'
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
-                {/* Header */}
+                {}
                 <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
                     <TouchableOpacity
                         style={styles.backButton}
@@ -103,7 +97,6 @@ const NotificationSettings = ({ navigation }: ScreenProps<'NotificationSettings'
                     </Text>
                     <View style={styles.placeholder} />
                 </View>
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={[
@@ -112,12 +105,11 @@ const NotificationSettings = ({ navigation }: ScreenProps<'NotificationSettings'
                     ]}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Section Header */}
+                    {}
                     <Text style={[styles.sectionHeader, { color: theme.colors.text }]}>
                         Notify me when...
                     </Text>
-
-                    {/* Notification Options */}
+                    {}
                     {notificationOptions.map((option, index) => (
                         <View
                             key={option.id}
@@ -144,7 +136,6 @@ const NotificationSettings = ({ navigation }: ScreenProps<'NotificationSettings'
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -204,5 +195,4 @@ const styles = StyleSheet.create({
         paddingRight: 16,
     },
 });
-
 export default NotificationSettings;

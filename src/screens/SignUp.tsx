@@ -17,7 +17,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { wp, hp, fs } from '../utils/responsive';
 import { ScreenProps } from '../types';
-
 const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
@@ -26,23 +25,17 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
     const [agreedToPrivacy, setAgreedToPrivacy] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const insets = useSafeAreaInsets();
-
-    // Email validation
     const isValidEmail = (email: string): boolean => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
-
     const handleFacebookLogin = (): void => {
         Alert.alert('Facebook Login', 'Facebook authentication will be implemented with Firebase');
     };
-
     const handleGoogleLogin = (): void => {
         Alert.alert('Google Login', 'Google authentication will be implemented with Firebase');
     };
-
     const handleSignUp = async (): Promise<void> => {
-        // Validation
         if (!name.trim()) {
             Alert.alert('Error', 'Please enter your name');
             return;
@@ -67,18 +60,12 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
             Alert.alert('Error', 'Please agree to the Privacy Policy');
             return;
         }
-
         setIsLoading(true);
-
         try {
-            // Firebase Authentication
             const { signUpWithEmail } = require('../services/authService');
             const result = await signUpWithEmail(email, password, name);
-
             setIsLoading(false);
-
             if (result.success) {
-                // Show success message and navigate to Login screen
                 Alert.alert('Success!', 'Account created successfully. Please login to continue.', [
                     {
                         text: 'OK',
@@ -86,7 +73,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                     },
                 ]);
             } else {
-                // Show error message from Firebase
                 Alert.alert('Signup Failed', result.error);
             }
         } catch (error) {
@@ -95,7 +81,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
             console.error('Signup error:', error);
         }
     };
-
     return (
         <View style={styles.container}>
             <Image
@@ -113,7 +98,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                         contentContainerStyle={styles.scrollContent}
                         showsVerticalScrollIndicator={false}
                     >
-                        {/* Header */}
                         <View style={styles.header}>
                             <TouchableOpacity
                                 onPress={() => navigation.goBack()}
@@ -122,15 +106,10 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                                 <Ionicons name="arrow-back" size={24} color="#3F414E" />
                             </TouchableOpacity>
                         </View>
-
-                        {/* Title */}
                         <View style={styles.titleContainer}>
                             <Text style={styles.title}>Create your account</Text>
                         </View>
-
-                        {/* Social Login Buttons */}
                         <View style={styles.socialButtonsContainer}>
-                            {/* Facebook Button */}
                             <TouchableOpacity
                                 style={styles.facebookButton}
                                 onPress={handleFacebookLogin}
@@ -148,8 +127,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                                     </Text>
                                 </LinearGradient>
                             </TouchableOpacity>
-
-                            {/* Google Button */}
                             <TouchableOpacity
                                 style={styles.googleButton}
                                 onPress={handleGoogleLogin}
@@ -162,8 +139,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                                 <Text style={styles.googleButtonText}>CONTINUE WITH GOOGLE</Text>
                             </TouchableOpacity>
                         </View>
-
-                        {/* Divider */}
                         <TouchableOpacity
                             style={styles.dividerContainer}
                             onPress={() => navigation.navigate('Login')}
@@ -171,10 +146,7 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                         >
                             <Text style={styles.dividerText}>OR LOG IN WITH EMAIL</Text>
                         </TouchableOpacity>
-
-                        {/* Form */}
                         <View style={styles.formContainer}>
-                            {/* Name Input */}
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
@@ -193,8 +165,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                                     />
                                 )}
                             </View>
-
-                            {/* Email Input */}
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
@@ -214,8 +184,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                                     />
                                 )}
                             </View>
-
-                            {/* Password Input */}
                             <View style={styles.inputContainer}>
                                 <TextInput
                                     style={styles.input}
@@ -237,8 +205,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                                     />
                                 </TouchableOpacity>
                             </View>
-
-                            {/* Privacy Policy Checkbox */}
                             <TouchableOpacity
                                 style={styles.checkboxContainer}
                                 onPress={() => {
@@ -261,8 +227,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
                                 </View>
                             </TouchableOpacity>
                         </View>
-
-                        {/* Get Started Button */}
                         <TouchableOpacity
                             style={styles.getStartedButton}
                             onPress={handleSignUp}
@@ -286,7 +250,6 @@ const SignUp = ({ navigation }: ScreenProps<'SignUpForm'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -461,5 +424,4 @@ const styles = StyleSheet.create({
         letterSpacing: 1.2,
     },
 });
-
 export default SignUp;

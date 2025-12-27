@@ -12,10 +12,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../context/ThemeContext';
 import { ScreenProps } from '../types';
-
 const Settings = ({ navigation }: ScreenProps<'Settings'>) => {
     const { theme, isDarkMode, toggleTheme } = useTheme();
-
     const settingsOptions = [
         {
             id: 'account',
@@ -42,15 +40,13 @@ const Settings = ({ navigation }: ScreenProps<'Settings'>) => {
             onPress: () => navigation.navigate('AboutScreen'),
         },
     ];
-
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <StatusBar
                 barStyle={theme.colors.statusBar}
                 backgroundColor={theme.colors.background}
             />
-
-            {/* Header */}
+            {}
             <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
                 <TouchableOpacity
                     style={styles.backButton}
@@ -62,18 +58,16 @@ const Settings = ({ navigation }: ScreenProps<'Settings'>) => {
                 <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Settings</Text>
                 <View style={styles.headerPlaceholder} />
             </View>
-
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Appearance Section */}
+                {}
                 <View style={styles.section}>
                     <Text style={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
                         APPEARANCE
                     </Text>
-
                     <View
                         style={[
                             styles.settingItem,
@@ -115,13 +109,11 @@ const Settings = ({ navigation }: ScreenProps<'Settings'>) => {
                         />
                     </View>
                 </View>
-
-                {/* General Settings */}
+                {}
                 <View style={styles.section}>
                     <Text style={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
                         GENERAL
                     </Text>
-
                     {settingsOptions.map((option, index) => (
                         <TouchableOpacity
                             key={option.id}
@@ -161,13 +153,11 @@ const Settings = ({ navigation }: ScreenProps<'Settings'>) => {
                         </TouchableOpacity>
                     ))}
                 </View>
-
-                {/* About Section */}
+                {}
                 <View style={styles.section}>
                     <Text style={[styles.sectionTitle, { color: theme.colors.textSecondary }]}>
                         ABOUT
                     </Text>
-
                     <View
                         style={[
                             styles.settingItem,
@@ -206,8 +196,7 @@ const Settings = ({ navigation }: ScreenProps<'Settings'>) => {
                         </View>
                     </View>
                 </View>
-
-                {/* Logout Button */}
+                {}
                 <TouchableOpacity
                     style={[styles.logoutButton, { backgroundColor: theme.colors.error + '15' }]}
                     activeOpacity={0.7}
@@ -227,7 +216,6 @@ const Settings = ({ navigation }: ScreenProps<'Settings'>) => {
         </SafeAreaView>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -319,5 +307,4 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
 });
-
 export default Settings;

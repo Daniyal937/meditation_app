@@ -12,24 +12,20 @@ import {
     Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import { OneSignal } from 'react-native-onesignal';
 import * as Notifications from 'expo-notifications';
 import { wp, hp, fs, spacing } from '../utils/responsive';
-
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 import { ScreenProps } from '../types';
 import { LinearGradient } from 'expo-linear-gradient';
-
 const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
     const insets = useSafeAreaInsets();
     const [selectedHour, setSelectedHour] = useState(11);
     const [selectedMinute, setSelectedMinute] = useState(30);
     const [selectedPeriod, setSelectedPeriod] = useState('AM');
     const [selectedDays, setSelectedDays] = useState<number[]>([]);
-
     const hours = Array.from({ length: 12 }, (_, i) => i + 1);
     const minutes = Array.from({ length: 60 }, (_, i) => i);
     const periods = ['AM', 'PM'];
@@ -42,7 +38,6 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
         { id: 5, label: 'F', full: 'Friday' },
         { id: 6, label: 'S', full: 'Saturday' },
     ];
-
     const toggleDay = (dayId: number) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         if (selectedDays.includes(dayId)) {
@@ -51,31 +46,17 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
             setSelectedDays([...selectedDays, dayId]);
         }
     };
-
     const handleSave = async () => {
         if (selectedDays.length === 0) {
             Alert.alert('Please select at least one day');
             return;
         }
-
-        // Format time string HH:MM AM/PM
         const timeString = `${selectedHour}:${selectedMinute.toString().padStart(2, '0')} ${selectedPeriod}`;
-
         try {
-            // 1. Schedule Local Notifications (Expo)
-            // Cancel all previous reminders first
             await Notifications.cancelAllScheduledNotificationsAsync();
-
-            // Convert 12h to 24h for scheduling
             let hour24 = selectedHour;
             if (selectedPeriod === 'PM' && hour24 < 12) hour24 += 12;
             if (selectedPeriod === 'AM' && hour24 === 12) hour24 = 0;
-
-            // Schedule for each selected day
-            // OneSignal days are 0-6 (Sun-Sat), which matches expo-notifications weekday (1-7 but wait)
-            // Expo weekday: 1 (Sunday), 2 (Monday), ..., 7 (Saturday)
-            // Our days array: Sunday is id: 0. So we need to add 1.
-
             for (const dayId of selectedDays) {
                 await Notifications.scheduleNotificationAsync({
                     content: {
@@ -87,36 +68,26 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
                         type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
                         hour: hour24,
                         minute: selectedMinute,
-                        weekday: dayId + 1, // 0+1 = 1 (Sunday), etc.
+                        weekday: dayId + 1, 
                         repeats: true,
                     },
                 });
             }
-
-            // 2. Add OneSignal Tags for server-side segmentation
             OneSignal.User.addTags({
                 reminder_time: timeString,
                 reminder_days: selectedDays.join(','),
                 has_reminders_enabled: 'true',
             });
-
             Alert.alert('Success', 'Reminders saved successfully!');
         } catch (error) {
             console.error('Error setting reminders:', error);
             Alert.alert('Success', 'Reminders saved locally (Push notifications vary by device)');
         }
-
-        // Navigate to Home screen
         navigation.navigate('Home', {});
     };
-
     const handleNoThanks = () => {
-        // Skip reminder setup
-
-        // Navigate to Home screen
         navigation.navigate('Home', {});
     };
-
     const renderPickerItem = (value: number | string, isSelected: boolean, onPress: () => void) => (
         <TouchableOpacity key={value} onPress={onPress} style={styles.pickerItem}>
             <Text style={[styles.pickerItemText, isSelected && styles.pickerItemTextSelected]}>
@@ -124,11 +95,9 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
             </Text>
         </TouchableOpacity>
     );
-
     return (
         <View style={[styles.container, { paddingTop: insets.top }]}>
             <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={[
@@ -138,7 +107,7 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
                 showsVerticalScrollIndicator={false}
                 nestedScrollEnabled={true}
             >
-                {/* Time Section */}
+                {}
                 <View style={styles.section}>
                     <Text style={[styles.title, { paddingTop: 20 }]}>
                         What time would you like to meditate?
@@ -146,10 +115,9 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
                     <Text style={styles.subtitle}>
                         Any time you can choose but We recommend first thing in the morning.
                     </Text>
-
-                    {/* Time Picker */}
+                    {}
                     <View style={styles.timePickerContainer}>
-                        {/* Hour Picker */}
+                        {}
                         <View style={styles.pickerColumn}>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
@@ -163,8 +131,7 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
                                 )}
                             </ScrollView>
                         </View>
-
-                        {/* Minute Picker */}
+                        {}
                         <View style={styles.pickerColumn}>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
@@ -178,8 +145,7 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
                                 )}
                             </ScrollView>
                         </View>
-
-                        {/* Period Picker */}
+                        {}
                         <View style={styles.pickerColumn}>
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
@@ -195,15 +161,13 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
                         </View>
                     </View>
                 </View>
-
-                {/* Day Selection Section */}
+                {}
                 <View style={[styles.section, { marginTop: 20 }]}>
                     <Text style={styles.title}>Which day would you like to meditate?</Text>
                     <Text style={styles.subtitle}>
                         Everyday is best, but we recommend picking at least five.
                     </Text>
-
-                    {/* Day Buttons */}
+                    {}
                     <View style={styles.dayContainer}>
                         {days.map(day => (
                             <TouchableOpacity
@@ -228,8 +192,7 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
                         ))}
                     </View>
                 </View>
-
-                {/* Action Buttons */}
+                {}
                 <View style={styles.actionContainer}>
                     <TouchableOpacity
                         style={styles.saveButtonWrapper}
@@ -245,7 +208,6 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
                             <Text style={styles.saveButtonText}>SAVE</Text>
                         </LinearGradient>
                     </TouchableOpacity>
-
                     <TouchableOpacity onPress={handleNoThanks} activeOpacity={0.7}>
                         <Text style={styles.noThanksText}>NO THANKS</Text>
                     </TouchableOpacity>
@@ -254,7 +216,6 @@ const Reminders = ({ navigation }: ScreenProps<'Reminders'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -369,5 +330,4 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
     },
 });
-
 export default Reminders;

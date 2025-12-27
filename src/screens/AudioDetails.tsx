@@ -10,36 +10,28 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { ScreenProps } from '../types';
-
 const AudioDetails = ({ navigation, route }: ScreenProps<'AudioDetails'>) => {
-    // Get session data from route params or use default
     const defaultSession = {
         name: 'Introduction to Mindfulness',
         duration: '5 - 10 min',
     };
-
     const sessionData = typeof route?.params?.sessionId === 'string'
         ? defaultSession
         : (route?.params?.sessionId || defaultSession);
-
     const [selectedDuration, setSelectedDuration] = useState(10);
     const durations = [5, 10, 15];
-
     const handleStart = () => {
-        // Navigate to AudioDetails2 screen as requested
         navigation.navigate('AudioDetails2', { session: sessionData, duration: selectedDuration.toString() });
     };
-
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-
             <ScrollView
                 style={styles.scrollView}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Back Button */}
+                {}
                 <TouchableOpacity
                     style={styles.backButton}
                     onPress={() => navigation.goBack()}
@@ -47,17 +39,14 @@ const AudioDetails = ({ navigation, route }: ScreenProps<'AudioDetails'>) => {
                 >
                     <Ionicons name="arrow-back" size={24} color="#3F414E" />
                 </TouchableOpacity>
-
-                {/* Session Title */}
+                {}
                 <Text style={styles.title}>{sessionData.name}</Text>
-
-                {/* Session Description */}
+                {}
                 <Text style={styles.description}>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
                     incididunt ut labore et dolore magna aliqua
                 </Text>
-
-                {/* Duration Picker */}
+                {}
                 <View style={styles.durationSection}>
                     <Text style={styles.sectionTitle}>Pick a Duration</Text>
                     <View style={styles.durationButtons}>
@@ -84,8 +73,7 @@ const AudioDetails = ({ navigation, route }: ScreenProps<'AudioDetails'>) => {
                         ))}
                     </View>
                 </View>
-
-                {/* Download Section */}
+                {}
                 <View style={styles.downloadSection}>
                     <Text style={styles.sectionTitle}>Download</Text>
                     <View style={styles.downloadCard}>
@@ -101,8 +89,7 @@ const AudioDetails = ({ navigation, route }: ScreenProps<'AudioDetails'>) => {
                     </View>
                 </View>
             </ScrollView>
-
-            {/* Start Button */}
+            {}
             <View style={styles.startButtonContainer}>
                 <TouchableOpacity
                     style={styles.startButton}
@@ -115,7 +102,6 @@ const AudioDetails = ({ navigation, route }: ScreenProps<'AudioDetails'>) => {
         </SafeAreaView>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -127,7 +113,7 @@ const styles = StyleSheet.create({
     scrollContent: {
         paddingHorizontal: 20,
         paddingTop: 20,
-        paddingBottom: 100, // Space for start button
+        paddingBottom: 100, 
     },
     backButton: {
         width: 40,
@@ -234,5 +220,4 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
 });
-
 export default AudioDetails;

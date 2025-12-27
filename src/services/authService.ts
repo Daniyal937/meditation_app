@@ -11,13 +11,6 @@ import { doc, setDoc, getDoc, DocumentData } from 'firebase/firestore';
 import { auth, db } from '../config/firebaseConfig';
 import { AuthResponse, UserProfile } from '../types';
 
-/**
- * Sign up a new user with email and password
- * @param {string} email - User's email
- * @param {string} password - User's password
- * @param {string} name - User's full name
- * @returns {Promise<AuthResponse>} User data
- */
 export const signUpWithEmail = async (
     email: string,
     password: string,
@@ -32,8 +25,6 @@ export const signUpWithEmail = async (
         ]);
 
         const user = userCredential.user;
-
-        // Create user profile in Firestore
 
         await createUserProfile(user.uid, {
             name,
@@ -59,12 +50,6 @@ export const signUpWithEmail = async (
     }
 };
 
-/**
- * Sign in an existing user with email and password
- * @param {string} email - User's email
- * @param {string} password - User's password
- * @returns {Promise<AuthResponse>} User data
- */
 export const signInWithEmail = async (
     email: string,
     password: string
@@ -73,11 +58,7 @@ export const signInWithEmail = async (
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Get user profile from Firestore
-
         const userProfile = await getUserProfile(user.uid);
-
-        // Update last login
 
         await updateUserProfile(user.uid, {
             lastLogin: new Date().toISOString(),
@@ -100,10 +81,6 @@ export const signInWithEmail = async (
     }
 };
 
-/**
- * Sign out the current user
- * @returns {Promise<AuthResponse>} Success status
- */
 export const signOutUser = async (): Promise<AuthResponse> => {
     try {
         await signOut(auth);
@@ -116,30 +93,16 @@ export const signOutUser = async (): Promise<AuthResponse> => {
     }
 };
 
-/**
- * Get the current authenticated user
- * @returns {FirebaseUser | null} Current user or null
- */
 export const getCurrentUser = (): FirebaseUser | null => {
     return auth.currentUser;
 };
 
-/**
- * Listen to authentication state changes
- * @param {Function} callback - Callback function to handle auth state changes
- * @returns {Function} Unsubscribe function
- */
 export const onAuthStateChange = (
     callback: (user: FirebaseUser | null) => void
 ): (() => void) => {
     return onAuthStateChanged(auth, callback);
 };
 
-/**
- * Create user profile in Firestore
- * @param {string} userId - User's UID
- * @param {Partial<UserProfile>} userData - User data to store
- */
 export const createUserProfile = async (
     userId: string,
     userData: Partial<UserProfile>
@@ -147,7 +110,6 @@ export const createUserProfile = async (
     try {
         const userRef = doc(db, 'users', userId);
 
-        // Use ISO string dates instead of serverTimestamp for web compatibility
         const profileData: UserProfile = {
             name: userData.name || '',
             email: userData.email || '',
@@ -172,11 +134,6 @@ export const createUserProfile = async (
     }
 };
 
-/**
- * Get user profile from Firestore
- * @param {string} userId - User's UID
- * @returns {Promise<UserProfile | null>} User profile data
- */
 export const getUserProfile = async (userId: string): Promise<UserProfile | null> => {
     try {
         const userRef = doc(db, 'users', userId);
@@ -193,11 +150,6 @@ export const getUserProfile = async (userId: string): Promise<UserProfile | null
     }
 };
 
-/**
- * Update user profile in Firestore
- * @param {string} userId - User's UID
- * @param {Partial<UserProfile>} updates - Data to update
- */
 export const updateUserProfile = async (
     userId: string,
     updates: Partial<UserProfile>
@@ -211,11 +163,6 @@ export const updateUserProfile = async (
     }
 };
 
-/**
- * Convert Firebase error codes to user-friendly messages
- * @param {string} errorCode - Firebase error code
- * @returns {string} User-friendly error message
- */
 const getErrorMessage = (errorCode: string): string => {
     switch (errorCode) {
         case 'auth/email-already-in-use':
@@ -237,11 +184,6 @@ const getErrorMessage = (errorCode: string): string => {
     }
 };
 
-/**
- * Send password reset email
- * @param {string} email - User's email
- * @returns {Promise<AuthResponse>} Success status
- */
 export const resetPassword = async (email: string): Promise<AuthResponse> => {
     try {
         await sendPasswordResetEmail(auth, email);

@@ -1,4 +1,3 @@
-// Profile Screen - Refined custom icons and layout v5
 import React, { useState, useEffect } from 'react';
 import {
     View,
@@ -13,49 +12,40 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
+import * as ImagePicker from 'expo-image-picker'; 
 import { useTheme } from '../context/ThemeContext';
 import { auth } from '../config/firebaseConfig';
 import { getUserProfile } from '../services/authService';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserProfile as setUserProfileAction, clearUserData } from '../redux/slices/userSlice';
 import BottomMenu from '../components/BottomMenu';
-import { wp, hp, fs, spacing } from '../utils/responsive'; // Import responsive utilities
+import { wp, hp, fs, spacing } from '../utils/responsive'; 
 import { ScreenProps } from '../types';
 import { RootState } from '../redux/store';
-
 const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
     const { theme, isDarkMode, toggleTheme } = useTheme();
     const dispatch = useDispatch();
     const userProfileFromRedux = useSelector((state: RootState) => state.user.profile);
-
-    // Use Redux state or local defaults
     const [userName, setUserName] = useState(userProfileFromRedux?.name || 'User');
     const [userEmail, setUserEmail] = useState(userProfileFromRedux?.email || '');
     const [showLogoutModal, setShowLogoutModal] = useState(false);
-    const [profileImage, setProfileImage] = useState(userProfileFromRedux?.profileImage || null); // State for profile image
+    const [profileImage, setProfileImage] = useState(userProfileFromRedux?.profileImage || null); 
     const insets = useSafeAreaInsets();
-
     useEffect(() => {
         const fetchUserData = async () => {
             try {
                 const currentUser = auth.currentUser;
                 if (currentUser) {
-                    // Update email if invalid/missing
                     if (!userEmail && currentUser.email) {
                         setUserEmail(currentUser.email);
                     }
-
                     if (userProfileFromRedux) {
                         setUserName(userProfileFromRedux.name);
-                        // Update local email if Redux has it, otherwise keep currentUser.email
                         if (userProfileFromRedux.email) setUserEmail(userProfileFromRedux.email);
-                        // Update local profile image if Redux has it
                         if (userProfileFromRedux.profileImage)
                             setProfileImage(userProfileFromRedux.profileImage);
-                        return; // Already have data
+                        return; 
                     }
-
                     const userProfile = await getUserProfile(currentUser.uid);
                     if (userProfile && userProfile.name) {
                         setUserName(userProfile.name);
@@ -81,30 +71,23 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                 console.error('Error fetching user data:', error);
             }
         };
-
         fetchUserData();
     }, [userProfileFromRedux]);
-
     const pickImage = async () => {
-        // ... (unchanged)
-        // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
         });
-
         if (!result.canceled) {
             const newImage = result.assets[0].uri;
             setProfileImage(newImage);
-            // Sync with Redux immediately so other screens update
             if (userProfileFromRedux) {
                 dispatch(setUserProfileAction({ ...userProfileFromRedux, profileImage: newImage }));
             }
         }
     };
-
     const menuItems = [
         {
             id: 'personal',
@@ -129,17 +112,14 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
             title: 'Language',
             iconImage: require('../../assets/images/language_icon.png'),
             value: 'English (US)',
-            onPress: () => { }, // TODO: Implement Language selection
+            onPress: () => { }, 
         },
     ];
-
     const handleLogout = () => {
         setShowLogoutModal(false);
-        // Sign out from Firebase
         auth.signOut()
             .then(() => {
-                dispatch(clearUserData()); // Clear global user state
-                // Navigate to login screen
+                dispatch(clearUserData()); 
                 navigation.reset({
                     index: 0,
                     routes: [{ name: 'SignUp' }],
@@ -149,7 +129,6 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                 console.error('Error signing out:', error);
             });
     };
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -157,8 +136,7 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
-                {/* Header */}
+                {}
                 <View style={[styles.header, { borderBottomColor: theme.colors.border }]}>
                     <Text style={[styles.headerTitle, { color: theme.colors.text }]}>Profile</Text>
                     <View style={styles.menuButton}>
@@ -169,17 +147,16 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                         />
                     </View>
                 </View>
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={{ paddingBottom: hp(100) }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* User Profile Section */}
+                    {}
                     <View style={[styles.profileCard, { backgroundColor: theme.colors.card }]}>
                         <View style={styles.profileHeader}>
                             <View style={styles.profileLeft}>
-                                {/* Profile Picture */}
+                                {}
                                 <TouchableOpacity
                                     style={[
                                         styles.profilePicture,
@@ -199,8 +176,7 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                                         </Text>
                                     )}
                                 </TouchableOpacity>
-
-                                {/* User Info */}
+                                {}
                                 <View style={styles.userInfo}>
                                     <Text style={[styles.userName, { color: theme.colors.text }]}>
                                         {userName}
@@ -215,8 +191,7 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                                     </Text>
                                 </View>
                             </View>
-
-                            {/* Edit Button */}
+                            {}
                             <TouchableOpacity
                                 style={styles.editButton}
                                 activeOpacity={0.7}
@@ -230,8 +205,7 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                             </TouchableOpacity>
                         </View>
                     </View>
-
-                    {/* Menu Items */}
+                    {}
                     <View style={styles.menuContainer}>
                         {menuItems.map((item, index) => (
                             <TouchableOpacity
@@ -277,8 +251,7 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                                 </View>
                             </TouchableOpacity>
                         ))}
-
-                        {/* Dark Mode Toggle */}
+                        {}
                         <View style={[styles.menuItem, { backgroundColor: theme.colors.card }]}>
                             <View style={styles.menuLeft}>
                                 <Image
@@ -302,8 +275,7 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                                 ios_backgroundColor="#E5E7EB"
                             />
                         </View>
-
-                        {/* About */}
+                        {}
                         <TouchableOpacity
                             style={[styles.menuItem, { backgroundColor: theme.colors.card }]}
                             onPress={() => navigation.navigate('AboutScreen')}
@@ -329,8 +301,7 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                                 color={theme.colors.textSecondary}
                             />
                         </TouchableOpacity>
-
-                        {/* Logout */}
+                        {}
                         <TouchableOpacity
                             style={[
                                 styles.menuItem,
@@ -361,13 +332,11 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                             />
                         </TouchableOpacity>
                     </View>
-
-                    {/* Bottom padding for navigation */}
+                    {}
                     <View style={{ height: hp(100) }} />
                 </ScrollView>
             </View>
-
-            {/* Logout Confirmation Modal */}
+            {}
             <Modal
                 visible={showLogoutModal}
                 transparent={true}
@@ -425,13 +394,11 @@ const Profile = ({ navigation }: ScreenProps<'Profile'>) => {
                     </View>
                 </View>
             </Modal>
-
-            {/* Bottom Navigation */}
+            {}
             <BottomMenu navigation={navigation} activeTab="Profile" userName={userName} />
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -457,7 +424,7 @@ const styles = StyleSheet.create({
     menuIcon: {
         width: wp(24),
         height: wp(24),
-        tintColor: undefined, // Preserve original image colors
+        tintColor: undefined, 
     },
     scrollView: {
         flex: 1,
@@ -488,7 +455,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: spacing(12),
-        overflow: 'hidden', // Ensure image stays within bounds
+        overflow: 'hidden', 
     },
     profileImage: {
         width: '100%',
@@ -607,5 +574,4 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
 });
-
 export default Profile;

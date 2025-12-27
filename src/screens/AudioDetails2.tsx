@@ -12,6 +12,7 @@ import {
     PanResponder,
     LayoutChangeEvent,
     GestureResponderEvent,
+    Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,22 +22,19 @@ import { useTheme } from '../context/ThemeContext';
 import BottomMenu from '../components/BottomMenu';
 import { ScreenProps } from '../types';
 import { Session, Sound as SoundType, AudioStatus } from '../global';
-
 const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
     const { theme } = useTheme();
     const insets = useSafeAreaInsets();
-    // Session data (passed from previous screen or default)
     const defaultSession = {
         name: 'Mindfulness',
         category: 'Relax',
         duration: '6-15 min',
         description:
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque fermentum, urna sit amet cursus vestibulum, ligula sapien cursus elit, nec suscipit quam velit',
-        artist: 'Sam Wilson', // Ensure this is present
+        artist: 'Sam Wilson',
         location: 'San Fransisco',
         streams: '2.6',
     };
-
     const sessionData: Session = { ...defaultSession, ...route?.params?.session };
     const [showMiniPlayer, setShowMiniPlayer] = useState<boolean>(false);
     const [sound, setSound] = useState<Audio.Sound | undefined>(undefined);
@@ -44,25 +42,16 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
     const [status, setStatus] = useState<{ position: number; duration: number }>({ position: 0, duration: 1 });
     const [isSeeking, setIsSeeking] = useState<boolean>(false);
     const [seekPosition, setSeekPosition] = useState<number>(0);
-
     const barWidth = useRef(0);
     const statusRef = useRef(status);
-
     useEffect(() => {
         statusRef.current = status;
     }, [status]);
-
-
-
-    // We need a ref for sound because PanResponder closure might capture old null sound
     const soundRef = useRef<Audio.Sound | undefined>(sound);
     useEffect(() => {
         soundRef.current = sound;
     }, [sound]);
-
-    // CORRECTED PANRESPONDER LOGIC:
     const startPositionRef = useRef(0);
-
     const panResponderCorrect = useRef(
         PanResponder.create({
             onStartShouldSetPanResponder: () => true,
@@ -91,7 +80,6 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
             },
         })
     ).current;
-
     useEffect(() => {
         return sound
             ? () => {
@@ -99,14 +87,12 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
             }
             : undefined;
     }, [sound]);
-
     const formatTime = (millis: number): string => {
         if (!millis) return '0:00';
         const minutes = Math.floor(millis / 60000);
         const seconds = Math.floor((millis % 60000) / 1000);
         return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
     };
-
     const handlePlay = async () => {
         setShowMiniPlayer(true);
         if (sound) {
@@ -127,7 +113,7 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                             if (playbackStatus.isLoaded) {
                                 setStatus({
                                     position: playbackStatus.positionMillis,
-                                    duration: playbackStatus.durationMillis || 1, // Avoid divide by zero
+                                    duration: playbackStatus.durationMillis || 1,
                                 });
                                 setIsPlaying(playbackStatus.isPlaying);
                                 if (playbackStatus.didJustFinish) {
@@ -138,21 +124,20 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                         }
                     );
                     setSound(newSound);
-
-                    // setIsPlaying(true); // Handled by status update
+                    setIsPlaying(true);
                 } catch (error) {
                     console.error('Error loading sound', error);
+                    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                    Alert.alert('Error', `Unable to load audio: ${errorMessage}\n\nPlease check that the audio URL is valid and accessible.`);
+                    setIsPlaying(false);
                 }
             } else {
-                console.warn('No audio URL provided for this session');
+                Alert.alert('No Audio', 'No audio URL available for this session.\n\nPlease add a valid audio URL to play this meditation.');
             }
         }
     };
-
-    // Calculate progress percentage
     const currentDisplayPosition = isSeeking ? seekPosition : status.position;
     const progressPercent = (currentDisplayPosition / status.duration) * 100;
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <SafeAreaView style={{ flex: 1 }}>
@@ -160,11 +145,10 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                     barStyle={theme.colors.statusBar}
                     backgroundColor={theme.colors.background}
                 />
-
-                {/* Header */}
+                { }
                 <View style={styles.header}>
                     <TouchableOpacity
-                        style={[styles.backButton, { backgroundColor: theme.colors.surface }]} // Added background for better visibility? Or just standard icon.
+                        style={[styles.backButton, { backgroundColor: theme.colors.surface }]}
                         onPress={() => navigation.goBack()}
                     >
                         <Ionicons name="arrow-back" size={fs(24)} color={theme.colors.text} />
@@ -176,24 +160,22 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                         <Ionicons name="heart-outline" size={fs(24)} color={theme.colors.text} />
                     </TouchableOpacity>
                 </View>
-
                 <ScrollView
                     style={styles.scrollView}
                     contentContainerStyle={[styles.scrollContent, { paddingBottom: hp(160) }]}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Hero Card Container */}
+                    { }
                     <View style={styles.heroCardContainer}>
-                        {/* ... (Hero card uses image background, maybe text color inside needs care if overlay changes, but usually white text on image is fine) ... */}
+                        { }
                         <ImageBackground
                             source={require('../../assets/images/audio_details_bg.png')}
                             style={styles.heroCard}
                             imageStyle={{ borderRadius: wp(20) }}
                         >
                             <View style={styles.heroOverlay}>
-                                {/* Text is now part of the background image */}
+                                { }
                                 <View />
-
                                 <View style={styles.heroBottomContent}>
                                     <View>
                                         <Text style={styles.categoryText}>
@@ -228,8 +210,7 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                             </View>
                         </ImageBackground>
                     </View>
-
-                    {/* Meta Data */}
+                    { }
                     <View style={styles.metaDataContainer}>
                         <Text style={[styles.sessionTitle, { color: theme.colors.text }]}>
                             {sessionData.name}
@@ -237,13 +218,11 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                         <Text style={[styles.sessionArtist, { color: theme.colors.textSecondary }]}>
                             By {sessionData.artist}
                         </Text>
-
                         <Text style={[styles.description, { color: theme.colors.textSecondary }]}>
                             {sessionData.description}
                         </Text>
                     </View>
-
-                    {/* Try This Exercise */}
+                    { }
                     <View style={styles.section}>
                         <View style={styles.sectionHeaderRow}>
                             <Text style={styles.tryExerciseHeader}>Try this exercise</Text>
@@ -251,20 +230,17 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                                 <Text style={styles.seeAllText}>see all</Text>
                             </TouchableOpacity>
                         </View>
-                        {/* Add content for "Try this exercise" here if needed, or leave empty as per design */}
+                        { }
                     </View>
-
-                    {/* Bottom padding for navigation */}
+                    { }
                     <View style={{ height: hp(120) }} />
                 </ScrollView>
             </SafeAreaView>
-
-            {/* Bottom Navigation */}
+            { }
             {!showMiniPlayer && (
                 <BottomMenu navigation={navigation} activeTab="Meditate" userName="User" />
             )}
-
-            {/* Mini Player */}
+            { }
             {showMiniPlayer && (
                 <View
                     style={[
@@ -292,10 +268,9 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                             >
                                 {sessionData.name}
                             </Text>
-
                             <View style={styles.miniPlayerProgressRow}>
                                 <View style={{ flex: 1, justifyContent: 'center' }}>
-                                    {/* Progress Bar Wrapper with increased hit slop */}
+                                    { }
                                     <View
                                         style={{ height: hp(30), justifyContent: 'center' }}
                                         onLayout={e => {
@@ -318,7 +293,7 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                                                     },
                                                 ]}
                                             />
-                                            {/* Hidden knob */}
+                                            { }
                                             <View
                                                 style={[
                                                     styles.progressBarKnob,
@@ -330,8 +305,7 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                                             />
                                         </View>
                                     </View>
-
-                                    {/* Time */}
+                                    { }
                                     <View style={styles.timeContainer}>
                                         <Text
                                             style={[
@@ -351,8 +325,7 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                                         </Text>
                                     </View>
                                 </View>
-
-                                {/* Pause Button */}
+                                { }
                                 <TouchableOpacity
                                     style={styles.miniPlayerPauseButton}
                                     onPress={handlePlay}
@@ -364,8 +337,7 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                                     />
                                 </TouchableOpacity>
                             </View>
-
-                            {/* Controls */}
+                            { }
                             <View style={styles.miniPlayerBottomControls}>
                                 <View style={styles.controlsGroup}>
                                     <TouchableOpacity>
@@ -383,7 +355,6 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
                                         />
                                     </TouchableOpacity>
                                 </View>
-
                                 <View style={styles.controlsGroup}>
                                     <TouchableOpacity>
                                         <Ionicons
@@ -408,7 +379,6 @@ const AudioDetails2 = ({ navigation, route }: ScreenProps<'AudioDetails2'>) => {
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -634,11 +604,11 @@ const styles = StyleSheet.create({
     },
     progressBarFill: {
         height: '100%',
-        backgroundColor: '#5F8595', // Muted Teal/Slate Blue
+        backgroundColor: '#5F8595',
         borderRadius: hp(3),
     },
     progressBarKnob: {
-        width: 0, // Hidden
+        width: 0,
         height: 0,
     },
     timeContainer: {
@@ -685,5 +655,4 @@ const styles = StyleSheet.create({
         color: '#3F414E',
     },
 });
-
 export default AudioDetails2;
